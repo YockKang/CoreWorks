@@ -1,13 +1,13 @@
-##Team Name: 
+## Team Name:
 
 404: Team Name Not Found
 
-##Level of Achievement: 
+## Level of Achievement:
 
 Project Gemini
 
 ---
-##Motivation 
+## Motivation
 
 Our motivation for undertaking this project is that it provides us with an opportunity to learn about game development in a systematic and interesting manner. We also believe that Orbital provides us with a great opportunity to learn about software development firsthand during the summer. Through this project, we hope to learn more about the software development process and make our summer both productive and fulfilling.
 
@@ -16,7 +16,7 @@ Through the development of a simple game, we want to learn how to create an inte
 In addition to fulfilling our credit requirements, we are also looking forward to the opportunity to work together as a team and learn from our adviser and the technical workshops that will help us develop as programmers. Most of all, we are excited to create something interesting that represents our passions while also allowing us to develop as programmers.
 
 ---
-##Aim 
+## Aim
 
 We hope to gain a better understanding of how software products are designed, developed, and improved, while also learning and improving our technical skills and our ability to work well together as a team. We also hope that we can use this project as an opportunity to learn more about game development.
 
@@ -28,14 +28,14 @@ For this particular project, we would like to create an application that is func
 We hope that it will be a positive experience that will enable us to produce something related to our interests, meet the requirements of the programme, and gain meaningful exposure to the development process from concept to completion.
 
 ---
-##User Stories
+## User Stories
 1. As a user who wants to be entertained, I want to be able to start and play the game easily so that I can have a smooth experience.
 2. As a user who wants to be able to improve at the game, I want to be able to understand the rules and controls clearly so that I can learn how to play.
 3. As a user who enjoys challenges, I want to be able to complete levels, solve obstacles, or overcome difficulty so that the game remains interesting.
 4. As a user who wants a sense of achievement, I want to be able to track my progress or score so that I feel motivated to continue playing.
 
 ---
-##Features
+## Features
 1. LibGDX Game Engine (Core)
     * Have a deeper understanding of gameplay systems, performance optimisation, and feature integration.
     * Create a flexible technical foundation that can allow expansion and experimentation in the future.
@@ -60,7 +60,7 @@ We hope that it will be a positive experience that will enable us to produce som
 
   
 ---
-##Timeline
+## Timeline
 
 | Date          | Stage           | Key Goals                                                                                                                              |
 | ------------- | --------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
@@ -77,7 +77,7 @@ We hope that it will be a positive experience that will enable us to produce som
 | 26 Aug        | Splashdown      | Complete game (a complete and polished build with all major systems, content, and presentation complete)                               |
 
 ---
-##Tech Stack
+## Tech Stack
 1. Java – main programming language
 2. LibGDX – library used for the development of the main game systems, rendering, input, sound, etc.
 3. Git & GitHub – used for the versioning, collaboration, and management of the code
