@@ -19,7 +19,7 @@ public class Enemy extends Character {
     }
 
     public String displayIntent() {
-        return String.format("Next move in %s ticks: %s", this.moveTimer, moveset.get(currMoveIndex).toString());
+        return String.format("Next move in %s ticks \n %s", this.moveTimer, moveset.get(currMoveIndex).toString());
     }
 
     public void tick(Character target) {
@@ -32,5 +32,10 @@ public class Enemy extends Character {
 
         currMoveIndex = (currMoveIndex + 1) % moveset.size;
         moveTimer = moveset.get(currMoveIndex).getChargeTime();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s \n %s", super.toString(), this.displayIntent());
     }
 }

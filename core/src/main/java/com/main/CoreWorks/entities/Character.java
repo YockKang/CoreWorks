@@ -65,4 +65,9 @@ public abstract class Character {
     public boolean isDead() {
         return this.hp <= 0;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Name: %s \n HP: %s/%s \n Shield: %s", this.name, this.hp, this.maxHp, this.shield);
+    }
 }

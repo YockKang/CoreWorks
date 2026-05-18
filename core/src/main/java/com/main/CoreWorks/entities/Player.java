@@ -29,4 +29,9 @@ public class Player extends Character{
     public Building getBuildingAt(int index) {
         return inventory.get(index);
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s \n Current Inventory: %s", super.toString(), this.getInventory().toString());
+    }
 }
