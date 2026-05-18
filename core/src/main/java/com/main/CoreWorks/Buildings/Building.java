@@ -2,6 +2,7 @@ package com.main.CoreWorks.Buildings;
 
 import com.badlogic.gdx.utils.Array;
 import com.main.CoreWorks.Recipe.Recipe;
+import com.main.CoreWorks.moveset.Move;
 
 public abstract class Building {
 
@@ -49,9 +50,7 @@ public abstract class Building {
         return name + ' ' + id;
     }
 
-    public void updateTick() {
-
-    }
+    public abstract Move updateTick();
 
     public void enable() {
         isEnabled = true;

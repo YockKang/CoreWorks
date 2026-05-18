@@ -3,11 +3,11 @@ package com.main.CoreWorks.Resources;
 public class Resource {
     String id;
     String name;
-    double dmgMult;
+    float dmgMult;
 
     // possibly more multipliers?
 
-    public Resource (String idIn, String nameIn, double dmg) {
+    public Resource (String idIn, String nameIn, float dmg) {
         id = idIn;
         name = nameIn;
         dmgMult = dmg;
@@ -20,5 +20,9 @@ public class Resource {
 
     public String getId() {
         return id;
+    }
+
+    public float getDmgMult() {
+        return dmgMult;
     }
 }

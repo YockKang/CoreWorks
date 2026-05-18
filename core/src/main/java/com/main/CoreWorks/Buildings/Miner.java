@@ -3,6 +3,7 @@ package com.main.CoreWorks.Buildings;
 import com.badlogic.gdx.utils.Array;
 import com.main.CoreWorks.Recipe.Recipe;
 import com.main.CoreWorks.Resources.Resource;
+import com.main.CoreWorks.moveset.Move;
 
 public class Miner extends Building {
 
@@ -48,12 +49,16 @@ public class Miner extends Building {
     }
 
     @Override
-    public void updateTick() {
-        currCooldown++;
+    public Move updateTick() {
         if (currCooldown >= cooldownTimer) {
-            mine();
+            boolean mineSuccess = mine();
+            if (mineSuccess) {
+                currCooldown = 0;
+            }
+        } else {
+            currCooldown++;
         }
-        currCooldown %= cooldownTimer;
+        return null;
     }
 
     public void setRecipe(Recipe rec) {
@@ -69,13 +74,20 @@ public class Miner extends Building {
         this.outputBuffer.shrink();
     }
 
-    public void mine() {
+    public boolean mine() {
         Array<Integer> mults = this.recipe.getOutputMultipliers();
+        // attempt to extract all into buffers
+        for (int i = 0; i < mults.size; i++) {
+            int expected = this.outputBuffer.get(i) + mults.get(i) * this.mineMultiplier;
+            // buffer for that type is full, cannot mine
+            if (expected > this.outputBufferSize.get(i)) {
+                return false;
+            }
+        }
         for (int i = 0; i < mults.size; i++) {
             this.outputBuffer.set(i,
-                Math.min(this.outputBuffer.get(i) + mults.get(i) * this.mineMultiplier,
-                    this.outputBufferSize.get(i))
-            );
+                this.outputBuffer.get(i) + mults.get(i) * this.mineMultiplier);
         }
+        return true;
     }
 }

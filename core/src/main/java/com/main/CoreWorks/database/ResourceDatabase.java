@@ -15,7 +15,7 @@ Starter Resources
 public class ResourceDatabase {
     private static final Map<String, Resource> ResourceDB = new HashMap<>();
 
-    public static Resource register(String id, String name, double dmgMult) {
+    public static Resource register(String id, String name, float dmgMult) {
         Resource type = new Resource(id, name, dmgMult);
         ResourceDB.put(id, type);
         return type;
