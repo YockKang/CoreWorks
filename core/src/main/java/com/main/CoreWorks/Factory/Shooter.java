@@ -1,4 +1,4 @@
-package com.main.CoreWorks.Buildings;
+package com.main.CoreWorks.Factory;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Queue;
@@ -47,6 +47,9 @@ public class Shooter extends Building {
             currCooldown++;
         }
         return null;
+    }
+    public void addToMag(Resource x) {
+        ;
     }
 
     public DamageMove shoot() {

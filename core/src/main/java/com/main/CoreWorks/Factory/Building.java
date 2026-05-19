@@ -1,4 +1,4 @@
-package com.main.CoreWorks.Buildings;
+package com.main.CoreWorks.Factory;
 
 import com.badlogic.gdx.utils.Array;
 import com.main.CoreWorks.Recipe.Recipe;
@@ -20,10 +20,34 @@ public abstract class Building {
     protected int yCoord = -1; // left is 0
     protected int rotation = 0; // 0 is "up"
     protected String name;
-    protected boolean[][][] shape;
     protected static int idCount = 0;
     protected int id;
     protected Recipe recipe = null;
+
+
+    protected boolean[][][] shape;
+    /*
+    SHAPE GUIDE
+    stores all rotations and then the 2d representation of which tiles are filled
+
+    e.g. 1 by 1
+
+    { {{true}}, {{true}}, {{true}}, {{true}} }
+
+    e.g. 2 by 2 L
+
+    { {{true, true},
+       {true, false}},
+
+      {{true, false},
+       {true, true}},
+
+      {{false, true},
+       {true, true}},
+
+      {{true, true},
+       {false, true}} }
+     */
 
     // ?? fields
     protected int HP;
@@ -81,6 +105,22 @@ public abstract class Building {
     public void setPos(int x, int y) {
         xCoord = x;
         yCoord = y;
+    }
+
+    public int[] getPos() {
+        return new int[] {getX(), getY()};
+    }
+
+    public int getX() {
+        return xCoord;
+    }
+
+    public int getY() {
+        return yCoord;
+    }
+
+    public boolean[][] getShape() {
+        return shape[rotation];
     }
 
     public void setRotation(int rot) {

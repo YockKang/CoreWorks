@@ -1,7 +1,7 @@
 package com.main.CoreWorks.entities;
 
 import com.badlogic.gdx.utils.Array;
-import com.main.CoreWorks.Buildings.Building;
+import com.main.CoreWorks.Factory.Building;
 
 public class Player extends Character{
 

@@ -1,4 +1,4 @@
-package com.main.CoreWorks.Buildings;
+package com.main.CoreWorks.Factory;
 
 import com.badlogic.gdx.utils.Array;
 import com.main.CoreWorks.Recipe.Recipe;
