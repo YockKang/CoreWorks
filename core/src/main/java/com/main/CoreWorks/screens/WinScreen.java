@@ -3,11 +3,11 @@ package com.main.CoreWorks.screens;
 import com.badlogic.gdx.Screen;
 import com.main.CoreWorks.Coreworks;
 
-public class WinLoseScreen implements Screen {
+public class WinScreen implements Screen {
 
     private final Coreworks game;
 
-    public WinLoseScreen(Coreworks game) {
+    public WinScreen(Coreworks game) {
         this.game = game;
     }
 
@@ -23,7 +23,7 @@ public class WinLoseScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        // TBD
+        game.viewport.update(width, height, true);
     }
 
     @Override

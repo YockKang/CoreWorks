@@ -1,15 +1,32 @@
 package com.main.CoreWorks;
 
 import com.badlogic.gdx.Game;
-import com.main.CoreWorks.screens.CombatScreen;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.main.CoreWorks.screens.MenuScreen;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Coreworks extends Game {
 
+    public SpriteBatch batch;
+    public BitmapFont font;
+    public FitViewport viewport;
+
     @Override
     public void create() {
-        // For now, starting the game leads straight to combat screen
-        this.setScreen(new CombatScreen(this)); // eventually will replace with the Main Menu screen
+        batch = new SpriteBatch();
+        // use libGDX's default font
+        font = new BitmapFont();
+        viewport = new FitViewport(8, 5);
+
+        // font has 15pt, but we need to scale it to our viewport by ratio of viewport height to screen height
+        font.setUseIntegerPositions(false);
+        font.getData().setScale(viewport.getWorldHeight() / Gdx.graphics.getHeight());
+
+        // For now, starting the game leads to a placeholder menu screen
+        this.setScreen(new MenuScreen(this)); // eventually will replace with the Main Menu screen
     }
 
     @Override
@@ -24,5 +41,7 @@ public class Coreworks extends Game {
         if (getScreen() != null) {
             getScreen().dispose();
         }
+        batch.dispose();
+        font.dispose();
     }
 }

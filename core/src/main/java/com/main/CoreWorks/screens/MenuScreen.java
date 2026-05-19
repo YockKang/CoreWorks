@@ -1,11 +1,14 @@
 package com.main.CoreWorks.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.main.CoreWorks.Coreworks;
 
 public class MenuScreen implements Screen {
 
-    private final Coreworks game;
+    final Coreworks game;
 
     public MenuScreen(Coreworks game) {
         this.game = game;
@@ -18,12 +21,27 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        // TBD
+        ScreenUtils.clear(Color.BLACK);
+
+        game.viewport.apply();
+        game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
+
+        game.batch.begin();
+        //draw text. Remember that x and y are in meters
+        game.font.draw(game.batch, "Welcome to Coreworks!!! ", 1, 1.5f);
+        game.font.draw(game.batch, "Tap anywhere to begin!", 1, 1);
+        game.batch.end();
+
+        if (Gdx.input.isTouched()) {
+            game.setScreen(new CombatScreen(game));
+            dispose();
+
+        }
     }
 
     @Override
     public void resize(int width, int height) {
-        // TBD
+        game.viewport.update(width, height, true);
     }
 
     @Override
@@ -43,6 +61,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void dispose() {
-        // TBD
+        game.batch.dispose();
+        game.font.dispose();
     }
 }

@@ -1,0 +1,33 @@
+package com.main.CoreWorks.simulators;
+
+public class CombatController {
+    private FactorySim factorySim;
+    private CombatSim combatSim;
+
+    public CombatController(FactorySim factorySim, CombatSim combatSim) {
+        this.factorySim = factorySim;
+        this.combatSim = combatSim;
+    }
+
+    public void advanceTick() {
+        if (combatSim.isWin() || combatSim.isLost()) {
+            return;
+        }
+        // Firstly, tick the factory
+        factorySim.advanceTick();
+
+        // Then, transfer the factory actions to combat
+        combatSim.enqueueMoves(factorySim.returnMoves());
+
+        // Lastly, resolve combat
+        combatSim.advanceTick();
+    }
+
+    public boolean isWin() {
+        return combatSim.isWin();
+    }
+
+    public boolean isLost() {
+        return combatSim.isLost();
+    }
+}
