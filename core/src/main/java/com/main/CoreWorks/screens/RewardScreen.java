@@ -23,7 +23,7 @@ public class RewardScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        // TBD
+        game.viewport.update(width, height, true);
     }
 
     @Override

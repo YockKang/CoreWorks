@@ -3,11 +3,11 @@ package com.main.CoreWorks.screens;
 import com.badlogic.gdx.Screen;
 import com.main.CoreWorks.Coreworks;
 
-public class MapScreen implements Screen {
+public class LoseScreen implements Screen {
 
     private final Coreworks game;
 
-    public MapScreen(Coreworks game) {
+    public LoseScreen(Coreworks game) {
         this.game = game;
     }
 
@@ -46,4 +46,3 @@ public class MapScreen implements Screen {
         // TBD
     }
 }
-
