@@ -37,8 +37,6 @@ public class Miner extends Building {
     public String toString() {
         return new StringBuilder()
             .append(name)
-            .append(" ")
-            .append(id)
             .append('\n')
             .append(recipe)
             .append("\nOutput Capacity ")

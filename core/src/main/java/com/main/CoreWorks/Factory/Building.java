@@ -1,6 +1,7 @@
 package com.main.CoreWorks.Factory;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Queue;
 import com.main.CoreWorks.Recipe.Recipe;
 import com.main.CoreWorks.moveset.Move;
 
@@ -20,9 +21,11 @@ public abstract class Building {
     protected int yCoord = -1; // left is 0
     protected int rotation = 0; // 0 is "up"
     protected String name;
-    protected static int idCount = 0;
-    protected int id;
     protected Recipe recipe = null;
+    /*
+    protected Queue<IOPort> inPorts;
+    protected Queue<IOPort> outPorts;
+     */
 
 
     protected boolean[][][] shape;
@@ -65,13 +68,11 @@ public abstract class Building {
         inputBuffer = inputs;
         outputBuffer = outputs;
         name = nameIn;
-        id = idCount;
-        idCount++;
     }
 
     @Override
     public String toString() {
-        return name + ' ' + id;
+        return name;
     }
 
     public abstract Move updateTick();
@@ -134,6 +135,35 @@ public abstract class Building {
     public void takeOffGrid() {
         onGrid = false;
     }
+
+    /*
+    public void addPort(IOPort port) {
+        inPorts.addLast(port);
+    }
+
+    public void addInPort(int x, int y, int dir) {
+        IOPort port = new IOPort(x, y, dir, "IN");
+        inPorts.addLast(port);
+    }
+
+    public void addOutPort(int x, int y, int dir) {
+        IOPort port = new IOPort(x, y, dir, "OUT");
+        outPorts.addLast(port);
+    }
+
+    public void clearInPorts() {
+        inPorts.clear();
+    }
+
+    public void clearOutPorts() {
+        outPorts.clear();
+    }
+
+    public void clearAllPorts() {
+        clearInPorts();
+        clearOutPorts();
+    }
+     */
 
     /*
 	    Bool isEnabled
