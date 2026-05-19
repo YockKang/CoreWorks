@@ -15,6 +15,8 @@ public class CombatScreen implements Screen {
 
     Coreworks game;
     CombatController controller;
+    private float accumulator = 0f;
+    private static final float TIME_STEP = 1/4f; // 4 Ticks per second
 
     public CombatScreen(Coreworks game) {
 
@@ -35,11 +37,21 @@ public class CombatScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        // Anti-"Lag spike spiral of death" code
+        delta = Math.min(delta, 1/8f);
 
-        // Tick Simulation + combat + tick advancement goes here
+        // Tick Advancement code below
+        accumulator += delta;
+        while (accumulator >= TIME_STEP) {
+            controller.advanceTick();
+            accumulator -= TIME_STEP;
+        }
 
         // Using the default libGDX font as placeholder, all the screen drawing code below must be changed when art is done
+        // Drawing of the UI, HP bars etc will be done below, after incrementing the tick if needed.
         game.batch.begin();
+
+        // drawing of UI + meters here
 
         // The below code handles win/loss
         if (controller.isWin()) {
