@@ -43,6 +43,11 @@ public class Shooter extends Building {
         }
         return null;
     }
+
+    public void addToAnythingQueue(Resource x) {
+        addToMag(x);
+    }
+
     public void addToMag(Resource x) {
         magazine.addLast(x);
     }

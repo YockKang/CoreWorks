@@ -3,10 +3,7 @@ package com.main.CoreWorks.simulators;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Queue;
-import com.main.CoreWorks.Factory.Building;
-import com.main.CoreWorks.Factory.FactoryGrid;
-import com.main.CoreWorks.Factory.ResourceBuffer;
-import com.main.CoreWorks.Factory.ResourceRequest;
+import com.main.CoreWorks.Factory.*;
 import com.main.CoreWorks.Resources.Resource;
 import com.main.CoreWorks.moveset.Move;
 import com.sun.net.httpserver.Request;
@@ -40,23 +37,44 @@ public class FactorySim {
              ObjectMap<Building, Array<Resource>> suppliers = req.getRequester().getInputBuildings();
              Array<Building> suppliersSorted = suppliers.keys().toArray();
              suppliersSorted.sort((a, b)  -> a.getPriority() - b.getPriority());
-            for (Building supplier : suppliersSorted) {
-                if (req.getValue() >= 0) {
-                    break;
-                }
-                if (suppliers.get(supplier).contains(req.getResource(), true)) {
-                    ResourceBuffer drawBuffer = supplier.getOutputResourceBuffer(req.getResource());
-                    if (drawBuffer != null) {
-                        int drawAmt = min(drawBuffer.getCurrent(), req.getValue());
-                        drawBuffer.draw(drawAmt);
-                        req.reduceValue(drawAmt);
-                        req.getRequester().getInputResourceBuffer(req.getResource()).add(drawAmt);
-                    }
-                }
-            }
+             if (!(req instanceof AnythingRequest)) {
+                 for (Building supplier : suppliersSorted) {
+                     if (req.getValue() >= 0) {
+                         break;
+                     }
+                     if (suppliers.get(supplier).contains(req.getResource(), true)) {
+                         ResourceBuffer drawBuffer = supplier.getOutputResourceBuffer(req.getResource());
+                         if (drawBuffer != null) {
+                             int drawAmt = min(drawBuffer.getCurrent(), req.getValue());
+                             drawBuffer.draw(drawAmt);
+                             req.reduceValue(drawAmt);
+                             req.getRequester().getInputResourceBuffer(req.getResource()).add(drawAmt);
+                         }
+                     }
+                 }
+             } else {
+                 for (Building supplier : suppliersSorted) {
+                     if (req.getValue() >= 0) {
+                         break;
+                     }
+                     for (ResourceBuffer drawBuffer : supplier.getOutputResourceBuffer()) {
+                         int drawAmt = min(drawBuffer.getCurrent(), req.getValue());
+                         drawBuffer.draw(drawAmt);
+                         req.reduceValue(drawAmt);
+                         for (int i = 0; i < drawAmt; i++) {
+                             req.getRequester().addToAnythingQueue(drawBuffer.getResource());
+                         }
+                     }
+                 }
+             }
         }
 
-
+        for (Building building : buildings) {
+            Move result = building.updateTick();
+            if (result != null) {
+                pendingMoves.addLast(result);
+            }
+        }
 
         // Grid will handle the resource transfer via method call here
     }

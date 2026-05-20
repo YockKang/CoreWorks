@@ -244,6 +244,14 @@ public abstract class Building {
         return null;
     }
 
+    public Array<ResourceBuffer> getOutputResourceBuffer() {
+        return outputBuffer;
+    }
+
+    public void addToAnythingQueue(Resource x) {
+
+    }
+
     public ResourceBuffer getInputResourceBuffer(Resource r) {
         for (ResourceBuffer buffer : inputBuffer) {
             if (buffer.resource == r) {
