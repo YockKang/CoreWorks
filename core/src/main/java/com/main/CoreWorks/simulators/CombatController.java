@@ -30,4 +30,12 @@ public class CombatController {
     public boolean isLost() {
         return combatSim.isLost();
     }
+
+    public CombatSim getCombatSim() {
+        return combatSim;
+    }
+
+    public FactorySim getFactorySim() {
+        return factorySim;
+    }
 }

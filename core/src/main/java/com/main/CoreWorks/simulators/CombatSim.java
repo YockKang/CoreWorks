@@ -108,4 +108,12 @@ public class CombatSim {
     public boolean isLost() {
         return lost;
     }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Array<Enemy> getEnemies() {
+        return enemies;
+    }
 }

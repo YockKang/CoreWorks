@@ -2,6 +2,7 @@ package com.main.CoreWorks;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -13,13 +14,22 @@ public class Coreworks extends Game {
     public SpriteBatch batch;
     public BitmapFont font;
     public FitViewport viewport;
+    public OrthographicCamera camera;
+    // The below represents a 800 x 480 coordinate system, regardless of the screen resolution
+    public static final float WORLD_WIDTH = 800;
+    public static final float WORLD_HEIGHT = 480;
 
     @Override
     public void create() {
+        camera = new OrthographicCamera();
         batch = new SpriteBatch();
         // use libGDX's default font
         font = new BitmapFont();
-        viewport = new FitViewport(8, 5);
+        viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
+
+        // Center the camera in the middle of the screen
+        camera.position.set(WORLD_WIDTH/2f, WORLD_HEIGHT/2f, 0);
+        camera.update();
 
         // font has 15pt, but we need to scale it to our viewport by ratio of viewport height to screen height
         font.setUseIntegerPositions(false);
@@ -43,5 +53,11 @@ public class Coreworks extends Game {
         }
         batch.dispose();
         font.dispose();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height,true);
+        super.resize(width, height);
     }
 }
