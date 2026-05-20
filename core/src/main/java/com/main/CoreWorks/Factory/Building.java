@@ -369,6 +369,10 @@ public abstract class Building {
         ports.clear();
     }
 
+    public String displayName() {
+        return this.name;
+    }
+
     /*
 	    Bool isEnabled
 	    int cooldownTimer

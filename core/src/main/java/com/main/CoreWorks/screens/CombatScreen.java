@@ -130,7 +130,7 @@ public class CombatScreen implements Screen {
                 // Code here handles the building drawing, everything is a fixed letter for now until we can differentiate the buildings
                 int buildingX = gridStartX + x * tileSize + 34;
                 int buildingY = gridEndY - y * tileSize - 36;
-                game.font.draw(game.batch, building.toString(), buildingX, buildingY);
+                game.font.draw(game.batch, building.displayName(), buildingX, buildingY);
             }
         }
 
@@ -147,7 +147,7 @@ public class CombatScreen implements Screen {
         game.font.draw(game.batch, controller.getCombatSim().getEnemies().toString(), 380, 675);
 
         // Below draws the selected building HUD
-        game.font.draw(game.batch, selectedBuilding == null ? "Selected: None" : "Selected: " + selectedBuilding.toString(), 600, 675);
+        game.font.draw(game.batch, selectedBuilding == null ? "Selected: None" : "Selected: " + selectedBuilding, 600, 675);
 
         // Below draws the rotation
         if (selectedBuilding != null) {
@@ -199,7 +199,7 @@ public class CombatScreen implements Screen {
         for (int i = 0; i < controller.getCombatSim().getPlayer().getInventory().size; i++) {
             Building building = controller.getCombatSim().getPlayer().getBuildingAt(i);
             int leftBoundInventoryBorder = inventoryStartX + i * (inventorySlotSize + inventorySlotGap);
-            game.font.draw(game.batch, building.toString(), leftBoundInventoryBorder + 38, inventoryStartY + 56);
+            game.font.draw(game.batch, building.displayName(), leftBoundInventoryBorder + 38, inventoryStartY + 56);
         }
 
         game.batch.end();
