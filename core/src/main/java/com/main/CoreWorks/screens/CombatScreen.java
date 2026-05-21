@@ -352,8 +352,6 @@ public class CombatScreen implements Screen {
 
     @Override
     public void dispose() {
-        game.batch.dispose();
-        game.font.dispose();
         shapeRenderer.dispose();
     }
 }
