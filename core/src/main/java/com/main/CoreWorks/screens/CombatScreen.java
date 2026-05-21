@@ -223,7 +223,7 @@ public class CombatScreen implements Screen {
         game.font.draw(game.batch, controller.getCombatSim().getEnemies().toString(), 940, 675);
 
         // Below draws the selected building HUD
-        game.font.draw(game.batch, selectedBuilding == null ? "Selected: None" : "Selected: " + selectedBuilding, 600, 675);
+        game.font.draw(game.batch, selectedBuilding == null ? "Selected: None" : "Selected: " + selectedBuilding, 60, 575);
 
         // Below draws the rotation
         if (selectedBuilding != null) {
@@ -232,8 +232,8 @@ public class CombatScreen implements Screen {
         }
 
         // Below draws the hints
-        game.font.draw(game.batch, "Left click Inventory - Select", 40, 325);
-        game.font.draw(game.batch, "Left click Grid - Place", 40, 225);
+        game.font.draw(game.batch, "Left click Inventory - Select", 40, 225);
+        game.font.draw(game.batch, "Left click Grid - Place", 40, 175);
         game.font.draw(game.batch, "Right click - Deselect or Remove building", 40, 125);
 
         game.batch.end();
