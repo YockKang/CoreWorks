@@ -36,6 +36,6 @@ public class Player extends Character{
 
     @Override
     public String toString() {
-        return String.format("%s \n Current Inventory: \n %s", super.toString(), this.getInventory().toString());
+        return super.toString();
     }
 }
