@@ -105,32 +105,38 @@ public abstract class Building {
     }
 
     protected int[] tryGlobalCoord(int x , int y, int tryPosX, int tryPosY) {
-        int shapeW = shape[0].length;
-        int shapeH = shape.length;
+        return getGlobalCoord(x, y, this.xCoord, this.yCoord, this.rotation, this.shape);
+    }
+
+    public static int[] getGlobalCoord(int locX, int locY, int posX, int posY, int rot, boolean[][] shape) {
+        return getGlobalCoord(locX, locY, posX, posY, rot, shape[0].length, shape.length);
+    }
+
+    public static int[] getGlobalCoord(int locX, int locY, int posX, int posY, int rot, int height, int width) {
         int globalX = 0;
         int globalY = 0;
 
-        switch (rotation & 3) {
+        switch (rot) {
             case 0:
-                globalX = x;
-                globalY = y;
+                globalX = locX;
+                globalY = locY;
                 break;
             case 1:
-                globalX = shapeH - 1 - y;
-                globalY = x;
+                globalX = height - 1 - locY;
+                globalY = locX;
                 break;
             case 2:
-                globalX = shapeW - 1 - x;
-                globalY = shapeH - 1 - y;
+                globalX = width - 1 - locX;
+                globalY = height - 1 - locY;
                 break;
             case 3:
-                globalX = y;
-                globalY = shapeW - 1 - x;
+                globalX = locY;
+                globalY = width - 1 - locX;
                 break;
         }
 
-        globalX += tryPosX;
-        globalY += tryPosY;
+        globalX += posX;
+        globalY += posY;
 
         return new int[]{globalX, globalY};
     }
@@ -215,12 +221,9 @@ public abstract class Building {
     }
 
     public void updateOutputs(Array<Array<Building>> grid) {
-        System.out.println("updating "+name+" outputs");
         if (this.ports != null) {
             for (IOPort p : ports) {
-                System.out.println("procesing " + p);
                 int[] targetCoord = getGlobalCoord(p.getX(), p.getY());
-                System.out.println("port at " + targetCoord[0] + " " + targetCoord[1]);
                 int portGlobalDir = (p.getDir() + rotation) % 4;
 
                 switch (portGlobalDir) {
@@ -237,9 +240,6 @@ public abstract class Building {
                         targetCoord[0]--;
                     }
                 }
-                System.out.println("pointing at " + targetCoord[0] + " " + targetCoord[1]);
-                System.out.println("grid");
-                System.out.println(grid);
                 Building target;
                 try {
                     target = grid.get(targetCoord[1]).get(targetCoord[0]);
