@@ -192,6 +192,7 @@ public class CombatScreen implements Screen {
         game.batch.begin();
 
         // Draws the actual building itself
+        // Need to update with drawing via grid.getBuildings() instead of looping thru the whole grid
         for (int x = 0; x < gridWidth; x++) {
             for (int y = 0; y < gridHeight; y++) {
                 Building building = controller.getFactorySim().getGrid().getBuildingAt(x, y);
@@ -236,8 +237,10 @@ public class CombatScreen implements Screen {
         // Eventually when we finish the screens, uncomment the setScreen Lines
         if (controller.isWin()) {
             game.setScreen(new WinScreen(game));
+            return;
         } else if (controller.isLost()) {
             game.setScreen(new LoseScreen(game));
+            return;
         }
 
         game.batch.end();
@@ -348,6 +351,9 @@ public class CombatScreen implements Screen {
             selectedBuilding = null;
         } else {
             Building building = controller.getFactorySim().getGrid().getBuildingAt(coords.x, coords.y);
+            if (building == null) {
+                return;
+            }
             controller.getFactorySim().getGrid().removeBuilding(building);
             controller.getCombatSim().getPlayer().addBuilding(building);
         }
