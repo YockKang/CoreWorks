@@ -30,7 +30,7 @@ public class CombatScreen implements Screen {
 
     // Temp Layout since we have not decided how we want the final UI to look like yet
     // Rmb that everything is drawn in a coordinate system (check Coreworks class for the public static final screen size)
-    private final int gridStartX = 400;
+    private final int gridStartX = 500;
     private final int gridEndY = 560;
     private final int tileSize = 96;
 
@@ -128,7 +128,7 @@ public class CombatScreen implements Screen {
                     continue;
                 }
                 // Code here handles the building drawing, everything is a fixed letter for now until we can differentiate the buildings
-                int buildingX = gridStartX + x * tileSize + 34;
+                int buildingX = gridStartX + x * tileSize + 10;
                 int buildingY = gridEndY - y * tileSize - 36;
                 game.font.draw(game.batch, building.displayName(), buildingX, buildingY);
             }
@@ -151,13 +151,13 @@ public class CombatScreen implements Screen {
 
         // Below draws the rotation
         if (selectedBuilding != null) {
-            game.font.draw(game.batch, "Current rotation: " + selectedBuilding.getRotation(), 600, 650);
-            game.font.draw(game.batch, "Press R to rotate", 760, 650);
+            game.font.draw(game.batch, "Current rotation: " + selectedBuilding.getRotation(), 940, 150);
+            game.font.draw(game.batch, "Press R to rotate", 940, 200);
         }
 
         // Below draws the hints
-        game.font.draw(game.batch, "Left click Inventory - Select", 40, 525);
-        game.font.draw(game.batch, "Left click Grid - Place", 40, 325);
+        game.font.draw(game.batch, "Left click Inventory - Select", 40, 325);
+        game.font.draw(game.batch, "Left click Grid - Place", 40, 225);
         game.font.draw(game.batch, "Right click - Deselect or Remove building", 40, 125);
 
         // Below draws the screen transitions
@@ -197,7 +197,7 @@ public class CombatScreen implements Screen {
         for (int i = 0; i < controller.getCombatSim().getPlayer().getInventory().size; i++) {
             Building building = controller.getCombatSim().getPlayer().getBuildingAt(i);
             int leftBoundInventoryBorder = inventoryStartX + i * (inventorySlotSize + inventorySlotGap);
-            game.font.draw(game.batch, building.displayName(), leftBoundInventoryBorder + 38, inventoryStartY + 56);
+            game.font.draw(game.batch, building.displayName(), leftBoundInventoryBorder + 10, inventoryStartY + 56);
         }
 
         game.batch.end();
