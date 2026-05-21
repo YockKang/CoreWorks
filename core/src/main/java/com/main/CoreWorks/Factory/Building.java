@@ -106,6 +106,10 @@ public abstract class Building {
     }
 
     protected int[] getGlobalCoord(int x , int y) {
+        return tryGlobalCoord(x, y, xCoord, yCoord);
+    }
+
+    protected int[] tryGlobalCoord(int x , int y, int tryPosX, int tryPosY) {
         int shapeW = shape[0].length;
         int shapeH = shape.length;
         int globalX = 0;
@@ -130,8 +134,8 @@ public abstract class Building {
                 break;
         }
 
-        globalX += xCoord;
-        globalY += yCoord;
+        globalX += tryPosX;
+        globalY += tryPosY;
         return new int[] {globalX, globalY};
     }
 
