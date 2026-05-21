@@ -164,11 +164,9 @@ public class CombatScreen implements Screen {
         // Since we do not have a win / loss screen yet, it will be a hardcoded placeholder victory or defeat screen
         // Eventually when we finish the screens, uncomment the setScreen Lines
         if (controller.isWin()) {
-            // game.setScreen(new WinScreen(game));
-            game.font.draw(game.batch, "YOU WIN!", 620, 360);
+            game.setScreen(new WinScreen(game));
         } else if (controller.isLost()) {
-            // game.setScreen(new LoseScreen(game));
-            game.font.draw(game.batch, "YOU LOSE!", 620, 360);
+            game.setScreen(new LoseScreen(game));
         }
 
         game.batch.end();
