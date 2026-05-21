@@ -32,8 +32,11 @@ public class ResourceDatabase {
         }
     }
 
-
     public static Resource get(String id) {
         return ResourceDB.get(id);
+    }
+
+    public static String showDB(){
+        return ResourceDB.toString();
     }
 }

@@ -18,13 +18,13 @@ public class Resource {
     public Resource (JsonValue data) {
         id = data.getString("id");
         name = data.getString("Name");
-        dmgMult = data.getFloat("dmgMult");
+        dmgMult = data.getFloat("DmgMult");
     }
 
 
     @Override
     public String toString() {
-        return name;
+        return "Resource: " + name;
     }
 
     public String getId() {

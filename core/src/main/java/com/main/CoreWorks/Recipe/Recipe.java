@@ -61,14 +61,17 @@ public class Recipe {
     }
 
     public Recipe(JsonValue data) {
+        Resource[] r = new Resource[0];
         this.input = new Array<Resource>(
-            (Resource[]) Arrays.stream(data.get("InputId").asStringArray())
+            Arrays.stream(data.get("InputId").asStringArray())
                 .map(ResourceDatabase::get)
-                .toArray());
+                .toList()
+                .toArray(r));
         this.output = new Array<Resource>(
-            (Resource[]) Arrays.stream(data.get("OutputId").asStringArray())
+            Arrays.stream(data.get("OutputId").asStringArray())
                 .map(ResourceDatabase::get)
-                .toArray());
+                .toList()
+                .toArray(r));
         this.inputMult = new Array<Integer>(
             Arrays.stream(
                 data.get("InputMult")
@@ -98,23 +101,23 @@ public class Recipe {
         for (int i = 0; i < this.input.size; i++) {
             inputStr.append(input.get(i).toString()).append(" x");
             try {
-                inputStr.append(input.get(i).toString());
+                inputStr.append(inputMult.get(i).toString());
             } catch (Exception e) {
                 inputStr.append("0");
             }
             inputStr.append(" ");
         }
         StringBuilder outputStr = new StringBuilder(" ");
-        for (int i = 0; i < this.input.size; i++) {
-            outputStr.append(input.get(i).toString()).append(" x");
+        for (int i = 0; i < this.output.size; i++) {
+            outputStr.append(output.get(i).toString()).append(" x");
             try {
-                outputStr.append(input.get(i).toString());
+                outputStr.append(outputMult.get(i).toString());
             } catch (Exception e) {
                 outputStr.append("0");
             }
             outputStr.append(" ");
         }
-        return this.name + ":\n" + "["  + inputStr + "]\n" + duration + "\n["  + outputStr + "]";
+        return this.name + ":\n" + "["  + inputStr + "]\n" + duration + " ticks\n["  + outputStr + "]";
     }
 
     public Array<Resource> getInputs() {

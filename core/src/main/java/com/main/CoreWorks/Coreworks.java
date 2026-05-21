@@ -12,10 +12,7 @@ import com.main.CoreWorks.database.BuildingDatabase;
 import com.main.CoreWorks.database.RecipeDatabase;
 import com.main.CoreWorks.database.ResourceDatabase;
 import com.main.CoreWorks.screens.MenuScreen;
-import org.checkerframework.checker.units.qual.A;
 
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Coreworks extends Game {
@@ -45,20 +42,29 @@ public class Coreworks extends Game {
         font.getData().setScale(viewport.getWorldHeight() / Gdx.graphics.getHeight());
 
         // load game assets and databases
+        System.out.println("Starting file loading");
         Array<FileHandle> resourceFiles = new Array<>();
-        fileScanner(resourceFiles, Gdx.files.internal("assets/Resources"));
+        fileScanner(resourceFiles, Gdx.files.internal("assets/FactoryData/Resources"));
         resourceFiles.iterator().forEach(
             fh -> ResourceDatabase.register(JsonProcessor.read(fh)));
+        System.out.println("Resources Complete");
 
         Array<FileHandle> recipeFiles = new Array<>();
-        fileScanner(recipeFiles, Gdx.files.internal("assets/Resources"));
+        fileScanner(recipeFiles, Gdx.files.internal("assets/FactoryData/Recipes"));
         recipeFiles.iterator().forEach(
             fh -> RecipeDatabase.register(JsonProcessor.read(fh)));
+        System.out.println("Recipes Complete");
 
         Array<FileHandle> buildingFiles = new Array<>();
-        fileScanner(buildingFiles, Gdx.files.internal("assets/Resources"));
+        fileScanner(buildingFiles, Gdx.files.internal("assets/FactoryData/Buildings"));
         buildingFiles.iterator().forEach(
             BuildingDatabase::register);
+        System.out.println("Buildings Complete");
+        System.out.println("All Complete");
+
+        System.out.println(ResourceDatabase.showDB());
+        System.out.println(RecipeDatabase.showDB());
+        System.out.println(BuildingDatabase.showDB());
 
 
 

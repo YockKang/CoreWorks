@@ -14,7 +14,7 @@ public class BuildingTemplate {
 
     public BuildingTemplate(FileHandle file) {
         JsonValue parse = JsonProcessor.read(file);
-        String name = "com.main.CoreWorks.Factory.Building." + parse.getString("Name");
+        String name = "com.main.CoreWorks.Factory." + parse.getString("Name");
 
         try {
             Class<?> raw = ClassReflection.forName(name);
@@ -34,6 +34,11 @@ public class BuildingTemplate {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Template of: " + clazz;
     }
 
 }

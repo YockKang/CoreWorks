@@ -65,4 +65,9 @@ public class RecipeDatabase {
     public static Recipe get(String id) {
         return RecipeDB.get(id);
     }
+
+
+    public static String showDB(){
+        return RecipeDB.toString();
+    }
 }

@@ -6,7 +6,6 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.main.CoreWorks.Factory.Building;
 import com.main.CoreWorks.Factory.BuildingTemplate.BuildingTemplate;
 import com.main.CoreWorks.JsonProcessor;
-import com.main.CoreWorks.Resources.Resource;
 
 public class BuildingDatabase {
     private static final ObjectMap<String, BuildingTemplate> BuildingDB = new ObjectMap<>();
@@ -25,4 +24,9 @@ public class BuildingDatabase {
     public static Building getBuilding(String id) {
         return BuildingDB.get(id).of();
     }
+
+    public static String showDB(){
+        return BuildingDB.toString();
+    }
+
 }
