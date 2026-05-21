@@ -84,3 +84,5 @@ We hope that it will be a positive experience that will enable us to produce som
 4. JSON – used for the storage of the game data, items, characters, achievements, etc.
 5. Piskel – used for the creation of the 2D sprites, pixel art, etc.
 6. Audacity / Bfxr – used for the editing and creation of the sound effects respectively
+
+Basic game up as of 21 May '26 
