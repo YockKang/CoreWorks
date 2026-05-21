@@ -39,8 +39,6 @@ public class Miner extends Building {
     public String toString() {
         return new StringBuilder()
             .append(name)
-            .append('\n')
-            .append(recipe)
             .append("\nOutput Buffer ")
             .append(outputBuffer)
             .toString();
@@ -48,13 +46,13 @@ public class Miner extends Building {
 
     @Override
     public Move updateTick() {
+        currCooldown++;
         if (currCooldown >= cooldownTimer) {
             boolean mineSuccess = mine();
+            currCooldown = cooldownTimer - 1;
             if (mineSuccess) {
                 currCooldown = 0;
             }
-        } else {
-            currCooldown++;
         }
         return null;
     }

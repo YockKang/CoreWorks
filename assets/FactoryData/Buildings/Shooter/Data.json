@@ -4,5 +4,6 @@
   "Name" : "Shooter",
   "Cooldown" : 2,
   "Shape" : [[true]],
-  "MagSize": 5
+  "MagSize": 5,
+  "BaseDmg": 1
 }

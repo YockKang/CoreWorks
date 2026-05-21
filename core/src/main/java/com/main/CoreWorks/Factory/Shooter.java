@@ -11,7 +11,7 @@ public class Shooter extends Building {
 
     protected Queue<Resource> magazine;
     protected int magSize;
-    protected float baseDmg;
+    protected float baseDmg = 1;
 
     public Shooter(int coolDown, int magSize, boolean[][] shape) {
         super(coolDown,
@@ -27,6 +27,7 @@ public class Shooter extends Building {
         super(data);
         this.magSize = data.getInt("MagSize");
         this.magazine = new Queue<>(magSize);
+        this.baseDmg = data.getFloat("BaseDmg");
     }
 
     @Override
@@ -42,11 +43,13 @@ public class Shooter extends Building {
 
     @Override
     public Move updateTick() {
-        if (currCooldown >= cooldownTimer && magazine.notEmpty()) {
-            currCooldown = 0;
-            return shoot();
-        } else {
-            currCooldown++;
+        currCooldown++;
+        if (currCooldown >= cooldownTimer) {
+            currCooldown = cooldownTimer - 1;
+            if (magazine.notEmpty()) {
+                currCooldown = 0;
+                return shoot();
+            }
         }
         return null;
     }

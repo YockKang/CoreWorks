@@ -43,7 +43,6 @@ public class FactoryGrid {
     }
 
     public boolean placeBuilding(Building bldg, int x, int y, int rot) {
-        System.out.println("attempting to place at " + x + " " + y);
         if (!checkValidPosition(bldg, x, y, rot)) {
             return false;
         } else {

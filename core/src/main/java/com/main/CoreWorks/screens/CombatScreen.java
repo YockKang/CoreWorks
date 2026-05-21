@@ -332,7 +332,6 @@ public class CombatScreen implements Screen {
         }
         Coords coords = getGridAt(mouseTranslatedX, mouseTranslatedY);
         if (coords != null && selectedBuilding != null) {
-            System.out.println(coords);
             boolean successfulPlacement = controller.getFactorySim().getGrid().placeBuilding(selectedBuilding, coords.x, coords.y, selectedBuilding.getRotation());
             if (successfulPlacement) {
                 controller.getCombatSim().getPlayer().removeBuilding(selectedBuilding);

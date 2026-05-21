@@ -20,6 +20,7 @@ public class FactorySim {
     }
 
     public void advanceTick() {
+        System.out.println();
         System.out.println("Advancing Tick");
         pendingMoves.clear();
         Array<Building> buildings = grid.getBuildings();
@@ -47,7 +48,8 @@ public class FactorySim {
             suppliersSorted.sort((a, b)  -> a.getPriority() - b.getPriority());
             if (!(req instanceof AnythingRequest)) {
                 for (Building supplier : suppliersSorted) {
-                    if (req.getValue() >= 0) {
+                    System.out.println(req);
+                    if (req.getValue() <= 0) {
                        break;
                     }
                     if (suppliers.get(supplier).contains(req.getResource(), true)) {
@@ -62,14 +64,22 @@ public class FactorySim {
                 }
             } else {
                 for (Building supplier : suppliersSorted) {
-                    if (req.getValue() >= 0) {
+                    System.out.println(req);
+                    System.out.println("try");
+                    System.out.println(supplier.displayName());
+
+                    if (req.getValue() <= 0) {
                         break;
                     }
+
                     for (ResourceBuffer drawBuffer : supplier.getOutputResourceBuffer()) {
+                        System.out.println(drawBuffer);
                         int drawAmt = min(drawBuffer.getCurrent(), req.getValue());
+                        System.out.println("taking "+drawAmt + " " + drawBuffer.getResource());
                         drawBuffer.draw(drawAmt);
                         req.reduceValue(drawAmt);
                         for (int i = 0; i < drawAmt; i++) {
+                            System.out.println("adding "+drawBuffer.getResource());
                             req.getRequester().addToAnythingQueue(drawBuffer.getResource());
                         }
                     }
@@ -77,12 +87,19 @@ public class FactorySim {
             }
         }
 
+        System.out.println("Transfers complete");
+
         for (Building building : buildings) {
+            System.out.println("Before");
+            System.out.println(building);
             Move result = building.updateTick();
             if (result != null) {
                 pendingMoves.addLast(result);
             }
+            System.out.println("Updated");
+            System.out.println(building);
         }
+        System.out.println(pendingMoves);
     }
 
     public Queue<Move> returnMoves() {

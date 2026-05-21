@@ -81,7 +81,7 @@ public abstract class Building {
                 int portX = thisPortData.getInt("x");
                 int portY = thisPortData.getInt("y");
                 if (portX >= 0 && portX < this.shape[0].length &&
-                    portY >= 0 && portY < this.shape[0].length) {
+                    portY >= 0 && portY < this.shape.length) {
                     IOPort thisPort = new IOPort(portX, portY, thisPortData.getInt("dir"), thisPortData.getInt("rate"));
                     addPort(thisPort);
                 }
@@ -105,11 +105,11 @@ public abstract class Building {
     }
 
     public int[] tryGlobalCoord(int x , int y, int tryPosX, int tryPosY) {
-        return getGlobalCoord(x, y, this.xCoord, this.yCoord, this.rotation, this.shape);
+        return getGlobalCoord(x, y, tryPosX, tryPosY, this.rotation, this.shape);
     }
 
     public static int[] getGlobalCoord(int locX, int locY, int posX, int posY, int rot, boolean[][] shape) {
-        return getGlobalCoord(locX, locY, posX, posY, rot, shape[0].length, shape.length);
+        return getGlobalCoord(locX, locY, posX, posY, rot, shape.length, shape[0].length);
     }
 
     public static int[] getGlobalCoord(int locX, int locY, int posX, int posY, int rot, int height, int width) {
@@ -179,14 +179,12 @@ public abstract class Building {
     }
 
     public void updateInputs(Array<Array<Building>> grid) {
-        System.out.println("updating "+name+" inputs");
-
         ObjectSet<Building> neighbours = new ObjectSet<>();
 
         for (int lr = 0; lr < shape.length; lr++) {
             for (int lc = 0; lc < shape[lr].length; lc++) {
-                int[] gc = getGlobalCoord(lr, lc);
                 for (int r = 0; r < 4; r++) {
+                    int[] gc = getGlobalCoord(lc, lr);
                     switch (r) {
                         case 0 -> {
                             gc[1]--;
@@ -203,7 +201,7 @@ public abstract class Building {
                     }
                     Building maybeNeighbour = null;
                     try {
-                        maybeNeighbour = grid.get(gc[0]).get(gc[1]);
+                        maybeNeighbour = grid.get(gc[1]).get(gc[0]);
                     } catch (Exception e) {
                         continue;
                     }
