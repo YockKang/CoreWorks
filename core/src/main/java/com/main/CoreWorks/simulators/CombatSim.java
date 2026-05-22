@@ -14,6 +14,7 @@ public class CombatSim {
     private Queue<Move> queuedFactoryMoves = new Queue<>();
     private boolean win = false;
     private boolean lost = false;
+    private Array<String> combatLog = new Array<>(2);
 
     public CombatSim(Player player, Array<Enemy> enemies) {
         this.player = player;
@@ -24,6 +25,13 @@ public class CombatSim {
         while (queue.size > 0) {
             queuedFactoryMoves.addLast(queue.removeFirst());
         }
+    }
+
+    private void addLog(String log) {
+        if (combatLog.size >= 2) {
+            combatLog.removeIndex(0);
+        }
+        combatLog.add(log);
     }
 
     /*
@@ -57,9 +65,13 @@ public class CombatSim {
             if (move == null) {
                 continue;
             } else {
-                // Always kills enemies from left to right
+                // Always kills enemies from left to right + add to combat log for display
                 // TBD if we want to enable target selection
                 move.execute(enemies.first());
+                if (move instanceof DamageMove) {
+                    addLog(String.format("%s dealt %s damage to %s", player.displayName(), move.getValue(), enemies.first().displayName()));
+                }
+                // Can add more via if statements in the future
             }
         }
     }
@@ -68,13 +80,28 @@ public class CombatSim {
         for (Enemy enemy : enemies) {
             // Hardcoding the move target for now, eventually should make wrapper classes for different moves that target different things
             Move currMove = enemy.getMove();
+            int playerHP = player.displayCurrentHp();
+            int enemyHP = enemy.displayCurrentHp();
+
+            // Also hardcoding all possible moves and how to add to combat log for now
+            // Definitely should change in the future
             switch (currMove) {
+                // Healing for now only heals oneself
+                // Healing other targets for future consideration
                 case HealMove healMove:
                     enemy.tick(enemy);
+                    int newEnemyHP = enemy.displayCurrentHp();
+                    if (enemyHP != newEnemyHP) {
+                        addLog(String.format("%s healed itself for %s", enemy.displayName(), currMove.getValue()));
+                    }
                     break;
 
                 case DamageMove damageMove:
                     enemy.tick(player);
+                    int newPlayerHP = player.displayCurrentHp();
+                    if (newPlayerHP != playerHP) {
+                        addLog(String.format("%s dealt %s damage to %s", enemy.displayName(), currMove.getValue(), player.displayName()));
+                    }
                     break;
 
                 default:
@@ -84,7 +111,8 @@ public class CombatSim {
     }
 
     public void removeDead() {
-        for (int i = 0; i < enemies.size; i++) {
+        // Reverse order to patch potential bugs with 2 dead enemies side by side
+        for (int i = enemies.size - 1; i >= 0; i--) {
             if (enemies.get(i).isDead()) {
                 enemies.removeIndex(i);
             }
@@ -115,5 +143,9 @@ public class CombatSim {
 
     public Array<Enemy> getEnemies() {
         return enemies;
+    }
+
+    public Array<String> getCombatLog() {
+        return combatLog;
     }
 }

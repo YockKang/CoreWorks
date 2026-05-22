@@ -23,4 +23,6 @@ public abstract class Move {
     }
 
     public abstract void execute(Character target);
+
+    public abstract int getValue();
 }

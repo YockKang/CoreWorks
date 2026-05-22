@@ -12,13 +12,13 @@ import com.main.CoreWorks.Coreworks;
 import com.main.CoreWorks.Factory.Building;
 import com.main.CoreWorks.Factory.FactoryGrid;
 import com.main.CoreWorks.Factory.IOPort;
-import com.main.CoreWorks.database.BuildingDatabase;
 import com.main.CoreWorks.database.EnemyDatabase;
 import com.main.CoreWorks.database.PlayerDatabase;
 import com.main.CoreWorks.entities.Enemy;
 import com.main.CoreWorks.simulators.CombatController;
 import com.main.CoreWorks.simulators.CombatSim;
 import com.main.CoreWorks.simulators.FactorySim;
+import org.checkerframework.checker.units.qual.C;
 
 public class CombatScreen implements Screen {
 
@@ -29,6 +29,8 @@ public class CombatScreen implements Screen {
     private int tickCount = 0;
     private Vector2 mouse2DCoords = new Vector2();
     private ShapeRenderer shapeRenderer;
+    private Coords hoveredGridCoords = null;
+    private boolean hoveredCanPlace = false;
 
     // Temp Layout since we have not decided how we want the final UI to look like yet
     // Rmb that everything is drawn in a coordinate system (check Coreworks class for the public static final screen size)
@@ -75,7 +77,7 @@ public class CombatScreen implements Screen {
         // Anti-"Lag spike spiral of death" code
         delta = Math.min(delta, 1/8f);
 
-        mouseInput();
+        externalInput();
 
         // Tick Advancement code below
         if (!controller.isWin() && !controller.isLost()) {
@@ -99,6 +101,7 @@ public class CombatScreen implements Screen {
 
         // Drawing functions below
         drawGrid();
+        drawPlacementPreview();
         drawBuildings();
         drawIOPorts();
         drawInventory();
@@ -108,6 +111,48 @@ public class CombatScreen implements Screen {
     /*
     All drawing related functions should be handled from here on
      */
+
+    public void drawPlacementPreview() {
+        if (selectedBuilding == null || hoveredGridCoords == null) {
+            return;
+        }
+
+        boolean[][] rotatedShape = selectedBuilding.getProjectedShape();
+
+        // Set Green if valid, Red if not valid
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        if (hoveredCanPlace) {
+            shapeRenderer.setColor(Color.GREEN);
+        } else {
+            shapeRenderer.setColor(Color.RED);
+        }
+
+        // Draws the preview
+        for (int y = 0; y < rotatedShape.length; y++) {
+            for (int x = 0; x < rotatedShape[y].length; x++) {
+                if (!rotatedShape[y][x]) { // If not filled, do not draw anything
+                    continue;
+                }
+
+                // Get the base x,y coord in the grid 2D shape array for drawing
+                int gridX = hoveredGridCoords.x + x;
+                int gridY = hoveredGridCoords.y + y;
+
+                // For now, no drawing of any parts of the building outside of grid
+                // When we have sprites maybe can change this part
+                if (gridX < 0 || gridY < 0 || gridX >= gridWidth || gridY >= gridHeight) {
+                    continue;
+                }
+
+                float tileX = gridStartX + gridX * tileSize;
+                float tileY = gridEndY - (gridY + 1) * tileSize;
+
+                shapeRenderer.rect(tileX, tileY, tileSize, tileSize);
+            }
+        }
+
+        shapeRenderer.end();
+    }
 
     public void drawIOPorts() {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -195,7 +240,7 @@ public class CombatScreen implements Screen {
         for (int x = 0; x < gridWidth; x++) {
             for (int y = 0; y < gridHeight; y++) {
                 int bottomLeftCorner = gridStartX + x * tileSize;
-                int topLeftCorner = gridEndY - (y + 1) * tileSize; // offset by one since libGDX stores its object origins in the bottom left
+                int topLeftCorner = gridEndY - (y + 1) * tileSize; // offset by one since libGDX shape draws the object origins in the bottom left, but we start from top left
                 shapeRenderer.rect(bottomLeftCorner, topLeftCorner, tileSize, tileSize);
             }
         }
@@ -218,6 +263,11 @@ public class CombatScreen implements Screen {
 
     public void drawCombatHUD() {
         game.batch.begin();
+        // Below draws the combat log
+        Array<String> log = controller.getCombatSim().getCombatLog();
+        for (int i = 0; i < log.size; i++) {
+            game.font.draw(game.batch, log.get(i), inventoryStartX, 700 - i * 20);
+        }
 
         // Below draws the Entities HUD
         game.font.draw(game.batch, "Coreworks - Milestone 1", 40, 710);
@@ -271,6 +321,8 @@ public class CombatScreen implements Screen {
         shapeRenderer.end();
 
         game.batch.begin();
+
+        // Below draws the Inventory itself
         game.font.draw(game.batch, "Inventory", inventoryStartX, inventoryStartY + 125);
 
         for (int i = 0; i < controller.getCombatSim().getPlayer().getInventory().size; i++) {
@@ -287,7 +339,7 @@ public class CombatScreen implements Screen {
     All mouse inputs should be handled here
      */
 
-    private void mouseInput() {
+    private void externalInput() {
         // Keyboard inputs handled below
 
         // Press R to rotate building
@@ -300,12 +352,21 @@ public class CombatScreen implements Screen {
         }
 
         // Mouse inputs handled below
+        Vector2 mouseTranslatedCoords = translateMouseToWorld();
+
+        float mouseTranslatedX = mouseTranslatedCoords.x;
+        float mouseTranslatedY = mouseTranslatedCoords.y;
+
+        // Handles Placement preview via mouse hovering
+        hoveredGridCoords = getGridAt(mouseTranslatedX, mouseTranslatedY);
+        if (hoveredGridCoords != null && selectedBuilding != null) {
+            hoveredCanPlace = controller.getFactorySim().getGrid().checkValidPosition(selectedBuilding, hoveredGridCoords.x, hoveredGridCoords.y, selectedBuilding.getRotation());
+        } else {
+            hoveredCanPlace = false;
+        }
+
+        // Handles left and right clicks
         if (Gdx.input.justTouched()) {
-            Vector2 mouseTranslatedCoords = translateMouseToWorld();
-
-            float mouseTranslatedX = mouseTranslatedCoords.x;
-            float mouseTranslatedY = mouseTranslatedCoords.y;
-
             if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
                 leftClick(mouseTranslatedX, mouseTranslatedY);
             }
@@ -316,11 +377,13 @@ public class CombatScreen implements Screen {
         }
     }
 
+    // Translates mouse coordinates to world coordinates
     private Vector2 translateMouseToWorld() {
         mouse2DCoords.set(Gdx.input.getX(), Gdx.input.getY());
         game.viewport.unproject(mouse2DCoords);
         return mouse2DCoords;
     }
+
     /*
     Left clicks will handle (c.a.a Milestone 1)
         1. Selecting a building from inventory
@@ -364,6 +427,7 @@ public class CombatScreen implements Screen {
         }
     }
 
+    // Returns the inventory building clicked by mouse if mouse over inventory
     private Building getInventoryBuildingAt(float mouseTranslatedX, float mouseTranslatedY) {
         for (int i = 0; i < controller.getCombatSim().getPlayer().getInventory().size; i++) {
             int leftBoundInventorySlot = inventoryStartX + i * (inventorySlotSize + inventorySlotGap);
@@ -380,6 +444,7 @@ public class CombatScreen implements Screen {
         return null;
     }
 
+    // Generic code that translates mouse clicks on grid into an x and y coord of a 2D array (in this case grid's 2D array)
     private Coords getGridAt(float mouseTranslatedX, float mouseTranslatedY) {
         boolean insideWholeGridX = mouseTranslatedX >= gridStartX && mouseTranslatedX < gridStartX + gridWidth * tileSize;
         boolean insideWholeGridY = mouseTranslatedY <= gridEndY && mouseTranslatedY > gridEndY - gridHeight * tileSize;

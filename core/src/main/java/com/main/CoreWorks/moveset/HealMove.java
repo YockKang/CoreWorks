@@ -20,4 +20,9 @@ public class HealMove extends Move {
     public String toString() {
         return super.toString();
     }
+
+    @Override
+    public int getValue() {
+        return this.heal;
+    }
 }
