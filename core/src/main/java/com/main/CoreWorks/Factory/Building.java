@@ -10,6 +10,7 @@ import com.main.CoreWorks.database.RecipeDatabase;
 import com.main.CoreWorks.moveset.Move;
 
 
+
 public abstract class Building {
 
 
@@ -17,7 +18,7 @@ public abstract class Building {
     protected boolean isEnabled = true;
     protected boolean onGrid = false;
     protected int cooldownTimer;
-    protected int currCooldown = 0;
+    protected float currCooldown = 0;
     protected Array<ResourceBuffer> inputBuffer;
     protected Array<ResourceBuffer> outputBuffer;
     protected int capacityMult = 5;
@@ -28,6 +29,7 @@ public abstract class Building {
     protected Recipe recipe = null;
     protected Array<IOPort> ports = new Array<>(0);
     protected int priority = 0;
+    protected float speedMultiplier = 1f;
 
     protected ObjectMap<Building, Array<Resource>> inputBuildings = new ObjectMap<>();
     protected ObjectMap<Building, Array<Resource>> outputBuildings = new ObjectMap<>();
@@ -92,6 +94,9 @@ public abstract class Building {
             setRecipe(RecipeDatabase.get(data.getString("DefaultRecipe")));
         }
 
+        if (data.get("SpeedMult") != null) {
+            speedMultiplier = data.getFloat("SpeedMult");
+        }
 
     }
 
@@ -141,29 +146,95 @@ public abstract class Building {
         return new int[]{globalX, globalY};
     }
 
+    public boolean[][] getProjectedShape() {
+        boolean[][] newshape = {{}};
+        switch (rotation & 1) {
+            case 0:
+                newshape = new boolean[shape.length][shape[0].length];
+                break;
+            case 1:
+                newshape = new boolean[shape[0].length][shape.length];
+                break;
+        }
+
+        int newHeight = newshape.length;
+        int newWidth = newshape[0].length;
+        int totalCells = newHeight * newWidth;
+
+        switch (rotation & 3) {
+            case 0:
+                for (int i = 0; i < totalCells; i++) {
+                    int x = i % shape[0].length;
+                    int y = i / shape[0].length;
+                    int newX = i % shape[0].length;
+                    int newY = i / shape[0].length;
+                    newshape[newY][newX] = shape[y][x];
+                }
+                break;
+            case 1:
+                for (int i = 0; i < totalCells; i++) {
+                    int x = i % shape[0].length;
+                    int y = i / shape[0].length;
+                    int newX = newWidth - 1 - (i / shape[0].length);
+                    int newY = i % shape[0].length;
+                    newshape[newY][newX] = shape[y][x];
+                }
+                break;
+            case 2:
+                for (int i = 0; i < totalCells; i++) {
+                    int x = i % shape[0].length;
+                    int y = i / shape[0].length;
+                    int newX = newWidth - 1 - (i % shape[0].length);
+                    int newY = newHeight - 1 - (i / shape[0].length);
+                    newshape[newY][newX] = shape[y][x];
+                }
+                break;
+            case 3:
+                for (int i = 0; i < totalCells; i++) {
+                    int x = i % shape[0].length;
+                    int y = i / shape[0].length;
+                    int newX = i / shape[0].length;
+                    int newY = newHeight - 1 - (i % shape[0].length);
+                    newshape[newY][newX] = shape[y][x];
+                }
+                break;
+        }
+
+        return newshape;
+
+    }
+
+
     protected int[] getLocalCoord(int x , int y) {
-        int shapeW = shape[0].length;
-        int shapeH = shape.length;
-        int offsetX = x - xCoord;
-        int offsetY = y - yCoord;
+        return getLocalCoord(x, y, this.xCoord, this.yCoord, this.rotation, this.shape);
+    }
+
+
+    public static int[] getLocalCoord(int gloX, int gloY, int posX, int posY, int rot, boolean[][] shape) {
+        return getLocalCoord(gloX, gloY, posX, posY, rot, shape.length, shape[0].length);
+    }
+
+    public static int[] getLocalCoord(int gloX, int gloY, int posX, int posY, int rot, int height, int width) {
+        int offsetX = gloX - posX;
+        int offsetY = gloY - posY;
         int localX = 0;
         int localY = 0;
 
-        switch (rotation & 3) {
+        switch (rot & 3) {
             case 0:
                 localX = offsetX;
                 localY = offsetY;
                 break;
             case 1:
                 localX = offsetY;
-                localY = shapeH - 1 - offsetX;
+                localY = height - 1 - offsetX;
                 break;
             case 2:
-                localX = shapeW - 1 - offsetX;
-                localY = shapeH - 1 - offsetY;
+                localX = width - 1 - offsetX;
+                localY = height - 1 - offsetY;
                 break;
             case 3:
-                localX = shapeW - 1 - offsetY;
+                localX = width - 1 - offsetY;
                 localY = offsetX;
                 break;
         }
