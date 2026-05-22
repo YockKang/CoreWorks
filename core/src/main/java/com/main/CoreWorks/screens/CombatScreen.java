@@ -32,16 +32,25 @@ public class CombatScreen implements Screen {
     private Coords hoveredGridCoords = null;
     private boolean hoveredCanPlace = false;
 
-    // Temp Layout since we have not decided how we want the final UI to look like yet
-    // Rmb that everything is drawn in a coordinate system (check Coreworks class for the public static final screen size)
-    private final int gridStartX = 500;
-    private final int gridEndY = 560;
-    private final int tileSize = 96;
 
     // Hardcoded grid size for milestone 1 testing purposes
     // Should be deleted eventually since it should be handled by the global runState which carries over the factory
-    private final int gridWidth = 4;
-    private final int gridHeight = 4;
+    private final int gridWidth = 8;
+    private final int gridHeight = 8;
+
+    // Temp Layout since we have not decided how we want the final UI to look like yet
+    // Rmb that everything is drawn in a coordinate system (check Coreworks class for the public static final screen size)
+    private final int gridSize = 400;
+
+    private final int tileSize = Math.min(gridSize / gridWidth, gridSize / gridHeight);
+
+    private final int gridMidX = (int) (Coreworks.WORLD_WIDTH / 2);
+    private final int gridMidY = 400;
+
+    private final int gridStartX = gridMidX - tileSize * gridWidth / 2 ;
+    private final int gridEndX = gridMidX - tileSize * gridWidth / 2;
+    private final int gridEndY = gridMidY + tileSize * gridHeight / 2;
+    private final int gridStartY = gridMidY - tileSize * gridHeight / 2;
 
     private final int inventoryStartX = 512;
     private final int inventoryStartY = 40;
