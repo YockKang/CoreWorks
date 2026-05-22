@@ -1,9 +1,8 @@
 {
-  "id" : "miner1",
-  "Type" : "Miner",
-  "Name" : "Miner",
+  "id" : "refiner1",
+  "Type" : "Refiner",
+  "Name" : "Smelter",
   "Shape" : [[true]],
-  "MineMult" : 1,
   "Ports" : [
     {
       "x" : 0,
@@ -12,5 +11,5 @@
       "rate" : 1
     }
   ],
-  "DefaultRecipe" : "MineIron"
+  "DefaultRecipe" : "SmeltIron"
 }

@@ -3,7 +3,6 @@ package com.main.CoreWorks.Factory;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import com.main.CoreWorks.Recipe.Recipe;
-import com.main.CoreWorks.Resources.Resource;
 import com.main.CoreWorks.moveset.Move;
 
 public class Miner extends Building {
@@ -39,6 +38,8 @@ public class Miner extends Building {
     public String toString() {
         return new StringBuilder()
             .append(name)
+            .append("\nSpeedMult ")
+            .append(speedMultiplier)
             .append("\nOutput Buffer ")
             .append(outputBuffer)
             .toString();
@@ -46,18 +47,19 @@ public class Miner extends Building {
 
     @Override
     public Move updateTick() {
-        currCooldown++;
+        currCooldown += speedMultiplier;
         if (currCooldown >= cooldownTimer) {
-            boolean mineSuccess = mine();
-            currCooldown = cooldownTimer - 1;
+            boolean mineSuccess = tryMine();
+            currCooldown = cooldownTimer - speedMultiplier;
             if (mineSuccess) {
+                mine();
                 currCooldown = 0;
             }
         }
         return null;
     }
 
-    public boolean mine() {
+    public boolean tryMine() {
         if (this.recipe == null) {
             return false;
         } else {
@@ -65,17 +67,19 @@ public class Miner extends Building {
             // attempt to extract all into buffers
             for (int i = 0; i < mults.size; i++) {
                 ResourceBuffer currentBuffer = this.outputBuffer.get(i);
-                int expected = currentBuffer.getCurrent() + mults.get(i) * this.mineMultiplier;
                 // buffer for that type will overfill, cannot mine
-                if (!currentBuffer.tryAdd(expected)) {
+                if (!currentBuffer.tryAdd(mults.get(i) * this.mineMultiplier)) {
                     return false;
                 }
-            }
-            for (int i = 0; i < mults.size; i++) {
-                ResourceBuffer currentBuffer = this.outputBuffer.get(i);
-                currentBuffer.add(mults.get(i) * this.mineMultiplier);
             }
             return true;
         }
     }
+
+    public void mine() {
+        Array<Integer> mults = this.recipe.getOutputMultipliers();
+        for (int i = 0; i < mults.size; i++) {
+            ResourceBuffer currentBuffer = this.outputBuffer.get(i);
+            currentBuffer.add(mults.get(i) * this.mineMultiplier);
+        }}
 }

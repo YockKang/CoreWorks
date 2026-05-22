@@ -12,6 +12,6 @@
   {
     "id" : "CannonBall",
     "Name" : "Cannonball",
-    "DmgMult" : 4
+    "DmgMult" : 5
   }
 ]

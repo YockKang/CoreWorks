@@ -20,7 +20,6 @@ public class FactorySim {
     }
 
     public void advanceTick() {
-        System.out.println();
         System.out.println("Advancing Tick");
         pendingMoves.clear();
         Array<Building> buildings = grid.getBuildings();
@@ -35,10 +34,12 @@ public class FactorySim {
 
         requests.sort((a,b) -> a.getPriority() - b.getPriority());
 
+        System.out.println();
         System.out.println("Requests:");
         System.out.println(requests);
 
         for (ResourceRequest req : requests) {
+            System.out.println();
             System.out.println("Processing: "+ req);
             ObjectMap<Building, Array<Resource>> suppliers = req.getRequester().getInputBuildings();
 
@@ -52,6 +53,7 @@ public class FactorySim {
                     if (req.getValue() <= 0) {
                        break;
                     }
+                    suppliers.get(supplier);
                     if (suppliers.get(supplier).contains(req.getResource(), true)) {
                         ResourceBuffer drawBuffer = supplier.getOutputResourceBuffer(req.getResource());
                         if (drawBuffer != null) {
@@ -90,9 +92,11 @@ public class FactorySim {
             }
         }
 
+        System.out.println();
         System.out.println("Transfers complete");
 
         for (Building building : buildings) {
+            System.out.println();
             System.out.println("Before");
             System.out.println(building);
             Move result = building.updateTick();
@@ -102,7 +106,13 @@ public class FactorySim {
             System.out.println("Updated");
             System.out.println(building);
         }
+
+        System.out.println();
         System.out.println(pendingMoves);
+
+        System.out.println();
+
+        System.out.println();
     }
 
     public Queue<Move> returnMoves() {

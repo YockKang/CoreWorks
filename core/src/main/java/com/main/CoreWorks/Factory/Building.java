@@ -17,7 +17,7 @@ public abstract class Building {
     // confirmed fields
     protected boolean isEnabled = true;
     protected boolean onGrid = false;
-    protected int cooldownTimer;
+    protected int cooldownTimer = Integer.MAX_VALUE;
     protected float currCooldown = 0;
     protected Array<ResourceBuffer> inputBuffer;
     protected Array<ResourceBuffer> outputBuffer;
@@ -62,7 +62,6 @@ public abstract class Building {
 
     public Building(JsonValue data) {
         this.name = data.getString("Name");
-        this.cooldownTimer = data.getInt("Cooldown");
         this.recipe = null;
 
         inputBuffer = new Array<>(0);
@@ -74,6 +73,11 @@ public abstract class Building {
         this.shape = new boolean[rows][cols];
         for (int y = 0; y < rows; y++) {
             this.shape[y] = shapeData.get(y).asBooleanArray();
+        }
+
+
+        if (data.get("Cooldown") != null) {
+            cooldownTimer = data.getInt("Cooldown");
         }
 
         if (data.get("Ports") != null) {
@@ -428,6 +432,7 @@ public abstract class Building {
     public void setRecipe(Recipe rec) {
         // write new recipe
         this.recipe = rec;
+        this.cooldownTimer = this.recipe.getDuration();
 
         // grab new inputs
         Array<Resource> inputs = this.recipe.getInputs();

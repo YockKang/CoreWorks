@@ -58,6 +58,7 @@ public class Coreworks extends Game {
             BuildingDatabase::register);
 
 
+
         // For now, starting the game leads to a placeholder menu screen
         this.setScreen(new MenuScreen(this)); // eventually will replace with the Main Menu screen
     }

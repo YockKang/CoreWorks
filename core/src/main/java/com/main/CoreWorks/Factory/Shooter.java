@@ -34,6 +34,8 @@ public class Shooter extends Building {
     public String toString() {
         return new StringBuilder()
             .append(name)
+            .append("\nSpeedMult ")
+            .append(speedMultiplier)
             .append('\n')
             .append("Magazine\n")
             .append("<-First   Last->\n")
@@ -43,9 +45,9 @@ public class Shooter extends Building {
 
     @Override
     public Move updateTick() {
-        currCooldown++;
+        currCooldown += speedMultiplier;
         if (currCooldown >= cooldownTimer) {
-            currCooldown = cooldownTimer - 1;
+            currCooldown = cooldownTimer - speedMultiplier;
             if (magazine.notEmpty()) {
                 currCooldown = 0;
                 return shoot();
