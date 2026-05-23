@@ -1,0 +1,56 @@
+[
+  {
+    "id" : "coalMiner",
+    "Type" : "Miner",
+    "Name" : "Coal Miner",
+    "Shape" : [[true]],
+    "MineMult" : 1,
+    "Ports" : [
+      {
+        "x" : 0,
+        "y" : 0,
+        "dir" : 0,
+        "rate" : 1
+      }
+    ],
+    "DefaultRecipe" : "MineCoal"
+  },
+  {
+    "id": "steelSmelter",
+    "Type": "Refiner",
+    "Name": "Steel Smelter",
+    "Shape": [
+      [
+        true
+      ]
+    ],
+    "Ports": [
+      {
+        "x": 0,
+        "y": 0,
+        "dir": 0,
+        "rate": 1
+      }
+    ],
+    "DefaultRecipe": "SmeltSteel"
+  },
+  {
+    "id": "steelCannonball",
+    "Type": "Refiner",
+    "Name": "Steel Cannonball-er",
+    "Shape": [
+      [
+        true
+      ]
+    ],
+    "Ports": [
+      {
+        "x": 0,
+        "y": 0,
+        "dir": 0,
+        "rate": 1
+      }
+    ],
+    "DefaultRecipe": "SteelCannonBall"
+  }
+]
