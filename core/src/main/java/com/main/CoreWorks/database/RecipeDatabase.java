@@ -56,6 +56,7 @@ public class RecipeDatabase {
             data.forEach(RecipeDatabase::register);
             return null;
         } else {
+            System.out.println(data.getString("id"));
             Recipe type = new Recipe(data);
             RecipeDB.put(data.getString("id"), type);
             return type;

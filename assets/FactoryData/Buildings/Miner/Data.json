@@ -1,7 +1,7 @@
 {
   "id" : "miner1",
   "Type" : "Miner",
-  "Name" : "Miner",
+  "Name" : "Iron Miner",
   "Shape" : [[true]],
   "MineMult" : 1,
   "Ports" : [

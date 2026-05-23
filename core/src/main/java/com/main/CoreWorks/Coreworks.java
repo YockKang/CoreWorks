@@ -55,7 +55,7 @@ public class Coreworks extends Game {
         Array<FileHandle> buildingFiles = new Array<>();
         fileScanner(buildingFiles, Gdx.files.internal("assets/FactoryData/Buildings"));
         buildingFiles.iterator().forEach(
-            BuildingDatabase::register);
+            fh -> BuildingDatabase.register(JsonProcessor.read(fh)));
 
 
 

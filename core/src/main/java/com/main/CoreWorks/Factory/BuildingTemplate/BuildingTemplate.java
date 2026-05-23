@@ -12,9 +12,8 @@ public class BuildingTemplate {
     Class<? extends Building> clazz;
     JsonValue buildingData;
 
-    public BuildingTemplate(FileHandle file) {
-        JsonValue parse = JsonProcessor.read(file);
-        String name = "com.main.CoreWorks.Factory." + parse.getString("Type");
+    public BuildingTemplate(JsonValue data) {
+        String name = "com.main.CoreWorks.Factory." + data.getString("Type");
 
         try {
             Class<?> raw = ClassReflection.forName(name);
@@ -25,7 +24,7 @@ public class BuildingTemplate {
         } catch (ReflectionException e) {
             throw new RuntimeException(e);
         }
-        buildingData = parse;
+        buildingData = data;
     };
 
     public Building of() {
