@@ -122,7 +122,7 @@ public class CombatScreen implements Screen {
      */
 
     public void drawPlacementPreview() {
-        if (selectedBuilding == null || hoveredGridCoords == null) {
+        if (selectedBuilding == null || hoveredGridCoords == null || selectedBuilding.isOnGrid()) {
             return;
         }
 
@@ -423,12 +423,16 @@ public class CombatScreen implements Screen {
             selectedBuilding = clickedBuilding;
             return;
         }
-        if (hoveredGridCoords != null && selectedBuilding != null) {
+        if (hoveredGridCoords != null && selectedBuilding != null && !selectedBuilding.isOnGrid()) {
             boolean successfulPlacement = controller.getFactorySim().getGrid().placeBuilding(selectedBuilding, hoveredGridCoords.x, hoveredGridCoords.y, selectedBuilding.getRotation());
             if (successfulPlacement) {
                 controller.getCombatSim().getPlayer().removeBuilding(selectedBuilding);
                 selectedBuilding = null;
             }
+        }
+        hoveredGridCoords = getGridAt(mouseTranslatedX, mouseTranslatedY);
+        if (hoveredGridCoords != null) {
+            selectedBuilding = controller.getFactorySim().getGrid().getBuildingAt(hoveredGridCoords.x, hoveredGridCoords.y);
         }
         // Need to add what to do when a non-inventory building (ie on the grid) is clicked. Display name card? highlight it? etc etc
     }

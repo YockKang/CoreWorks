@@ -522,6 +522,10 @@ public abstract class Building {
         ports.add(port);
     }
 
+    public boolean isOnGrid() {
+        return onGrid;
+    }
+
 
     public void clearPorts() {
         ports.clear();
