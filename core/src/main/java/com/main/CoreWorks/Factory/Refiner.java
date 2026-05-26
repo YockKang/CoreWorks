@@ -35,6 +35,7 @@ public class Refiner extends Building{
     public String toString() {
         return new StringBuilder()
             .append(name)
+            .append("\nOnGrid: ").append(onGrid)
             .append("\nSpeedMult ")
             .append(speedMultiplier)
             .append("\nInput Buffer ")
@@ -97,12 +98,13 @@ public class Refiner extends Building{
     }
 
     public boolean tryEndCraft() {
+        System.out.println("try end");
         if (this.recipe == null) {
             return false;
         } else {
             Array<Integer> mults = this.recipe.getOutputMultipliers();
             for (int i = 0; i < mults.size; i++) {
-                if (!this.inputBuffer.get(i).tryAdd(mults.get(i))) {
+                if (!this.outputBuffer.get(i).tryAdd(mults.get(i))) {
                     return false;
                 }
             }

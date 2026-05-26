@@ -133,6 +133,4 @@ public class FactoryGrid {
         this.maxWidth = newWidth;
     }
 
-    public void changeSize() {}
-
 }

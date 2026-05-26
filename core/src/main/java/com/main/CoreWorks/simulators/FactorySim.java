@@ -23,6 +23,7 @@ public class FactorySim {
         System.out.println("Advancing Tick");
         pendingMoves.clear();
         Array<Building> buildings = grid.getBuildings();
+        System.out.println(buildings);
 
         // Deterministic sort of buildings to determine which order to process the moves implemented here
 
@@ -34,22 +35,13 @@ public class FactorySim {
 
         requests.sort((a,b) -> a.getPriority() - b.getPriority());
 
-        System.out.println();
-        System.out.println("Requests:");
-        System.out.println(requests);
-
         for (ResourceRequest req : requests) {
-            System.out.println();
-            System.out.println("Processing: "+ req);
             ObjectMap<Building, Array<Resource>> suppliers = req.getRequester().getInputBuildings();
-
-            System.out.println("Suppliers: "+ suppliers);
 
             Array<Building> suppliersSorted = suppliers.keys().toArray();
             suppliersSorted.sort((a, b)  -> a.getPriority() - b.getPriority());
             if (!(req instanceof AnythingRequest)) {
                 for (Building supplier : suppliersSorted) {
-                    System.out.println(req);
                     if (req.getValue() <= 0) {
                        break;
                     }
@@ -66,10 +58,6 @@ public class FactorySim {
                 }
             } else {
                 for (Building supplier : suppliersSorted) {
-                    System.out.println(req);
-                    System.out.println("try");
-                    System.out.println(supplier.displayName());
-
                     if (req.getValue() <= 0) {
                         break;
                     }
@@ -78,13 +66,10 @@ public class FactorySim {
                         if (req.getValue() <= 0) {
                             break;
                         }
-                        System.out.println(drawBuffer);
                         int drawAmt = min(drawBuffer.getCurrent(), req.getValue());
-                        System.out.println("taking "+drawAmt + " " + drawBuffer.getResource());
                         drawBuffer.draw(drawAmt);
                         req.reduceValue(drawAmt);
                         for (int i = 0; i < drawAmt; i++) {
-                            System.out.println("adding "+drawBuffer.getResource());
                             req.getRequester().addToAnythingQueue(drawBuffer.getResource());
                         }
                     }
@@ -92,27 +77,13 @@ public class FactorySim {
             }
         }
 
-        System.out.println();
-        System.out.println("Transfers complete");
 
         for (Building building : buildings) {
-            System.out.println();
-            System.out.println("Before");
-            System.out.println(building);
             Move result = building.updateTick();
             if (result != null) {
                 pendingMoves.addLast(result);
             }
-            System.out.println("Updated");
-            System.out.println(building);
         }
-
-        System.out.println();
-        System.out.println(pendingMoves);
-
-        System.out.println();
-
-        System.out.println();
     }
 
     public Queue<Move> returnMoves() {
