@@ -8,7 +8,7 @@ import com.main.CoreWorks.Recipe.Recipe;
 import com.main.CoreWorks.Resources.Resource;
 import com.main.CoreWorks.database.RecipeDatabase;
 import com.main.CoreWorks.moveset.Move;
-
+import org.checkerframework.checker.units.qual.A;
 
 
 public abstract class Building {
@@ -33,7 +33,7 @@ public abstract class Building {
     protected float speedMultiplier = 1f;
 
     protected ObjectMap<Building, Array<Resource>> inputBuildings = new ObjectMap<>();
-    protected ObjectMap<Building, Array<Resource>> outputBuildings = new ObjectMap<>();
+    protected ObjectMap<Building, Array<IOPort>> outputBuildings = new ObjectMap<>();
 
     protected boolean[][] shape;
     /*
@@ -325,24 +325,20 @@ public abstract class Building {
 
             for (IOPort p : ports) {
                 if (p.target != null) {
-                    addOutput(p.target);
+                    addOutput(p.target, p);
                 }
             }
         }
 
     }
 
-    public void addInput(Building b) {
-        Array<Resource> matches = matchResource(b, false);
-        if (!matches.isEmpty()) {
-            inputBuildings.put(b, matches);
-            b.outputBuildings.put(this, matches);
-        }
-    }
 
-    public void addOutput(Building b) {
+    public void addOutput(Building b, IOPort p) {
         Array<Resource> matches = matchResource(b, true);
-        outputBuildings.put(b, matches);
+        if (!outputBuildings.containsKey(b)) {
+            outputBuildings.put(b, new Array<IOPort>());
+        }
+        outputBuildings.get(b).add(p);
         b.inputBuildings.put(this, matches);
     }
 
@@ -422,6 +418,10 @@ public abstract class Building {
 
     public ObjectMap<Building, Array<Resource>> getInputBuildings() {
         return inputBuildings;
+    }
+
+    public ObjectMap<Building, Array<IOPort>> getOutputBuildings() {
+        return outputBuildings;
     }
 
     public int getPriority() {

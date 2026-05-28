@@ -6,7 +6,6 @@ import com.badlogic.gdx.utils.Queue;
 import com.main.CoreWorks.Factory.*;
 import com.main.CoreWorks.Resources.Resource;
 import com.main.CoreWorks.moveset.Move;
-import com.sun.net.httpserver.Request;
 
 import static java.lang.Math.min;
 
@@ -47,9 +46,14 @@ public class FactorySim {
                     }
                     suppliers.get(supplier);
                     if (suppliers.get(supplier).contains(req.getResource(), true)) {
+                        int throughput = 0;
+                        Array<IOPort> portArr = supplier.getOutputBuildings().get(req.getRequester());
+                        for (IOPort p : portArr) {
+                            throughput += p.getSpeed();
+                        }
                         ResourceBuffer drawBuffer = supplier.getOutputResourceBuffer(req.getResource());
                         if (drawBuffer != null) {
-                            int drawAmt = min(drawBuffer.getCurrent(), req.getValue());
+                            int drawAmt = min(throughput, min(drawBuffer.getCurrent(), req.getValue()));
                             drawBuffer.draw(drawAmt);
                             req.reduceValue(drawAmt);
                             req.getRequester().getInputResourceBuffer(req.getResource()).add(drawAmt);
@@ -66,7 +70,12 @@ public class FactorySim {
                         if (req.getValue() <= 0) {
                             break;
                         }
-                        int drawAmt = min(drawBuffer.getCurrent(), req.getValue());
+                        int throughput = 0;
+                        Array<IOPort> portArr = supplier.getOutputBuildings().get(req.getRequester());
+                        for (IOPort p : portArr) {
+                            throughput += p.getSpeed();
+                        }
+                        int drawAmt = min(throughput, min(drawBuffer.getCurrent(), req.getValue()));
                         drawBuffer.draw(drawAmt);
                         req.reduceValue(drawAmt);
                         for (int i = 0; i < drawAmt; i++) {
