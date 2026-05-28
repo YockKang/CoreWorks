@@ -50,7 +50,7 @@ public class Refiner extends Building{
     }
 
     @Override
-    public Move updateTick() {
+    public Move updateEnabled() {
         if (!isCrafting) {
             if (tryStartCraft()) {
                 isCrafting = true;

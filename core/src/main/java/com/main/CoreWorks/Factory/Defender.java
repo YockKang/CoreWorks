@@ -45,7 +45,7 @@ public class Defender extends Building{
     }
 
     @Override
-    public Move updateTick() {
+    public Move updateEnabled() {
         currCooldown += speedMultiplier;
         if (currCooldown >= cooldownTimer) {
             currCooldown = cooldownTimer - speedMultiplier;

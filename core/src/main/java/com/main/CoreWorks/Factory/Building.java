@@ -16,6 +16,7 @@ public abstract class Building {
 
     // confirmed fields
     protected boolean isEnabled = true;
+    protected int disabledDur = 0;
     protected boolean onGrid = false;
     protected int cooldownTimer = Integer.MAX_VALUE;
     protected float currCooldown = 0;
@@ -451,23 +452,20 @@ public abstract class Building {
         }
     }
 
-    public abstract Move updateTick();
-
-    public void enable() {
-        isEnabled = true;
-    }
-
-    public void disable() {
-        isEnabled = false;
-    }
-
-    public void toggleEnable() {
+    public Move updateTick() {
         if (isEnabled) {
-            disable();
+            return updateEnabled();
         } else {
-            enable();
+            disabledDur--;
+            if (disabledDur <= 0) {
+                isEnabled = true;
+                disabledDur = 0;
+            }
+            return null;
         }
     }
+
+    public abstract Move updateEnabled();
 
     public void clear() {
         for (ResourceBuffer b : inputBuffer) {
@@ -526,6 +524,9 @@ public abstract class Building {
         return onGrid;
     }
 
+    public boolean isEnabled() {
+        return isEnabled;
+    }
 
     public void clearPorts() {
         ports.clear();
@@ -545,5 +546,21 @@ public abstract class Building {
 
     public int getPortGlobalDirection(IOPort port) {
         return (port.getDir() + rotation) % 4;
+    }
+
+    public void disableFor(int dur) {
+        if (isEnabled) {
+            isEnabled = false;
+        }
+        if (dur > disabledDur) {
+            disabledDur = dur;
+        }
+    }
+
+    public void addDisable(int dur) {
+        if (isEnabled) {
+            isEnabled = false;
+        }
+        disabledDur += dur;
     }
 }
