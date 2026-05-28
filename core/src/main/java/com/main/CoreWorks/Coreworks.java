@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.main.CoreWorks.database.BuildingDatabase;
 import com.main.CoreWorks.database.RecipeDatabase;
+import com.main.CoreWorks.database.RecipeGroupDatabase;
 import com.main.CoreWorks.database.ResourceDatabase;
 import com.main.CoreWorks.screens.MenuScreen;
 
@@ -51,6 +52,8 @@ public class Coreworks extends Game {
         fileScanner(recipeFiles, Gdx.files.internal("assets/FactoryData/Recipes"));
         recipeFiles.iterator().forEach(
             fh -> RecipeDatabase.register(JsonProcessor.read(fh)));
+
+        RecipeGroupDatabase.update();
 
         Array<FileHandle> buildingFiles = new Array<>();
         fileScanner(buildingFiles, Gdx.files.internal("assets/FactoryData/Buildings"));

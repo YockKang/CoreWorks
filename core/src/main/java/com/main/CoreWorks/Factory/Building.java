@@ -5,9 +5,11 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.main.CoreWorks.Factory.ResourceRequest.ResourceRequest;
+import com.main.CoreWorks.JsonProcessor;
 import com.main.CoreWorks.Recipe.Recipe;
 import com.main.CoreWorks.Resources.Resource;
 import com.main.CoreWorks.database.RecipeDatabase;
+import com.main.CoreWorks.database.RecipeGroupDatabase;
 import com.main.CoreWorks.database.ResourceDatabase;
 import com.main.CoreWorks.moveset.Move;
 
@@ -39,6 +41,7 @@ public abstract class Building {
     protected ObjectMap<Building, Array<IOPort>> outputBuildings = new ObjectMap<>();
 
     protected Array<Resource> whitelist = null;
+    protected Array<Recipe> validRecipes = null;
 
 
     protected boolean[][] shape;
@@ -119,6 +122,34 @@ public abstract class Building {
                 );
         }
 
+        if (data.get("Group") != null) {
+            validRecipes = new Array<>();
+            addRecipes(data.get("Group"));
+        }
+
+        if (validRecipes != null) {
+            ObjectSet<Recipe> seen = new ObjectSet<>();
+            Array<Recipe> unique = new Array<>();
+
+            for (Recipe item : validRecipes) {
+                if (seen.add(item)) {
+                    unique.add(item);
+                }
+            }
+            validRecipes = unique;
+
+            validRecipes.sort((r1, r2) -> r1.getName().compareTo(r2.getName()));
+
+        }
+
+    }
+
+    private void addRecipes(JsonValue data) {
+        if (data.isArray()) {
+            data.forEach(this::addRecipes);
+        } else {
+            validRecipes.addAll(RecipeGroupDatabase.get(data.asString()));
+        }
     }
 
     @Override
@@ -578,5 +609,20 @@ public abstract class Building {
             isEnabled = false;
         }
         disabledDur += dur;
+    }
+
+    public void setCapacityMult(int newCap) {
+        float ratio = (float) newCap / capacityMult;
+        capacityMult = newCap;
+        for (ResourceBuffer b : inputBuffer) {
+            b.setCapacity((int) (b.getCapacity() * ratio));
+        }
+        for (ResourceBuffer b : outputBuffer) {
+            b.setCapacity((int) (b.getCapacity() * ratio));
+        }
+    }
+
+    public int getCapacityMult() {
+        return capacityMult;
     }
 }

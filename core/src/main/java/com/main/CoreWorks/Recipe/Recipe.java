@@ -12,6 +12,7 @@ public class Recipe {
     protected final Array<Integer> inputMult;
     protected final Array<Resource> output;
     protected final Array<Integer> outputMult;
+    protected final Array<String> validGroups;
     protected final int duration;
     protected final String name;
     protected final String id;
@@ -20,6 +21,7 @@ public class Recipe {
                   Array<Resource> outputs,
                   Array<Integer> inputMultiple,
                   Array<Integer> outputMultiple,
+                  Array<String> groups,
                   int dur,
                   String name,
                   String id) {
@@ -27,6 +29,7 @@ public class Recipe {
         this.inputMult = inputMultiple;
         this.output = outputs;
         this.outputMult = outputMultiple;
+        this.validGroups = groups;
         this.duration = dur;
         this.name = name;
         this.id = id;
@@ -42,6 +45,7 @@ public class Recipe {
                   Resource[] outputs,
                   Integer[] inputMultiple,
                   Integer[] outputMultiple,
+                  String[] groups,
                   int dur,
                   String name,
                   String id) {
@@ -49,6 +53,7 @@ public class Recipe {
         this.output = new Array<Resource>(outputs);
         this.inputMult = new Array<Integer>(inputMultiple);
         this.outputMult = new Array<Integer>(outputMultiple);
+        this.validGroups = new Array<String>(groups);
         this.duration = dur;
         this.name = name;
         this.id = id;
@@ -84,6 +89,11 @@ public class Recipe {
                     .asIntArray())
                 .boxed()
                 .toArray(Integer[]::new));
+        this.validGroups = new Array<String>(
+            Arrays.stream(
+                data.get("ValidGroups")
+                    .asStringArray())
+                .toArray(String[]::new));
         this.duration = data.getInt("duration");
         this.name = data.getString("Name");
         this.id = data.getString("id");
@@ -138,5 +148,13 @@ public class Recipe {
 
     public int getDuration() {
         return duration;
+    }
+
+    public Array<String> getGroups() {
+        return validGroups;
+    }
+
+    public String getName() {
+        return name;
     }
 }

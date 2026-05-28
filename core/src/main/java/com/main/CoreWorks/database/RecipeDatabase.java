@@ -19,6 +19,7 @@ public class RecipeDatabase {
                                   Array<Resource> outputs,
                                   Array<Integer> inputMultiple,
                                   Array<Integer> outputMultiple,
+                                  Array<String> groups,
                                   int dur,
                                   String name,
                                   String id) {
@@ -26,6 +27,7 @@ public class RecipeDatabase {
             outputs,
             inputMultiple,
             outputMultiple,
+            groups,
             dur,
             name,
             id);
@@ -37,6 +39,7 @@ public class RecipeDatabase {
                                   Resource[] outputs,
                                   Integer[] inputMultiple,
                                   Integer[] outputMultiple,
+                                  String[] groups,
                                   int dur,
                                   String name,
                                   String id) {
@@ -44,6 +47,7 @@ public class RecipeDatabase {
             outputs,
             inputMultiple,
             outputMultiple,
+            groups,
             dur,
             name,
             id);
@@ -69,5 +73,9 @@ public class RecipeDatabase {
 
     public static String showDB(){
         return RecipeDB.toString();
+    }
+
+    protected static ObjectMap<String, Recipe> getDB() {
+        return RecipeDB;
     }
 }

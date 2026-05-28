@@ -87,4 +87,14 @@ public class Defender extends Building{
     public void clear() {
         this.magazine.clear();
     }
+
+    @Override
+    public int getCapacityMult() {
+        return magSize;
+    }
+
+    @Override
+    public void setCapacityMult(int newCap) {
+        magSize = newCap;
+    }
 }
