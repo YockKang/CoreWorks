@@ -91,7 +91,7 @@ public class Recipe {
                 .toArray(Integer[]::new));
         this.validGroups = new Array<String>(
             Arrays.stream(
-                data.get("ValidGroups")
+                data.get("Groups")
                     .asStringArray())
                 .toArray(String[]::new));
         this.duration = data.getInt("duration");

@@ -54,6 +54,7 @@ public class Coreworks extends Game {
             fh -> RecipeDatabase.register(JsonProcessor.read(fh)));
 
         RecipeGroupDatabase.update();
+        System.out.println(RecipeGroupDatabase.showDB());
 
         Array<FileHandle> buildingFiles = new Array<>();
         fileScanner(buildingFiles, Gdx.files.internal("assets/FactoryData/Buildings"));

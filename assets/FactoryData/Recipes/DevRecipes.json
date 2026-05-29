@@ -1,13 +1,14 @@
 [
-  {
-  "id" : "MineCoal",
-  "Name" : "Mine Coal",
-  "InputId"    : [],
-  "InputMult"  : [],
-  "OutputId"   : ["Coal"],
-  "OutputMult" : [1],
-  "duration" : 2
-},
+    {
+    "id" : "MineCoal",
+    "Name" : "Mine Coal",
+    "InputId"    : [],
+    "InputMult"  : [],
+    "OutputId"   : ["Coal"],
+    "OutputMult" : [1],
+    "duration" : 2,
+    "Groups" : ["Miner"]
+  },
   {
     "id" : "SmeltSteel",
     "Name" : "Smelt Steel",
@@ -15,7 +16,8 @@
     "InputMult"  : [1, 1],
     "OutputId"   : ["SteelIngot"],
     "OutputMult" : [1],
-    "duration" : 2
+    "duration" : 2,
+    "Groups" : ["Refiner T1", "Refiner T2"]
   },
   {
     "id" : "SteelCannonBall",
@@ -24,6 +26,7 @@
     "InputMult"  : [2, 1],
     "OutputId"   : ["SteelCannonBall"],
     "OutputMult" : [1],
-    "duration" : 1
+    "duration" : 1,
+    "Groups" : ["Refiner T2"]
   }
 ]
