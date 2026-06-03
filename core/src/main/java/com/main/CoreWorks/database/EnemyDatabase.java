@@ -1,9 +1,7 @@
 package com.main.CoreWorks.database;
 
-import com.main.CoreWorks.entities.Enemy;
-import com.main.CoreWorks.moveset.DamageMove;
-import com.main.CoreWorks.moveset.DisableBuildingMove;
-import com.main.CoreWorks.moveset.HealMove;
+import com.main.CoreWorks.entities.*;
+import com.main.CoreWorks.moveset.*;
 
 public class EnemyDatabase {
 

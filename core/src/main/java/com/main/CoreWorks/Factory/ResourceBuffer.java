@@ -1,6 +1,6 @@
 package com.main.CoreWorks.Factory;
 
-import com.main.CoreWorks.Factory.ResourceRequest.ResourceRequest;
+import com.main.CoreWorks.Factory.ResourceRequest.*;
 import com.main.CoreWorks.Resources.Resource;
 
 

@@ -1,6 +1,5 @@
 package com.main.CoreWorks.simulators;
 
-import com.main.CoreWorks.Factory.Building;
 
 public class CombatController {
     private FactorySim factorySim;

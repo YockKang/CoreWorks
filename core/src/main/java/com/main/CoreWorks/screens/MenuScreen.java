@@ -1,9 +1,8 @@
 package com.main.CoreWorks.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Coreworks;
 
 public class MenuScreen implements Screen {

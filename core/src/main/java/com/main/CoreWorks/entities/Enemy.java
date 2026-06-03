@@ -1,8 +1,8 @@
 package com.main.CoreWorks.entities;
 
-import com.badlogic.gdx.utils.Array;
-import com.main.CoreWorks.Factory.Building;
-import com.main.CoreWorks.moveset.Move;
+import com.badlogic.gdx.utils.*;
+import com.main.CoreWorks.Factory.*;
+import com.main.CoreWorks.moveset.*;
 
 public class Enemy extends Character {
 

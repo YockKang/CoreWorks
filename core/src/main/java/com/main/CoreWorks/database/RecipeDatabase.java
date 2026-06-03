@@ -1,17 +1,9 @@
 package com.main.CoreWorks.database;
 
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Recipe.Recipe;
-import com.main.CoreWorks.Resources.Resource;
+import com.main.CoreWorks.Resources.*;
 
-/*
-Starter Recipes
-Mine IronOre
-IronOre -> IronIngot
-IronIngot -> CannonBall
- */
 public class RecipeDatabase {
     private static final ObjectMap<String, Recipe> RecipeDB = new ObjectMap<>();
 

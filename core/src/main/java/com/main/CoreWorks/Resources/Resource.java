@@ -1,6 +1,6 @@
 package com.main.CoreWorks.Resources;
 
-import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.*;
 
 public class Resource {
     String id;

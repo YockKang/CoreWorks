@@ -1,6 +1,6 @@
 package com.main.CoreWorks.screens;
 
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.main.CoreWorks.Coreworks;
 
 public class RewardScreen implements Screen {

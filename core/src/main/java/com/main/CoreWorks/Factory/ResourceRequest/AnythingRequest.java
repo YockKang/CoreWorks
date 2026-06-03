@@ -1,7 +1,6 @@
 package com.main.CoreWorks.Factory.ResourceRequest;
 
 import com.main.CoreWorks.Factory.Building;
-import com.main.CoreWorks.Resources.Resource;
 
 public class AnythingRequest extends ResourceRequest {
 

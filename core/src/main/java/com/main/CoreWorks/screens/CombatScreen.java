@@ -1,23 +1,15 @@
 package com.main.CoreWorks.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.glutils.*;
+import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Coreworks;
-import com.main.CoreWorks.Factory.Building;
-import com.main.CoreWorks.Factory.FactoryGrid;
-import com.main.CoreWorks.Factory.IOPort;
-import com.main.CoreWorks.database.EnemyDatabase;
-import com.main.CoreWorks.database.PlayerDatabase;
-import com.main.CoreWorks.entities.Enemy;
-import com.main.CoreWorks.simulators.CombatController;
-import com.main.CoreWorks.simulators.CombatSim;
-import com.main.CoreWorks.simulators.FactorySim;
+import com.main.CoreWorks.Factory.*;
+import com.main.CoreWorks.database.*;
+import com.main.CoreWorks.entities.*;
+import com.main.CoreWorks.simulators.*;
 
 public class CombatScreen implements Screen {
 

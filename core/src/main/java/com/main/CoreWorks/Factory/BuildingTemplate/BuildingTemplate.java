@@ -1,12 +1,8 @@
 package com.main.CoreWorks.Factory.BuildingTemplate;
 
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.reflect.ClassReflection;
-import com.badlogic.gdx.utils.reflect.ReflectionException;
+import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.reflect.*;
 import com.main.CoreWorks.Factory.Building;
-import com.main.CoreWorks.JsonProcessor;
 
 public class BuildingTemplate {
     Class<? extends Building> clazz;

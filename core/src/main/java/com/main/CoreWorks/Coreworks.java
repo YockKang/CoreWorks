@@ -1,18 +1,13 @@
 package com.main.CoreWorks;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.main.CoreWorks.database.BuildingDatabase;
-import com.main.CoreWorks.database.RecipeDatabase;
-import com.main.CoreWorks.database.RecipeGroupDatabase;
-import com.main.CoreWorks.database.ResourceDatabase;
-import com.main.CoreWorks.screens.MenuScreen;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.files.*;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.viewport.*;
+import com.main.CoreWorks.database.*;
+import com.main.CoreWorks.screens.*;
 
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */

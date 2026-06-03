@@ -1,15 +1,9 @@
 package com.main.CoreWorks.simulators;
 
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Queue;
-import com.main.CoreWorks.Factory.Building;
-import com.main.CoreWorks.Factory.FactoryGrid;
-import com.main.CoreWorks.entities.Enemy;
-import com.main.CoreWorks.entities.Player;
-import com.main.CoreWorks.moveset.DamageMove;
-import com.main.CoreWorks.moveset.DisableBuildingMove;
-import com.main.CoreWorks.moveset.HealMove;
-import com.main.CoreWorks.moveset.Move;
+import com.badlogic.gdx.utils.*;
+import com.main.CoreWorks.Factory.*;
+import com.main.CoreWorks.entities.*;
+import com.main.CoreWorks.moveset.*;
 
 import java.util.Random;
 
