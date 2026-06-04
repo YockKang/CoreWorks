@@ -145,8 +145,8 @@ public class MapScreen implements Screen {
                     return;
                 }
 
-                // Handles clicking a non-adjacent node
-                if (!clicked.isUnlocked()) {
+                // Handles clicking a non-adjacent node / completed node
+                if (!clicked.isUnlocked() || clicked.isCompleted()) {
                     return;
                 }
 
