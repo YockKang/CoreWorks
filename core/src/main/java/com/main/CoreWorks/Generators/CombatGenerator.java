@@ -1,13 +1,14 @@
 package com.main.CoreWorks.Generators;
 
 import com.badlogic.gdx.utils.Array;
+import com.main.CoreWorks.database.EnemyGroupDatabase;
 import com.main.CoreWorks.entities.Enemy;
 
 import java.util.Random;
 
 public class CombatGenerator {
-    public static Array<Enemy> createCombat(int depth, Random random) {
-        Array<Enemy> enemies = new Array<>();
+    public static Array<Enemy> createCombat(int tier, float multiplier, Random random) {
+        Array<Enemy> enemies = EnemyGroupDatabase.getRandomGroup(tier, multiplier, random);
+        return enemies;
     }
-
 }

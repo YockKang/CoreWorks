@@ -4,6 +4,12 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Coreworks;
+import com.main.CoreWorks.Factory.FactoryGrid;
+import com.main.CoreWorks.Generators.RunMapGenerator;
+import com.main.CoreWorks.RunPersistence.RunMap;
+import com.main.CoreWorks.RunPersistence.RunState;
+import com.main.CoreWorks.database.PlayerDatabase;
+import com.main.CoreWorks.entities.Player;
 
 public class MenuScreen implements Screen {
 
@@ -32,7 +38,16 @@ public class MenuScreen implements Screen {
         game.batch.end();
 
         if (Gdx.input.justTouched()) {
-            game.setScreen(new CombatScreen(game));
+            // Creates the initial runState
+            Player player = PlayerDatabase.createEngineer();
+            FactoryGrid factoryGrid = new FactoryGrid(4, 4);
+            RunState runState = new RunState(player, factoryGrid);
+            RunMap runMap = RunMapGenerator.generateRunMap(runState.getRandom());
+            runState.setRunMap(runMap);
+            runState.setCurrNode(runMap.getStartNode());
+
+            // Moves to map screen
+            game.setScreen(new MapScreen(game, runState));
             dispose();
 
         }

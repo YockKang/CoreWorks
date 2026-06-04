@@ -5,13 +5,18 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Coreworks;
+import com.main.CoreWorks.RunPersistence.MapNode;
+import com.main.CoreWorks.RunPersistence.RunState;
 
 public class WinScreen implements Screen {
 
     private final Coreworks game;
+    private RunState runState;
 
-    public WinScreen(Coreworks game) {
+    public WinScreen(Coreworks game, RunState runState) {
+
         this.game = game;
+        this.runState = runState;
     }
 
     @Override
@@ -45,7 +50,10 @@ public class WinScreen implements Screen {
         game.font.getData().setScale(720f / 480f);
 
         if (Gdx.input.justTouched()) {
-            game.setScreen(new MenuScreen(game));
+            for (MapNode next : runState.getCurrNode().getNextNodes()) {
+                next.setUnlocked(true);
+            }
+            game.setScreen(new MapScreen(game, runState));
             dispose();
 
         }

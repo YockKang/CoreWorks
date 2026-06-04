@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Coreworks;
 import com.main.CoreWorks.Factory.*;
+import com.main.CoreWorks.RunPersistence.RunMap;
+import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.database.*;
 import com.main.CoreWorks.entities.*;
 import com.main.CoreWorks.simulators.*;
@@ -14,9 +16,10 @@ import com.main.CoreWorks.simulators.*;
 public class CombatScreen implements Screen {
 
     Coreworks game;
+    RunState runState;
     CombatController controller;
     private float accumulator = 0f;
-    private static final float TIME_STEP = 1/1f; // 4 Ticks per second
+    private static final float TIME_STEP = 1/4f; // 4 Ticks per second
     private int tickCount = 0;
     private Vector2 mouse2DCoords = new Vector2();
     private ShapeRenderer shapeRenderer;
@@ -52,17 +55,12 @@ public class CombatScreen implements Screen {
 
     private Building selectedBuilding;
 
-    public CombatScreen(Coreworks game) {
+    public CombatScreen(Coreworks game, RunState runstate, Array<Enemy> enemies) {
 
         this.game = game;
-        // Since this is milestone 1, we will be hardcoding the encounter and grid for now
-        // Eventually combatSim should be handled by the Map Screen and node generation code to create the combat encounter
-        // and factorySim would be carried over via the global runState class or something
-        FactorySim factorySim = new FactorySim(new FactoryGrid(gridHeight,gridWidth));
-        Array<Enemy> enemies = new Array<>();
-        enemies.add(EnemyDatabase.getEnemy("AnnoyingDrone", 1));
-        enemies.add(EnemyDatabase.getEnemy("DisableDrone", 1));
-        CombatSim combatSim = new CombatSim(PlayerDatabase.createEngineer(), enemies);
+        this.runState = runstate;
+        FactorySim factorySim = new FactorySim(runstate.getFactoryGrid());
+        CombatSim combatSim = new CombatSim(runstate.getPlayer(), enemies);
         this.controller = new CombatController(factorySim, combatSim);
     }
 
@@ -307,7 +305,7 @@ public class CombatScreen implements Screen {
 
         // Below draws the screen transitions
         if (controller.isWin()) {
-            game.setScreen(new WinScreen(game));
+            game.setScreen(new WinScreen(game, runState));
             return;
         } else if (controller.isLost()) {
             game.setScreen(new LoseScreen(game));
@@ -433,7 +431,6 @@ public class CombatScreen implements Screen {
         if (hoveredGridCoords != null) {
             selectedBuilding = controller.getFactorySim().getGrid().getBuildingAt(hoveredGridCoords.x, hoveredGridCoords.y);
         }
-        // Need to add what to do when a non-inventory building (ie on the grid) is clicked. Display name card? highlight it? etc etc
     }
 
     /*
