@@ -633,4 +633,15 @@ public abstract class Building {
     public int getCapacityMult() {
         return capacityMult;
     }
+
+    public void changeCapacityMult(int delta) {
+        capacityMult += delta;
+        for (ResourceBuffer b : inputBuffer) {
+            b.changeCapacity(delta);
+        }
+        for (ResourceBuffer b : outputBuffer) {
+            b.changeCapacity(delta);
+        }
+    }
+
 }

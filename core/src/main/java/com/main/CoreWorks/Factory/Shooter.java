@@ -9,7 +9,7 @@ public class Shooter extends Building {
 
     protected Queue<Resource> magazine;
     protected int magSize;
-    protected float baseDmg = 1;
+    protected float baseDmg = 1f;
     protected int flatDmg = 0;
     protected int attackCount = 2;
 
@@ -110,5 +110,13 @@ public class Shooter extends Building {
     @Override
     public void setCapacityMult(int newCap) {
         magSize = newCap;
+    }
+
+    public void changeBaseDamage(float delta) {
+        baseDmg += delta;
+    }
+
+    public void changeFlatDamage(float delta) {
+        flatDmg += delta;
     }
 }
