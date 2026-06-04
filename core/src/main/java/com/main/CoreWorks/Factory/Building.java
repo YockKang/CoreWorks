@@ -29,7 +29,9 @@ public abstract class Building {
     protected Recipe recipe = null;
     protected Array<IOPort> ports = new Array<>(0);
     protected int priority = 0;
+    protected float speedBase= 1f;
     protected float speedMultiplier = 1f;
+    protected float speedFlat = 0f;
 
     protected ObjectMap<Building, Array<Resource>> inputBuildings = new ObjectMap<>();
     protected ObjectMap<Building, Array<IOPort>> outputBuildings = new ObjectMap<>();
@@ -102,8 +104,8 @@ public abstract class Building {
             setRecipe(RecipeDatabase.get(data.getString("DefaultRecipe")));
         }
 
-        if (data.get("SpeedMult") != null) {
-            speedMultiplier = data.getFloat("SpeedMult");
+        if (data.get("BaseSpeed") != null) {
+            speedBase = data.getInt("BaseSpeed");
         }
 
         if (data.get("Whitelist") != null) {
@@ -493,7 +495,7 @@ public abstract class Building {
         }
     }
 
-    public Move updateTick() {
+    public Array<Move> updateTick() {
         if (isEnabled) {
             return updateEnabled();
         } else {
@@ -506,7 +508,7 @@ public abstract class Building {
         }
     }
 
-    public abstract Move updateEnabled();
+    public abstract Array<Move> updateEnabled();
 
     public void clear() {
         for (ResourceBuffer b : inputBuffer) {
@@ -555,6 +557,18 @@ public abstract class Building {
     public void addPort(int x, int y, int dir, int speed) {
         IOPort port = new IOPort(x, y, dir, speed);
         ports.add(port);
+    }
+
+    public float getSpeed() {
+        return speedBase * speedMultiplier + speedFlat;
+    }
+
+    public void addSpeedMult(float mult) {
+        speedMultiplier += mult;
+    }
+
+    public void addSpeedFlat(float flat) {
+        speedFlat += flat;
     }
 
     public void addPort(IOPort port) {
@@ -606,13 +620,13 @@ public abstract class Building {
     }
 
     public void setCapacityMult(int newCap) {
-        float ratio = (float) newCap / capacityMult;
+        int delta = newCap - capacityMult;
         capacityMult = newCap;
         for (ResourceBuffer b : inputBuffer) {
-            b.setCapacity((int) (b.getCapacity() * ratio));
+            b.changeCapacity(delta);
         }
         for (ResourceBuffer b : outputBuffer) {
-            b.setCapacity((int) (b.getCapacity() * ratio));
+            b.changeCapacity(delta);
         }
     }
 

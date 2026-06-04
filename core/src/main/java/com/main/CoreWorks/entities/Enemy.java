@@ -9,10 +9,46 @@ public class Enemy extends Character {
     private Array<Move> moveset = new Array<>();
     private int moveTimer;
     private int currMoveIndex = 0;
+    private float multiplier;
 
     public Enemy(int hp, int shield, String name, int gracePeriod) {
         super(hp, shield, name);
         this.moveTimer = gracePeriod;
+    }
+
+    public Enemy(JsonValue data, float multiplier) {
+        super(data, multiplier);
+        this.multiplier = multiplier;
+        JsonValue moves = data.get("Moveset");
+        moves.forEach(mv -> {
+            try {
+                String type = mv.getString("Type");
+                int value = (int) (mv.getInt("Value") * multiplier);
+                int charge = (int) Math.ceilDiv((long) mv.getInt("Charge"), (long) multiplier);
+                switch (type) {
+                    case "Damage":
+                        addMove(new DamageMove(value, charge));
+                        break;
+                    case "Heal":
+                        addMove(new HealMove(value, charge));
+                        break;
+                    case "Shield":
+                        addMove(new HealMove(value, charge));
+                        break;
+                    case "Disable":
+                        addMove(new DisableBuildingMove(value, charge));
+                        break;
+                }
+            } catch (Exception ignored) {
+            }
+            }
+        );
+
+        if (data.get("GracePeriod") != null) {
+            this.moveTimer = data.getInt("GracePeriod");
+        } else {
+            this.moveTimer = 0;
+        }
     }
 
     public void addMove(Move move) {

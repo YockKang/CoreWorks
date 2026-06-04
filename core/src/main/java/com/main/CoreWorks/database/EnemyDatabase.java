@@ -1,32 +1,35 @@
 package com.main.CoreWorks.database;
 
+import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.entities.*;
 import com.main.CoreWorks.moveset.*;
 
 public class EnemyDatabase {
 
-    public static Enemy createMissileDrone() {
-        Enemy enemy = new Enemy(30, 0, "Missile Drone", 3);
-        enemy.addMove(new DamageMove(2, 40));
-        return enemy;
+    private static final ObjectMap<String, EnemyFactory> EnemyDB = new ObjectMap<>();
+
+    public static Enemy register(JsonValue data) {
+        if (data.isArray()) {
+            data.forEach(com.main.CoreWorks.database.EnemyDatabase::register);
+            return null;
+        } else {
+            EnemyFactory tp = new EnemyFactory(data);
+            String id = data.getString("id");
+            EnemyDB.put(id, tp);
+            return tp.of(1);
+        }
     }
 
-    public static Enemy createShieldDrone() {
-        Enemy enemy = new Enemy(15, 5, "Shield Drone", 3);
-        enemy.addMove(new HealMove(2, 40));
-        return enemy;
+    public static EnemyFactory getEnemyConstructor(String id) {
+        return EnemyDB.get(id);
     }
 
-    public static Enemy createAnnoyingDrone() {
-        Enemy enemy = new Enemy(20, 5, "Annoying Drone", 3);
-        enemy.addMove(new HealMove(2, 40));
-        enemy.addMove(new DamageMove(2, 40));
-        return enemy;
+    public static Enemy getEnemy(String id, float multiplier) {
+        return EnemyDB.get(id).of(multiplier);
     }
 
-    public static Enemy createDisablingDrone() {
-        Enemy enemy = new Enemy(10, 0, "Disabling Drone", 3);
-        enemy.addMove(new DisableBuildingMove(30, 30));
-        return enemy;
+    public static String showDB(){
+        return EnemyDB.toString();
     }
+
 }

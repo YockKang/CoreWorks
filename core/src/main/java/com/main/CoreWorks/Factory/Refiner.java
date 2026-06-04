@@ -49,25 +49,27 @@ public class Refiner extends Building{
     }
 
     @Override
-    public Move updateEnabled() {
+    public Array<Move> updateEnabled() {
         if (!isCrafting) {
             if (tryStartCraft()) {
                 isCrafting = true;
                 startCraft();
             }
         } else {
-            currCooldown += speedMultiplier;
+            currCooldown += getSpeed();
             if (currCooldown >= cooldownTimer) {
                 boolean craftSuccess = tryEndCraft();
-                currCooldown = cooldownTimer - speedMultiplier;
                 if (craftSuccess) {
                     endCraft();
-                    currCooldown = 0;
+                    currCooldown -= cooldownTimer;
                     if (!tryStartCraft()) {
                         isCrafting = false;
+                        currCooldown = 0;
                     } else {
                         startCraft();
                     }
+                } else {
+                    currCooldown = cooldownTimer - getSpeed();
                 }
             }
         }

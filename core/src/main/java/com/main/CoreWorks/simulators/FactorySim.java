@@ -118,9 +118,11 @@ public class FactorySim {
 
 
         for (Building building : buildings) {
-            Move result = building.updateTick();
+            Array<Move> result = building.updateTick();
             if (result != null) {
-                pendingMoves.addLast(result);
+                for (Move mv : result) {
+                    pendingMoves.addLast(mv);
+                }
             }
         }
     }

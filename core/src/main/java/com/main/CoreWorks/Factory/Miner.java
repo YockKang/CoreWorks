@@ -37,22 +37,23 @@ public class Miner extends Building {
     public String toString() {
         return new StringBuilder()
             .append(name)
-            .append("\nSpeedMult ")
-            .append(speedMultiplier)
+            .append("\nSpeed ")
+            .append(getSpeed())
             .append("\nOutput Buffer ")
             .append(outputBuffer)
             .toString();
     }
 
     @Override
-    public Move updateEnabled() {
-        currCooldown += speedMultiplier;
+    public Array<Move> updateEnabled() {
+        currCooldown += getSpeed();
         if (currCooldown >= cooldownTimer) {
             boolean mineSuccess = tryMine();
-            currCooldown = cooldownTimer - speedMultiplier;
             if (mineSuccess) {
                 mine();
-                currCooldown = 0;
+                currCooldown -= cooldownTimer;
+            } else {
+                currCooldown = cooldownTimer - getSpeed();
             }
         }
         return null;
@@ -80,5 +81,6 @@ public class Miner extends Building {
         for (int i = 0; i < mults.size; i++) {
             ResourceBuffer currentBuffer = this.outputBuffer.get(i);
             currentBuffer.add(mults.get(i) * this.mineMultiplier);
-        }}
+        }
+    }
 }

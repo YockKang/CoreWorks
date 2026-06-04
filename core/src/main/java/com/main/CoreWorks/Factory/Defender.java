@@ -9,7 +9,9 @@ public class Defender extends Building{
 
     protected Queue<Resource> magazine;
     protected int magSize;
-    protected float baseDef = 1;
+    protected float baseDef = 1;;
+    protected int flatDef = 0;
+    protected int defCount = 1;
 
     public Defender(int coolDown, int magSize, boolean[][] shape) {
         super(coolDown,
@@ -42,13 +44,14 @@ public class Defender extends Building{
     }
 
     @Override
-    public Move updateEnabled() {
-        currCooldown += speedMultiplier;
+    public Array<Move> updateEnabled() {
+        currCooldown += getSpeed();
         if (currCooldown >= cooldownTimer) {
-            currCooldown = cooldownTimer - speedMultiplier;
             if (magazine.notEmpty()) {
-                currCooldown = 0;
+                currCooldown -= cooldownTimer;
                 return defend();
+            } else {
+                currCooldown = cooldownTimer - getSpeed();
             }
         }
         return null;
@@ -62,8 +65,18 @@ public class Defender extends Building{
         magazine.addLast(x);
     }
 
-    public HealMove defend() {
-        return new HealMove((int) (magazine.removeFirst().getDmgMult() * baseDef), 0);
+    private int calculateDef(Resource r) {
+        return (int) (baseDef * r.getDmgMult() + flatDef);
+    }
+
+
+    public Array<Move> defend() {
+        Array<Move> result = new Array<>();
+        Move dmg = new HealMove(calculateDef(magazine.removeFirst()), 0);
+        for (int i = 0; i < defCount; i++) {
+            result.add(dmg);
+        }
+        return result;
     }
 
     @Override

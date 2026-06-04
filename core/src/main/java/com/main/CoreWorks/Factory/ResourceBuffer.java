@@ -40,7 +40,7 @@ public class ResourceBuffer {
     }
 
     public boolean isFull() {
-        return current == capacity;
+        return current >= capacity;
     }
 
     public boolean tryAdd(int val) {
@@ -61,6 +61,16 @@ public class ResourceBuffer {
 
     public void setCapacity(int newCap) {
         capacity = newCap;
+        if (capacity > current) {
+            current = capacity;
+        }
+    }
+
+    public void changeCapacity(int delta) {
+        capacity += delta;
+        if (capacity < 0) {
+            capacity = 0;
+        }
         if (capacity > current) {
             current = capacity;
         }

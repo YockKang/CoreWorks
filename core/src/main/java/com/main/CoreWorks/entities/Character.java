@@ -1,5 +1,7 @@
 package com.main.CoreWorks.entities;
 
+import com.badlogic.gdx.utils.JsonValue;
+
 public abstract class Character {
     // Implementation of Status effects TBD
     // Protected modifier just in case subclass has unique gimmicks to modify
@@ -13,6 +15,15 @@ public abstract class Character {
         this.shield = shield;
         this.maxHp = hp;
         this.name = name;
+    }
+
+    public Character(JsonValue data, float multiplier) {
+        this.maxHp = (int) (data.getInt("HP") * multiplier);
+        this.hp = maxHp;
+        this.name = data.getString("Name");
+        if (data.get("Shield") != null) {
+            this.shield = (int) (data.getInt("Shield") * multiplier);
+        }
     }
 
     public void takeDamage(int damage) {

@@ -56,6 +56,12 @@ public class Coreworks extends Game {
             fh -> BuildingDatabase.register(JsonProcessor.read(fh)));
 
 
+        Array<FileHandle> enemyFiles = new Array<>();
+        fileScanner(enemyFiles, Gdx.files.internal("assets/Enemies"));
+        enemyFiles.iterator().forEach(
+            fh -> EnemyDatabase.register(JsonProcessor.read(fh)));
+
+
 
         // For now, starting the game leads to a placeholder menu screen
         this.setScreen(new MenuScreen(this)); // eventually will replace with the Main Menu screen

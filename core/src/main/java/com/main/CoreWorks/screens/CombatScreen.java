@@ -16,7 +16,7 @@ public class CombatScreen implements Screen {
     Coreworks game;
     CombatController controller;
     private float accumulator = 0f;
-    private static final float TIME_STEP = 1/4f; // 4 Ticks per second
+    private static final float TIME_STEP = 1/1f; // 4 Ticks per second
     private int tickCount = 0;
     private Vector2 mouse2DCoords = new Vector2();
     private ShapeRenderer shapeRenderer;
@@ -60,8 +60,8 @@ public class CombatScreen implements Screen {
         // and factorySim would be carried over via the global runState class or something
         FactorySim factorySim = new FactorySim(new FactoryGrid(gridHeight,gridWidth));
         Array<Enemy> enemies = new Array<>();
-        enemies.add(EnemyDatabase.createMissileDrone());
-        enemies.add(EnemyDatabase.createDisablingDrone());
+        enemies.add(EnemyDatabase.getEnemy("AnnoyingDrone", 1));
+        enemies.add(EnemyDatabase.getEnemy("DisableDrone", 1));
         CombatSim combatSim = new CombatSim(PlayerDatabase.createEngineer(), enemies);
         this.controller = new CombatController(factorySim, combatSim);
     }

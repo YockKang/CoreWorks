@@ -1,0 +1,60 @@
+[
+  {
+    "id": "MissileDrone",
+    "Name": "Missile Drone",
+    "HP": 30,
+    "GracePeriod": 3,
+    "Moveset": [
+      {
+        "Type": "Damage",
+        "Value": 2,
+        "Charge": 10
+      }
+    ]
+  },
+  {
+    "id" : "ShieldDrone",
+    "Name" : "Shield Drone",
+    "HP" : 15,
+    "Shield" : 5,
+    "GracePeriod": 3,
+    "Moveset": [
+      {
+        "Type": "Shield",
+        "Value": 5,
+        "Charge": 10
+      }
+    ]
+  },
+  {
+    "id": "AnnoyingDrone",
+    "Name": "Annoying Drone",
+    "HP": 30,
+    "GracePeriod": 3,
+    "Moveset": [
+      {
+        "Type": "Damage",
+        "Value": 2,
+        "Charge": 10
+      },
+      {
+        "Type": "Shield",
+        "Value": 5,
+        "Charge": 10
+      }
+    ]
+  },
+  {
+    "id": "DisableDrone",
+    "Name": "Disabling Drone",
+    "HP": 20,
+    "GracePeriod": 3,
+    "Moveset": [
+      {
+        "Type": "Disable",
+        "Value": 10,
+        "Charge": 10
+      }
+    ]
+  }
+]
