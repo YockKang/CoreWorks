@@ -1,0 +1,18 @@
+[
+  {
+    "Tier" : 1,
+    "Enemies" : ["AnnoyingDrone", "DisableDrone"]
+  },
+  {
+    "Tier" : 1,
+    "Enemies" : ["MissileDrone", "MissileDrone", "MissileDrone"]
+  },
+  {
+    "Tier" : 1,
+    "Enemies" : ["ShieldDrone", "ShieldDrone", "ShieldDrone"]
+  },
+  {
+    "Tier" : 1,
+    "Enemies" : ["DisableDrone", "DisableDrone", "DisableDrone"]
+  }
+]
