@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Coreworks;
+import com.main.CoreWorks.Generators.RewardGenerator;
+import com.main.CoreWorks.Rewards.Reward;
 import com.main.CoreWorks.RunPersistence.MapNode;
 import com.main.CoreWorks.RunPersistence.RunState;
 
@@ -59,7 +61,8 @@ public class WinScreen implements Screen {
             for (MapNode next : runState.getCurrNode().getNextNodes()) {
                 next.setUnlocked(true);
             }
-            game.setScreen(new MapScreen(game, runState));
+            Array<Reward> rewards = RewardGenerator.generateReward(runState);
+            game.setScreen(new RewardScreen(game, runState, rewards));
             dispose();
         }
     }
