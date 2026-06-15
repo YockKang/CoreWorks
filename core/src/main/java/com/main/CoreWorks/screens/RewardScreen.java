@@ -170,7 +170,9 @@ public class RewardScreen implements Screen {
             return;
         }
 
-        // Builds the display of all the buildings
+        // Builds the display of all the buildings with a limit on how many displayed per row.
+        int buildingPerRow = 5;
+        int count = 0;
         for (int i = 0; i < selectableBuildings.size; i++) {
             Building building = selectableBuildings.get(i);
 
@@ -192,7 +194,13 @@ public class RewardScreen implements Screen {
             });
 
             // Adds the building selection button
-            buildingTable.add(buildingButton).pad(15).row();
+            buildingTable.add(buildingButton).pad(15);
+
+            // Automatically use a new row when too many buildings are in a row
+            count++;
+            if (count % buildingPerRow == 0) {
+                buildingTable.row();
+            }
         }
 
         // Adds the whole row of building selection into the base table
@@ -209,7 +217,7 @@ public class RewardScreen implements Screen {
             }
         });
 
-        table.add(back).pad(20).row();
+        table.add(back).pad(20).width(100).height(50).row();
     }
 
     private void buildUpgradeConfirmationUI() {
