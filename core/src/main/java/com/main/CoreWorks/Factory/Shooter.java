@@ -123,7 +123,7 @@ public class Shooter extends Building {
     }
 
     public void changeFlatDamage(float delta) {
-        flatDmg += delta;
+        flatDmg += (int) delta;
     }
 
     public float getBaseDmg() {

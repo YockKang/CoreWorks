@@ -1,40 +1,33 @@
 package com.main.CoreWorks.database;
 
 import com.badlogic.gdx.utils.*;
-import com.main.CoreWorks.Resources.Resource;
-
-
-/*
-Starter Resources
-- IronOre
-- IronIngot
-- CannonBall
- */
+import com.main.CoreWorks.Resources.*;
 
 public class ResourceDatabase {
-    private static final ObjectMap<String, Resource> ResourceDB = new ObjectMap<>();
-
-    public static Resource register(String id, String name, float dmgMult) {
-        Resource type = new Resource(id, name, dmgMult);
-        ResourceDB.put(id, type);
-        return type;
-    }
+    private static final ObjectMap<String, ResourceTemplate> ResourceDB = new ObjectMap<>();
 
     public static Resource register(JsonValue data) {
         if (data.isArray()){
             data.forEach(ResourceDatabase::register);
             return null;
         } else {
-            Resource type = new Resource(data);
+            ResourceTemplate type = new ResourceTemplate(data);
             ResourceDB.put(data.getString("id"), type);
-            return type;
+            return type.of();
         }
     }
 
     public static Resource get(String id) {
-        return ResourceDB.get(id);
+        return ResourceDB.get(id).of();
     }
 
+    public static Resource get(String id, ObjectMap<String, Modifier> mods) {
+        return ResourceDB.get(id).of(mods);
+    }
+
+    public static String getName(String id) {
+        return ResourceDB.get(id).getName();
+    }
     public static String showDB(){
         return ResourceDB.toString();
     }

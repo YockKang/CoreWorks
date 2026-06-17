@@ -111,4 +111,5 @@ public class Defender extends Building{
 
     @Override
     public void changeCapacityMult(int delta) { magSize += delta; }
+
 }

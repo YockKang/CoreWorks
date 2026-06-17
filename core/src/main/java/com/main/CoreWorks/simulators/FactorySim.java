@@ -29,13 +29,13 @@ public class FactorySim {
             requests.addAll(building.generateDemandRequests());
         }
 
-        requests.sort((a,b) -> a.getPriority() - b.getPriority());
+        requests.sort((a, b) -> a.getPriority() - b.getPriority());
 
         for (ResourceRequest req : requests) {
-            ObjectMap<Building, Array<Resource>> suppliers = req.getRequester().getInputBuildings();
+            ObjectMap<Building, Array<String>> suppliers = req.getRequester().getInputBuildings();
 
             Array<Building> suppliersSorted = suppliers.keys().toArray();
-            suppliersSorted.sort((a, b)  -> a.getPriority() - b.getPriority());
+            suppliersSorted.sort();
             switch (req) {
                 case AnythingRequest anythingRequest -> {
                     for (Building supplier : suppliersSorted) {
@@ -53,11 +53,9 @@ public class FactorySim {
                                 throughput += p.getSpeed();
                             }
                             int drawAmt = min(throughput, min(drawBuffer.getCurrent(), req.getValue()));
-                            drawBuffer.draw(drawAmt);
+                            Array<Resource> transfers = drawBuffer.draw(drawAmt);
                             req.reduceValue(drawAmt);
-                            for (int i = 0; i < drawAmt; i++) {
-                                req.getRequester().addToAnythingQueue(drawBuffer.getResource());
-                            }
+                            transfers.forEach(rsc -> req.getRequester().addToAnythingQueue(rsc));
                         }
                     }
                 }
@@ -69,7 +67,7 @@ public class FactorySim {
 
                         suppliers.get(supplier);
                         for (ResourceBuffer drawBuffer : supplier.getOutputResourceBuffer()) {
-                            if (!whitelistRequest.getResources().contains(drawBuffer.getResource(), true)) {
+                            if (!whitelistRequest.getWhitelist().contains(drawBuffer.getResourceId(), false)) {
                                 continue;
                             }
                             if (req.getValue() <= 0) {
@@ -81,11 +79,9 @@ public class FactorySim {
                                 throughput += p.getSpeed();
                             }
                             int drawAmt = min(throughput, min(drawBuffer.getCurrent(), req.getValue()));
-                            drawBuffer.draw(drawAmt);
+                            Array<Resource> transfers = drawBuffer.draw(drawAmt);
                             req.reduceValue(drawAmt);
-                            for (int i = 0; i < drawAmt; i++) {
-                                req.getRequester().addToAnythingQueue(drawBuffer.getResource());
-                            }
+                            transfers.forEach(rsc -> req.getRequester().addToAnythingQueue(rsc));
                         }
                     }
                 }
@@ -95,7 +91,7 @@ public class FactorySim {
                             break;
                         }
                         suppliers.get(supplier);
-                        if (suppliers.get(supplier).contains(req.getResource(), true)) {
+                        if (suppliers.get(supplier).contains(req.getResource(), false)) {
                             int throughput = 0;
                             Array<IOPort> portArr = supplier.getOutputBuildings().get(req.getRequester());
                             for (IOPort p : portArr) {
@@ -104,9 +100,11 @@ public class FactorySim {
                             ResourceBuffer drawBuffer = supplier.getOutputResourceBuffer(req.getResource());
                             if (drawBuffer != null) {
                                 int drawAmt = min(throughput, min(drawBuffer.getCurrent(), req.getValue()));
-                                drawBuffer.draw(drawAmt);
+                                ResourceBuffer.directTransfer(
+                                    drawBuffer,
+                                    req.getRequester().getInputResourceBuffer(req.getResource()),
+                                    drawAmt);
                                 req.reduceValue(drawAmt);
-                                req.getRequester().getInputResourceBuffer(req.getResource()).add(drawAmt);
                             }
                         }
                     }
