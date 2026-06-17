@@ -107,7 +107,7 @@ public class ResourceBuffer {
         if (capacity < 0) {
             capacity = 0;
         }
-        while (capacity > buffer.size) {
+        while (buffer.size > capacity) {
             buffer.removeLast();
         }
     }

@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Coreworks;
 import com.main.CoreWorks.Factory.*;
+import com.main.CoreWorks.Factory.Tubes.Tube;
 import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.entities.*;
 import com.main.CoreWorks.simulators.*;
@@ -31,6 +32,12 @@ public class CombatScreen implements Screen {
     private Coords hoveredGridCoords = null;
     private boolean hoveredCanPlace = false;
     private boolean isPaused = true;
+
+    // tube placement fields
+    private boolean tubeMode = false;
+    DirectedCoords downPoint;
+    DirectedCoords upPoint;
+
 
     // Below field handles the scene2D UI
     private Stage stage;
@@ -101,13 +108,18 @@ public class CombatScreen implements Screen {
         Table topTable = new Table();
         topTable.top().left().pad(10);
         topTable.add(new Label("Coreworks", skin)).pad(20);
-        topTable.add(new Label("Ticks: " + tickCount, skin)).pad(20);
+        topTable.add(new Label("Tick:\n" + tickCount, skin)).pad(20);
         topTable.add(new Label(runState.getPlayer().toString(), skin)).pad(20);
         if (selectedBuilding == null) {
             topTable.add(new Label("Selected: None ", skin)).pad(20);
         } else {
             topTable.add(new Label("Selected: " + selectedBuilding.displayName(), skin)).pad(20);
             topTable.add(new Label("Press R to rotate \n Current rotation: " + selectedBuilding.getRotation(), skin)).pad(20);
+        }
+        if (tubeMode) {
+            topTable.add(new Label("Adding Tubes\nPress T to exit", skin)).pad(20);
+        } else {
+            topTable.add(new Label("Press T to add Tubes", skin)).pad(20);
         }
         if (isPaused) {
             topTable.add(new Label("PAUSED \n Press Space to Continue", skin)).pad(20);
@@ -345,18 +357,38 @@ public class CombatScreen implements Screen {
             for (int y = 0; y < gridHeight; y++) {
                 int bottomLeftCorner = gridStartX + x * tileSize;
                 int topLeftCorner = gridEndY - (y + 1) * tileSize; // offset by one since libGDX stores its object origins in the bottom left
-                Building occupied = controller.getFactorySim().getGrid().getBuildingAt(x, y);
+                Structure occupied = controller.getFactorySim().getGrid().getStructureAt(x, y);
 
                 // If there is a non-disabled building, draw it as blue
-                if (occupied != null && occupied.isEnabled()) {
-                    shapeRenderer.setColor(Color.BLUE);
-                    shapeRenderer.rect(bottomLeftCorner, topLeftCorner, tileSize, tileSize);
-                }
+                if (occupied instanceof Building bldg) {
+                    if (bldg.isEnabled()) {
+                        shapeRenderer.setColor(Color.BLUE);
+                        shapeRenderer.rect(bottomLeftCorner, topLeftCorner, tileSize, tileSize);
+                    }
 
-                // If there is a disabled building, draw it as yellow
-                if (occupied != null && !occupied.isEnabled()) {
-                    shapeRenderer.setColor(Color.YELLOW);
-                    shapeRenderer.rect(bottomLeftCorner, topLeftCorner, tileSize, tileSize);
+                    // If there is a disabled building, draw it as yellow
+                    if (!bldg.isEnabled()) {
+                        shapeRenderer.setColor(Color.YELLOW);
+                        shapeRenderer.rect(bottomLeftCorner, topLeftCorner, tileSize, tileSize);
+                    }
+                } else if (occupied instanceof Tube tube) {
+                    // if its a tube, do something else
+                    int i = 0;
+                    for (boolean conn : tube.getConnections1()) {
+                        if (conn) {
+                            pipeDrawSwitcher(i, bottomLeftCorner, topLeftCorner, Color.GRAY);
+                        }
+                        i++;
+                    }
+                    if (tube.getDouble()) {
+                        i = 0;
+                        for (boolean conn : tube.getConnections2()) {
+                            if (conn) {
+                                pipeDrawSwitcher(i, bottomLeftCorner, topLeftCorner, Color.LIGHT_GRAY);
+                            }
+                            i++;
+                        }
+                    }
                 }
             }
         }
@@ -414,7 +446,7 @@ public class CombatScreen implements Screen {
 
         // Press R to rotate building
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            if (selectedBuilding == null || selectedBuilding.isOnGrid()) {
+            if (selectedBuilding == null) {
                 return;
             }
             int nextRotation = (selectedBuilding.getRotation() + 1) % 4;
@@ -424,6 +456,42 @@ public class CombatScreen implements Screen {
         // Pause will be tied to Spacebar
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             isPaused = !isPaused;
+            needRefresh = true;
+        }
+
+        // Tube placement mode is T (for now)
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+            tubeMode = !tubeMode;
+            if (tubeMode) {
+                // deselect building
+                selectedBuilding = null;
+                // tube mode handling here for now
+                Gdx.input.setInputProcessor(new InputAdapter() {
+
+                    @Override
+                    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                        if (button == Input.Buttons.LEFT) {
+                            Vector2 mTCoords = translateMouseToWorld();
+                            downPoint = getGridQuadrantAt(mTCoords.x, mTCoords.y);
+                        }
+                        return true;
+                    }
+
+                    @Override
+                    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+                        if (button == Input.Buttons.LEFT) {
+                            Vector2 mTCoords = translateMouseToWorld();
+                            upPoint = getGridQuadrantAt(mTCoords.x, mTCoords.y);
+                        }
+                        return true;
+                    }
+
+                });
+            } else {
+                Gdx.input.setInputProcessor(stage);
+                downPoint = null;
+                upPoint = null;
+            }
             needRefresh = true;
         }
 
@@ -440,27 +508,46 @@ public class CombatScreen implements Screen {
 
         // Handles Placement preview via mouse hovering
         hoveredGridCoords = getGridAt(mouseTranslatedX, mouseTranslatedY);
-        if (selectedBuilding != null && hoveredGridCoords != null) {
-            hoveredGridCoords = getGridAt(
-                mouseTranslatedX - (float) (selectedBuilding.getProjectedShape()[0].length * tileSize) / 2 + tileSize/2,
-                mouseTranslatedY + (float) (selectedBuilding.getProjectedShape().length * tileSize) / 2 - tileSize/2);
-            if (hoveredGridCoords != null) {
-                hoveredCanPlace = controller.getFactorySim().getGrid().checkValidPosition(selectedBuilding, hoveredGridCoords.x, hoveredGridCoords.y, selectedBuilding.getRotation());
+
+        if (!tubeMode) {
+            // Handles Placement preview via mouse hovering
+            if (selectedBuilding != null && hoveredGridCoords != null) {
+                hoveredGridCoords = getGridAt(
+                    mouseTranslatedX - (float) (selectedBuilding.getProjectedShape()[0].length * tileSize) / 2 + tileSize / 2,
+                    mouseTranslatedY + (float) (selectedBuilding.getProjectedShape().length * tileSize) / 2 - tileSize / 2);
+                if (hoveredGridCoords != null) {
+                    hoveredCanPlace = controller.getFactorySim().getGrid().checkValidPosition(selectedBuilding, hoveredGridCoords.x, hoveredGridCoords.y, selectedBuilding.getRotation());
+                } else {
+                    hoveredCanPlace = false;
+                }
             } else {
                 hoveredCanPlace = false;
             }
-        } else {
-            hoveredCanPlace = false;
-        }
 
-        // Handles left and right clicks
-        if (Gdx.input.justTouched()) {
-            if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-                leftClick(mouseTranslatedX, mouseTranslatedY);
+            // Handles left and right clicks
+            if (Gdx.input.justTouched()) {
+                if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+                    leftClick(mouseTranslatedX, mouseTranslatedY);
+                }
+
+                if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+                    rightClick(mouseTranslatedX, mouseTranslatedY);
+                }
             }
-
+        } else {
+            if (upPoint != null) {
+                if (downPoint != null) {
+                    if (upPoint.x == downPoint.x &&
+                        upPoint.y == downPoint.y &&
+                        upPoint.dir != downPoint.dir) {
+                        controller.getFactorySim().getGrid().addTube(upPoint.x, upPoint.y, downPoint.dir, upPoint.dir);
+                    }
+                }
+                upPoint = null;
+                downPoint = null;
+            }
             if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
-                rightClick(mouseTranslatedX, mouseTranslatedY);
+                controller.getFactorySim().getGrid().removeTube(hoveredGridCoords.x, hoveredGridCoords.y);
             }
         }
     }
@@ -507,13 +594,46 @@ public class CombatScreen implements Screen {
             selectedBuilding = null;
             needRefresh = true;
         } else {
-            Building building = controller.getFactorySim().getGrid().getBuildingAt(coords.x, coords.y);
-            if (building == null) {
-                return;
+            Building building = controller.getFactorySim().getGrid().removeBuilding(coords.x, coords.y);
+            if (building != null) {
+                controller.getCombatSim().getPlayer().addBuilding(building);
             }
-            controller.getFactorySim().getGrid().removeBuilding(building);
-            controller.getCombatSim().getPlayer().addBuilding(building);
             needRefresh = true;
+        }
+    }
+
+    // draws pipes
+    private void pipeDrawSwitcher(int rot, float tileX, float tileY, Color colour) {
+        shapeRenderer.setColor(colour);
+        switch (rot) {
+            case 0 -> {
+                shapeRenderer.rect(
+                    tileX + (float) tileSize /3,
+                    tileY + (float) tileSize /3,
+                    (float) tileSize /3,
+                    (float) (2 * tileSize) /3);
+            }
+            case 1 -> {
+                shapeRenderer.rect(
+                    tileX + (float) tileSize /3,
+                    tileY + (float) tileSize /3,
+                    (float) (2 * tileSize) /3,
+                    (float) tileSize /3);
+            }
+            case 2 -> {
+                shapeRenderer.rect(
+                    tileX + (float) tileSize /3,
+                    tileY,
+                    (float) tileSize /3,
+                    (float) (2 * tileSize) /3);
+            }
+            case 3 -> {
+                shapeRenderer.rect(
+                    tileX,
+                    tileY + (float) tileSize /3,
+                    (float) (2 * tileSize) /3,
+                    (float) tileSize /3);
+            }
         }
     }
 

@@ -293,7 +293,7 @@ public class Tube extends Structure {
                     fullConnect = true;
                 }
 
-            } else if (connections1[dir1] && connections1[dir2]) {
+            } else if (!connections1[dir1] && !connections1[dir2]) {
                 hasDouble = true;
                 connections2[dir1] = true;
                 connections2[dir2] = true;
