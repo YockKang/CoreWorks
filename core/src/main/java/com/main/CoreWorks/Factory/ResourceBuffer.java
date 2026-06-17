@@ -1,34 +1,49 @@
 package com.main.CoreWorks.Factory;
 
+import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Factory.ResourceRequest.*;
 import com.main.CoreWorks.Resources.Resource;
+import com.main.CoreWorks.database.ResourceDatabase;
 
 
 public class ResourceBuffer {
-    protected Resource resource;
+    protected String resourceName;
+    protected String resourceId;
     protected int capacity;
-    protected int current;
+    protected Queue<Resource> buffer;
 
-    public ResourceBuffer(Resource r, int cap, int val) {
-        resource = r;
+    public ResourceBuffer(String id, int cap, int val) {
+        resourceId = id;
+        resourceName = ResourceDatabase.getName(id);
         capacity = cap;
-        current = val;
+        buffer = new Queue<>(cap);
+        for (int i = 0; i < val; i++) {
+            buffer.addLast(ResourceDatabase.get(resourceId));
+            if (buffer.size >= capacity) {
+                break;
+            }
+        }
     }
 
-    public ResourceBuffer(Resource r, int cap) {
-        resource = r;
+    public ResourceBuffer(String id, int cap) {
+        resourceId = id;
+        resourceName = ResourceDatabase.getName(id);
         capacity = cap;
-        current = 0;
+        buffer = new Queue<>(cap);
     }
 
     @Override
     public String toString() {
         return new StringBuilder()
-            .append(resource).append(": ").append(current).append("/").append(capacity).toString();
+            .append(resourceName).append(": ").append(buffer.size).append("/").append(capacity).toString();
     }
 
-    public Resource getResource() {
-        return resource;
+    public String getResource() {
+        return resourceName;
+    }
+
+    public String getResourceId() {
+        return resourceName;
     }
 
     public int getCapacity() {
@@ -36,33 +51,54 @@ public class ResourceBuffer {
     }
 
     public int getCurrent() {
-        return current;
+        return buffer.size;
     }
 
     public boolean isFull() {
-        return current >= capacity;
+        return buffer.size >= capacity;
     }
 
     public boolean tryAdd(int val) {
-        return current + val <= capacity;
+        return buffer.size + val <= capacity;
     }
 
-    public void add(int val) {
-        current += val;
+    public void add(Resource rsc) {
+        buffer.addLast(rsc);
+    }
+
+    public void add(Array<Resource> rsc) {
+        rsc.forEach(r -> buffer.addLast(r));
+    }
+
+    public void addNew(int val) {
+        for (int i = 0; i < val; i++) {
+            buffer.addLast(ResourceDatabase.get(resourceId));
+        }
     }
 
     public boolean tryDraw(int val) {
-        return current >= val;
+        return buffer.size >= val;
     }
 
-    public void draw(int val) {
-        current -= val;
+    public Array<Resource> draw() {
+        return draw(1);
+    }
+
+    public Array<Resource> draw(int val) {
+        Array<Resource> arr = new Array<>();
+        for (int i = 0; i < val; i++) {
+            if (buffer.size == 0){
+                break;
+            }
+            arr.add(buffer.removeFirst());
+        }
+        return arr;
     }
 
     public void setCapacity(int newCap) {
         capacity = newCap;
-        if (capacity > current) {
-            current = capacity;
+        while (capacity > buffer.size) {
+            buffer.removeLast();
         }
     }
 
@@ -71,26 +107,38 @@ public class ResourceBuffer {
         if (capacity < 0) {
             capacity = 0;
         }
-        if (capacity > current) {
-            current = capacity;
+        while (capacity > buffer.size) {
+            buffer.removeLast();
         }
     }
 
     public void setCurrent(int n) {
-        if (n < 0) {
-            current = 0;
-        } else if (capacity <= n) {
-            current = capacity;
+        if (n <= 0) {
+            buffer.clear();
         } else {
-            current = n;
+            if (n > capacity) {
+                n = capacity;
+            }
+            int delta = n - buffer.size;
+            if (delta < 0) {
+                draw(-delta);
+            } else if (delta > 0) {
+                addNew(delta);
+            }
         }
     }
+
     public ResourceRequest generateDemandRequest(Building b) {
         if (!isFull()) {
-            return new ResourceRequest(resource, b, capacity - current, 0);
+            return new ResourceRequest(resourceId, b, capacity - buffer.size, 0);
         } else {
             return null;
         }
     }
 
+    public static void directTransfer(ResourceBuffer from, ResourceBuffer to, int amount) {
+        for (int i = 0; i < amount; i++) {
+            from.buffer.addLast(from.buffer.removeFirst());
+        }
+    }
 }

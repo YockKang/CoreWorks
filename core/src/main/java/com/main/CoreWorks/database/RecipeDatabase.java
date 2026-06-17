@@ -7,8 +7,8 @@ import com.main.CoreWorks.Resources.*;
 public class RecipeDatabase {
     private static final ObjectMap<String, Recipe> RecipeDB = new ObjectMap<>();
 
-    public static Recipe register(Array<Resource> inputs,
-                                  Array<Resource> outputs,
+    public static Recipe register(Array<String> inputs,
+                                  Array<String> outputs,
                                   Array<Integer> inputMultiple,
                                   Array<Integer> outputMultiple,
                                   Array<String> groups,
@@ -27,8 +27,8 @@ public class RecipeDatabase {
         return type;
     }
 
-    public static Recipe register(Resource[] inputs,
-                                  Resource[] outputs,
+    public static Recipe register(String[] inputs,
+                                  String[] outputs,
                                   Integer[] inputMultiple,
                                   Integer[] outputMultiple,
                                   String[] groups,

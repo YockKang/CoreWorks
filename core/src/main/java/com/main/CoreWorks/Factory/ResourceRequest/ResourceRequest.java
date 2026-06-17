@@ -4,12 +4,12 @@ import com.main.CoreWorks.Factory.Building;
 import com.main.CoreWorks.Resources.Resource;
 
 public class ResourceRequest {
-    protected Resource resource;
+    protected String resource;
     protected Building requester;
     protected int value;
     protected int priority;
 
-    public ResourceRequest(Resource r, Building building, int v, int p) {
+    public ResourceRequest(String r, Building building, int v, int p) {
         resource = r;
         requester = building;
         value = v;
@@ -21,7 +21,7 @@ public class ResourceRequest {
         return requester.displayName() + " requests " + value + " " + resource + " @P: " + priority;
     }
 
-    public Resource getResource() {
+    public String getResource() {
         return resource;
     }
 

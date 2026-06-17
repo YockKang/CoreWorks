@@ -2,15 +2,17 @@ package com.main.CoreWorks.Factory;
 
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Factory.ResourceRequest.*;
+import com.main.CoreWorks.Factory.Tubes.*;
 import com.main.CoreWorks.Recipe.Recipe;
 import com.main.CoreWorks.Resources.Resource;
 import com.main.CoreWorks.database.*;
 import com.main.CoreWorks.moveset.*;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 
-public abstract class Building {
+public abstract class Building extends Structure implements Updatable, Comparable<Building> {
 
 
     // confirmed fields
@@ -24,23 +26,21 @@ public abstract class Building {
     protected Array<ResourceBuffer> inputBuffer;
     protected Array<ResourceBuffer> outputBuffer;
     protected int capacityMult = 5;
-    protected int xCoord = -1; // bottom is 0
-    protected int yCoord = -1; // left is 0
     protected int rotation = 0; // 0 is "up", +1 for clockwise rotation
     protected Recipe recipe = null;
     protected Array<IOPort> ports = new Array<>(0);
     protected int priority = 0;
-    protected float speedBase= 1f;
+    protected float speedBase = 1f;
     protected float speedMultiplier = 1f;
     protected float speedFlat = 0f;
 
-    protected ObjectMap<Building, Array<Resource>> inputBuildings = new ObjectMap<>();
+    protected ObjectMap<Building, Array<String>> inputBuildings = new ObjectMap<>();
+    protected ObjectSet<TubeNet> connectedTubeNet = new ObjectSet<>();
     protected ObjectMap<Building, Array<IOPort>> outputBuildings = new ObjectMap<>();
 
-    protected Array<Resource> whitelist = null;
+    protected Array<String> whitelist = null;
     protected Array<Recipe> validRecipes = null;
 
-    private static final Array<String> upgradeTags = new Array<>(new String[]{"Speed", "Buffer"});
 
 
     protected boolean[][] shape;
@@ -62,6 +62,7 @@ public abstract class Building {
                     Array<ResourceBuffer> outputs,
                     boolean[][] shape,
                     String nameIn) {
+        super();
         cooldownTimer = coolDown;
         inputBuffer = inputs;
         outputBuffer = outputs;
@@ -70,6 +71,7 @@ public abstract class Building {
     }
 
     public Building(JsonValue data) {
+        super();
         this.name = data.getString("Name");
         this.idNum = data.getInt("idNum");
         this.recipe = null;
@@ -136,12 +138,7 @@ public abstract class Building {
 
         if (data.get("Whitelist") != null) {
             String[] whitelistArr = data.get("Whitelist").asStringArray();
-            this.whitelist =
-                new Array<>(Arrays.stream(whitelistArr)
-                    .map(ResourceDatabase::get)
-                    .toList()
-                    .toArray(new Resource[]{})
-                );
+            this.whitelist = new Array<>(whitelistArr);
         }
 
         if (data.get("Group") != null) {
@@ -179,11 +176,11 @@ public abstract class Building {
         return name;
     }
 
-    public int[] getGlobalCoord(int x , int y) {
+    public int[] getGlobalCoord(int x, int y) {
         return tryGlobalCoord(x, y, xCoord, yCoord);
     }
 
-    public int[] tryGlobalCoord(int x , int y, int tryPosX, int tryPosY) {
+    public int[] tryGlobalCoord(int x, int y, int tryPosX, int tryPosY) {
         return getGlobalCoord(x, y, tryPosX, tryPosY, this.rotation, this.shape);
     }
 
@@ -279,7 +276,7 @@ public abstract class Building {
     }
 
 
-    protected int[] getLocalCoord(int x , int y) {
+    protected int[] getLocalCoord(int x, int y) {
         return getLocalCoord(x, y, this.xCoord, this.yCoord, this.rotation, this.shape);
     }
 
@@ -319,11 +316,12 @@ public abstract class Building {
     public void clearNeighbours() {
         inputBuildings.keys().forEach(building -> building.removeOutput(this));
         outputBuildings.keys().forEach(building -> building.removeInput(this));
+        connectedTubeNet.clear();
         inputBuildings.clear();
         outputBuildings.clear();
     }
 
-    public void updateInputs(Array<Array<Building>> grid) {
+    public void updateInputs(Array<Array<Structure>> grid) {
         ObjectSet<Building> neighbours = new ObjectSet<>();
 
         for (int lr = 0; lr < shape.length; lr++) {
@@ -344,7 +342,7 @@ public abstract class Building {
                             gc[0]--;
                         }
                     }
-                    Building maybeNeighbour = null;
+                    Structure maybeNeighbour = null;
                     try {
                         maybeNeighbour = grid.get(gc[1]).get(gc[0]);
                     } catch (Exception e) {
@@ -352,7 +350,14 @@ public abstract class Building {
                     }
                     if ((maybeNeighbour != null) &&
                         (maybeNeighbour != this)) {
-                        neighbours.add(maybeNeighbour);
+                        if (maybeNeighbour instanceof Tube tubeNeighbour) {
+                            TubeNet network = tubeNeighbour.getNetwork((r + 2) % 4);
+                            if (network != null) {
+                                connectedTubeNet.add(network);
+                            }
+                        } else if (maybeNeighbour instanceof Building bldg) {
+                            neighbours.add(bldg);
+                        }
                     }
                 }
             }
@@ -363,7 +368,7 @@ public abstract class Building {
 
     }
 
-    public void updateOutputs(Array<Array<Building>> grid) {
+    public void updateOutputs(Array<Array<Structure>> grid) {
         if (this.ports != null) {
             for (IOPort p : ports) {
                 int[] targetCoord = getGlobalCoord(p.getX(), p.getY());
@@ -383,7 +388,7 @@ public abstract class Building {
                         targetCoord[0]--;
                     }
                 }
-                Building target;
+                Structure target;
                 try {
                     target = grid.get(targetCoord[1]).get(targetCoord[0]);
                 } catch (Exception e) {
@@ -393,8 +398,8 @@ public abstract class Building {
             }
 
             for (IOPort p : ports) {
-                if (p.target != null) {
-                    addOutput(p.target, p);
+                if (p.target instanceof Building bldg) {
+                    addOutput(bldg, p);
                 }
             }
         }
@@ -403,7 +408,7 @@ public abstract class Building {
 
 
     public void addOutput(Building b, IOPort p) {
-        Array<Resource> matches = matchResource(b, true);
+        Array<String> matches = matchResource(b, true);
         if (!outputBuildings.containsKey(b)) {
             outputBuildings.put(b, new Array<IOPort>());
         }
@@ -419,10 +424,10 @@ public abstract class Building {
         outputBuildings.remove(b);
     }
 
-    public Array<Resource> matchResource(Building b, boolean thisSupplier) {
-        if (this.recipe != null && b.recipe!= null) {
-            Array<Resource> sup;
-            Array<Resource> cons;
+    public Array<String> matchResource(Building b, boolean thisSupplier) {
+        if (this.recipe != null && b.recipe != null) {
+            Array<String> sup;
+            Array<String> cons;
             if (thisSupplier) {
                 sup = this.recipe.getOutputs();
                 cons = b.recipe.getInputs();
@@ -431,11 +436,11 @@ public abstract class Building {
                 sup = b.recipe.getOutputs();
             }
 
-            ObjectSet<Resource> consAsSet = new ObjectSet<Resource>();
+            ObjectSet<String> consAsSet = new ObjectSet<String>();
             consAsSet.addAll(cons);
-            Array<Resource> matches = new Array<>(0);
+            Array<String> matches = new Array<>(0);
 
-            for (Resource rsc : sup) {
+            for (String rsc : sup) {
                 if (consAsSet.contains(rsc)) {
                     matches.add(rsc);
                 }
@@ -459,9 +464,9 @@ public abstract class Building {
         return requests;
     }
 
-    public ResourceBuffer getOutputResourceBuffer(Resource r) {
+    public ResourceBuffer getOutputResourceBuffer(String r) {
         for (ResourceBuffer buffer : outputBuffer) {
-            if (buffer.resource == r) {
+            if (Objects.equals(buffer.resourceId, r)) {
                 return buffer;
             }
         }
@@ -476,16 +481,16 @@ public abstract class Building {
 
     }
 
-    public ResourceBuffer getInputResourceBuffer(Resource r) {
+    public ResourceBuffer getInputResourceBuffer(String r) {
         for (ResourceBuffer buffer : inputBuffer) {
-            if (buffer.resource == r) {
+            if (Objects.equals(buffer.resourceId, r)) {
                 return buffer;
             }
         }
         return null;
     }
 
-    public ObjectMap<Building, Array<Resource>> getInputBuildings() {
+    public ObjectMap<Building, Array<String>> getInputBuildings() {
         return inputBuildings;
     }
 
@@ -503,24 +508,25 @@ public abstract class Building {
         this.cooldownTimer = this.recipe.getDuration();
 
         // grab new inputs
-        Array<Resource> inputs = this.recipe.getInputs();
+        Array<String> inputs = this.recipe.getInputs();
         Array<Integer> inputMults = this.recipe.getInputMultipliers();
         // reset queues
         this.inputBuffer.clear();
-        for (int i  = 0; i < inputs.size; i++) {
+        for (int i = 0; i < inputs.size; i++) {
             this.inputBuffer.add(new ResourceBuffer(inputs.get(i), capacityMult * inputMults.get(i)));
         }
 
         // grab new outputs
-        Array<Resource> outputs = this.recipe.getOutputs();
+        Array<String> outputs = this.recipe.getOutputs();
         Array<Integer> outputMults = this.recipe.getOutputMultipliers();
         // reset queues
         this.outputBuffer.clear();
-        for (int i  = 0; i < outputs.size; i++) {
+        for (int i = 0; i < outputs.size; i++) {
             this.outputBuffer.add(new ResourceBuffer(outputs.get(i), capacityMult * outputMults.get(i)));
         }
     }
 
+    @Override
     public Array<Move> updateTick() {
         if (isEnabled) {
             return updateEnabled();
@@ -551,14 +557,6 @@ public abstract class Building {
     public void setPos(int x, int y) {
         xCoord = x;
         yCoord = y;
-    }
-
-    public int getX() {
-        return xCoord;
-    }
-
-    public int getY() {
-        return yCoord;
     }
 
     public boolean[][] getShape() {
@@ -598,6 +596,7 @@ public abstract class Building {
     public float getSpeedMult() {
         return speedMultiplier;
     }
+
     public void addSpeedMult(float mult) {
         speedMultiplier += mult;
     }
@@ -616,10 +615,6 @@ public abstract class Building {
 
     public boolean isEnabled() {
         return isEnabled;
-    }
-
-    public static Array<String> getUpgradeTags() {
-        return upgradeTags;
     }
 
     public void clearPorts() {
@@ -684,4 +679,33 @@ public abstract class Building {
     }
 
 
+    public boolean hasPortFor(int x, int y, int dir) {
+        int[] local = getLocalCoord(x, y);
+        for (IOPort p :ports) {
+            if (p.getX() == local[0] &&
+                p.getY() == local[1] &&
+                (p.getDir() + rotation) % 4 == dir) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    @Override
+    public int compareTo(Building b) {
+        if (!isEnabled && b.isEnabled) {
+            return -1;
+        } else if (isEnabled && !b.isEnabled) {
+            return 1;
+        } else {
+            int priorityDiff = priority - b.priority;
+            if (priorityDiff != 0) {
+                return priorityDiff;
+            } else {
+                float speedDiff = getSpeed() - b.getSpeed();
+                return (int) Math.copySign(Math.ceil(Math.abs(speedDiff)), speedDiff);
+            }
+        }
+    }
 }

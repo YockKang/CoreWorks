@@ -7,17 +7,17 @@ import com.main.CoreWorks.database.*;
 import java.util.Arrays;
 
 public class Recipe {
-    protected final Array<Resource> input;
+    protected final Array<String> input;
     protected final Array<Integer> inputMult;
-    protected final Array<Resource> output;
+    protected final Array<String> output;
     protected final Array<Integer> outputMult;
     protected final Array<String> validGroups;
     protected final int duration;
     protected final String name;
     protected final String id;
 
-    public Recipe(Array<Resource> inputs,
-                  Array<Resource> outputs,
+    public Recipe(Array<String> inputs,
+                  Array<String> outputs,
                   Array<Integer> inputMultiple,
                   Array<Integer> outputMultiple,
                   Array<String> groups,
@@ -40,16 +40,16 @@ public class Recipe {
         }
     }
 
-    public Recipe(Resource[] inputs,
-                  Resource[] outputs,
+    public Recipe(String[] inputs,
+                  String[] outputs,
                   Integer[] inputMultiple,
                   Integer[] outputMultiple,
                   String[] groups,
                   int dur,
                   String name,
                   String id) {
-        this.input = new Array<Resource>(inputs);
-        this.output = new Array<Resource>(outputs);
+        this.input = new Array<String>(inputs);
+        this.output = new Array<String>(outputs);
         this.inputMult = new Array<Integer>(inputMultiple);
         this.outputMult = new Array<Integer>(outputMultiple);
         this.validGroups = new Array<String>(groups);
@@ -66,16 +66,8 @@ public class Recipe {
 
     public Recipe(JsonValue data) {
         Resource[] r = new Resource[0];
-        this.input = new Array<Resource>(
-            Arrays.stream(data.get("InputId").asStringArray())
-                .map(ResourceDatabase::get)
-                .toList()
-                .toArray(r));
-        this.output = new Array<Resource>(
-            Arrays.stream(data.get("OutputId").asStringArray())
-                .map(ResourceDatabase::get)
-                .toList()
-                .toArray(r));
+        this.input = new Array<>(data.get("InputId").asStringArray());
+        this.output = new Array<>(data.get("OutputId").asStringArray());
         this.inputMult = new Array<Integer>(
             Arrays.stream(
                 data.get("InputMult")
@@ -129,7 +121,7 @@ public class Recipe {
         return this.name + ":\n" + "["  + inputStr + "]\n" + duration + " ticks\n["  + outputStr + "]";
     }
 
-    public Array<Resource> getInputs() {
+    public Array<String> getInputs() {
         return input;
     }
 
@@ -137,7 +129,7 @@ public class Recipe {
         return inputMult;
     }
 
-    public Array<Resource> getOutputs() {
+    public Array<String> getOutputs() {
         return output;
     }
 

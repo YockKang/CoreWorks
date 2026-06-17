@@ -116,7 +116,7 @@ public class Refiner extends Building{
     public void endCraft() {
         Array<Integer> mults = this.recipe.getOutputMultipliers();
         for (int i = 0; i < mults.size; i++) {
-            this.outputBuffer.get(i).add(mults.get(i));
+            this.outputBuffer.get(i).addNew(mults.get(i));
         }
     }
 
