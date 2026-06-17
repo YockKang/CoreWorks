@@ -121,10 +121,9 @@ public class CombatScreen implements Screen {
         logTable.top().center();
         logTable.add(new Label("Combat Log:", skin)).row();
         Array<String> log = controller.getCombatSim().getCombatLog();
-        int start = Math.max(0, log.size - 3); // displays the 3 most recent interactions
+        int start = Math.max(0, log.size - 8); // displays the 8 most recent interactions
         for (int i = start; i < log.size; i++) {
             logTable.add(new Label(log.get(i), skin)).right().row();
-            needRefresh = true;
         }
         middleTable.add(logTable).expand().right().top().row();
 
@@ -488,11 +487,13 @@ public class CombatScreen implements Screen {
                 controller.getCombatSim().getPlayer().removeBuilding(selectedBuilding);
                 needRefresh = true;
                 selectedBuilding = null;
+                return;
             }
         }
         hoveredGridCoords = getGridAt(mouseTranslatedX, mouseTranslatedY);
         if (hoveredGridCoords != null) {
             selectedBuilding = controller.getFactorySim().getGrid().getBuildingAt(hoveredGridCoords.x, hoveredGridCoords.y);
+            needRefresh = true;
         }
     }
 
@@ -506,6 +507,7 @@ public class CombatScreen implements Screen {
         Coords coords = getGridAt(mouseTranslatedX, mouseTranslatedY);
         if (selectedBuilding != null || coords == null) {
             selectedBuilding = null;
+            needRefresh = true;
         } else {
             Building building = controller.getFactorySim().getGrid().getBuildingAt(coords.x, coords.y);
             if (building == null) {
