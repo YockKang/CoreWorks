@@ -3,6 +3,7 @@ package com.main.CoreWorks.Generators;
 import com.badlogic.gdx.utils.Array;
 import com.main.CoreWorks.RunPersistence.*;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -71,7 +72,7 @@ public class RunMapGenerator {
         // Nested array of arrays of nodes, each internal array represents rows, external array represents the full map
         Array<Array<MapNode>> allNodes = new Array<>();
 
-        // Creates the start Node
+        // Creates the start Node (Guaranteed to be a combat node)
         Array<MapNode> startRowNode = new Array<>();
         int startCol = totalCols / 2;
         float startX = generateXCoords(startCol, totalCols, leftBound, rightBound);
@@ -135,27 +136,43 @@ public class RunMapGenerator {
 
     // Helper function to connect the different rows
     private static void connectRows(Array<MapNode> fromRow, Array<MapNode> toRow, Random random) {
-        for (MapNode fromNode : fromRow) {
-            Array<MapNode> canConnectNodes = new Array<>();
+        // Sort nodes by column number to make the map less criss-crossy
+        fromRow.sort(Comparator.comparingInt(MapNode::getCol));
+        toRow.sort(Comparator.comparingInt(MapNode::getCol));
 
-            // Try to find suitable adjacent nodes first (ie adjacent col in different rows
+        // Connect nodes that are close without criss-crossing as much as possible
+        for (MapNode fromNode : fromRow) {
             for (MapNode toNode : toRow) {
+                // Look only for nodes within x columns away
                 if (Math.abs(fromNode.getCol() - toNode.getCol()) <= 1) {
-                    canConnectNodes.add(toNode);
+                    // If it crosses, do not add a connection
+                    if (willCross(fromNode, toNode, fromRow)) {
+                        continue;
+                    }
+
+                    // otherwise, add the connection, minimally 1, with a chance of more
+                    if (random.nextBoolean() || fromNode.getNextNodes().isEmpty()) {
+                        fromNode.addNextNode(toNode);
+                    }
                 }
             }
+        }
 
-            // If there are no adjacent nodes in the next row to the node in the current row, then just connect to every node in the next row to ensure there is outgoing edges
-            if (canConnectNodes.isEmpty()) {
-                canConnectNodes.addAll(toRow);
-            }
-
-            // Randomly pick between 1 and 3 connections, or connect to all nodes, whichever is smaller
-            int connections = Math.min(1 + random.nextInt(3), canConnectNodes.size);
-
-            // Randomly pick any connectable node to form a connection with, limited by max connections
-            for (int i = 0; i < connections; i++) {
-                fromNode.addNextNode(canConnectNodes.get(random.nextInt(canConnectNodes.size)));
+        // Ensure every node has at least 1 outgoing edge, else force it on the closest node
+        for (MapNode fromNode : fromRow) {
+            if (fromNode.getNextNodes().isEmpty()) {
+                MapNode closestNode = null;
+                int closestNodeColDiff = Integer.MAX_VALUE;
+                for (MapNode toNode : toRow) {
+                    int colDiff = Math.abs(fromNode.getCol() - toNode.getCol());
+                    if (colDiff < closestNodeColDiff && !willCross(fromNode, toNode, fromRow)) {
+                        closestNodeColDiff = colDiff;
+                        closestNode = toNode;
+                    }
+                }
+                if (closestNode != null) {
+                    fromNode.addNextNode(closestNode);
+                }
             }
         }
 
@@ -174,7 +191,7 @@ public class RunMapGenerator {
                 int closestNodeColDiff = Integer.MAX_VALUE;
                 for (MapNode fromNode : fromRow) {
                     int colDiff = Math.abs(fromNode.getCol() - toNode.getCol());
-                    if (colDiff < closestNodeColDiff) {
+                    if (colDiff < closestNodeColDiff && !willCross(fromNode, toNode, fromRow)) {
                         closestNodeColDiff = colDiff;
                         closestNode = fromNode;
                     }
@@ -184,6 +201,29 @@ public class RunMapGenerator {
                 }
             }
         }
+    }
+
+    // Helper function to check if any connection would cross
+    // Friendly note: LibGDX array uses more restrictive iterator instances, so functions that would be nested inside an outer libGDX array iterator loop  ('for ( X x : Y )' loops) like this helper method would break if this function ALSO used the iterator (e.g passed as a parameter in this case)
+    // Thus, have to use index based for-loops to bypass this optimization restriction in the nested function code and avoid using the iterator directly
+    private static boolean willCross(MapNode fromNode, MapNode toNode, Array<MapNode> fromRow) {
+        for (int i = 0; i < fromRow.size; i++) {
+            MapNode otherFromNode = fromRow.get(i);
+            for (int j = 0; j < otherFromNode.getNextNodes().size; j++) {
+                MapNode otherToNode = otherFromNode.getNextNodes().get(j);
+                // Cross condition 1: fromNode is left of otherFromNode, but tries to connect the toNode that is on the right of otherToNode
+                if (fromNode.getCol() < otherFromNode.getCol() && toNode.getCol() > otherToNode.getCol()) {
+                    return true;
+                }
+
+                // Cross condition 2: fromNode is right of otherFromNode, but tries to connect the toNode that is on the left of otherToNode
+                if (fromNode.getCol() > otherFromNode.getCol() && toNode.getCol() < otherToNode.getCol()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     // Helper function to generate x coordinates based on node's current column relative to total number of allowed columns
@@ -199,6 +239,7 @@ public class RunMapGenerator {
     }
 
     // Helper function that generates a random node for floor 1, scaling based on the row
+    // Eventually when we add more nodes and node screens, there will be more variety
     private static MapNode createRandomNodeF1(int row, int totalRows, int col, float x, float y, Random random) {
         float difficulty = 0.9f + row * 0.2f;
         int val = random.nextInt(100);
