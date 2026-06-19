@@ -11,6 +11,8 @@ public abstract class MapNode {
     // Stores the position of the node for map drawing
     protected float x;
     protected float y;
+    protected int col;
+    protected int row;
     // Stores connected Nodes
     protected Array<MapNode> nextNodes = new Array<>();
 
@@ -56,5 +58,13 @@ public abstract class MapNode {
 
     public float getMultiplier() {
         return rewardMultiplier;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
     }
 }

@@ -85,6 +85,10 @@ public class MapNodeActor extends Actor {
             return Color.RED;
         }
 
+        if (node instanceof EliteNode) {
+            return Color.PURPLE;
+        }
+
         // Default color for everything else not specifically included
         return Color.MAGENTA;
     }

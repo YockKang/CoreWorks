@@ -3,19 +3,19 @@ package com.main.CoreWorks.RunPersistence;
 import com.badlogic.gdx.utils.Array;
 import com.main.CoreWorks.entities.Enemy;
 
-public class CombatNode extends MapNode{
+public class EliteNode extends MapNode{
     private Array<Enemy> enemies;
 
-    public CombatNode(Array<Enemy> enemies, int tier, float multiplier, float x, float y) {
+    public EliteNode(Array<Enemy> enemies, int tier, float multiplier, float x, float y) {
         this.enemies = enemies;
         this.tier = tier;
         this.rewardMultiplier = multiplier;
         this.x = x;
         this.y = y;
-        this.name = "Combat";
+        this.name = "Elite";
     }
 
-    public CombatNode(Array<Enemy> enemies, int row, int col, int tier, float multiplier, float x, float y) {
+    public EliteNode(Array<Enemy> enemies, int row, int col, int tier, float multiplier, float x, float y) {
         this.enemies = enemies;
         this.tier = tier;
         this.rewardMultiplier = multiplier;
@@ -23,7 +23,7 @@ public class CombatNode extends MapNode{
         this.col = col;
         this.x = x;
         this.y = y;
-        this.name = "Combat";
+        this.name = "Elite";
     }
 
     public Array<Enemy> getEnemies() {

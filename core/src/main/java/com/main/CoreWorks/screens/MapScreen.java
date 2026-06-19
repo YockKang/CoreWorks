@@ -155,7 +155,7 @@ public class MapScreen implements Screen {
 
         // Draws the map + its nodes based on the position generated in RunMapGenerator
         table.add(new Label("Dungeon Map", skin)).row();
-        table.add(new Label("Click a unlocked node to continue", skin)).pad(10).row();
+        table.add(new Label("Click a unlocked node to continue (Drag to pan the map, mouseWheel to zoom in/out)", skin)).pad(10).row();
         for (MapNode node : runState.getRunMap().getNodes()) {
             // Relock all nodes that are not adjacent to the current node
             if (node.isUnlocked() && !node.isCompleted() && !(runState.getCurrNode() == node)) {
@@ -202,6 +202,13 @@ public class MapScreen implements Screen {
         if (node instanceof BossNode bossNode) {
             runState.setCurrNode(node);
             game.setScreen(new CombatScreen(game, runState, bossNode.getEnemies()));
+            return;
+        }
+
+        // Handles EliteNode
+        if (node instanceof EliteNode eliteNode) {
+            runState.setCurrNode(node);
+            game.setScreen(new CombatScreen(game, runState, eliteNode.getEnemies()));
             return;
         }
     }

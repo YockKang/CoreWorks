@@ -18,5 +18,9 @@
   {
     "Tier" : "Boss1",
     "Enemies" : ["FirstBoss"]
+  },
+  {
+    "Tier" : "Elite",
+    "Enemies" : ["MissileDrone", "MissileDrone","AnnoyingDrone", "DisableDrone","AnnoyingDrone", "DisableDrone"]
   }
 ]

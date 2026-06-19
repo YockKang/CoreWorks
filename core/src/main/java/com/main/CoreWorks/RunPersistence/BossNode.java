@@ -15,6 +15,17 @@ public class BossNode extends MapNode{
         this.name = "Boss";
     }
 
+    public BossNode(Array<Enemy> enemies, int row, int col, int tier, float multiplier, float x, float y) {
+        this.enemies = enemies;
+        this.tier = tier;
+        this.rewardMultiplier = multiplier;
+        this.x = x;
+        this.y = y;
+        this.row = row;
+        this.col = col;
+        this.name = "Boss";
+    }
+
     public Array<Enemy> getEnemies() {
         return enemies;
     }
