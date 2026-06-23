@@ -102,7 +102,7 @@ public class Shooter extends Building {
                 dmg = new TrueDamageMove(damage, 0);
             }
             case "Poison" -> {
-                dmg = new StatusEffectMove("Poison", damage, 4, 0.5f, true, 0);
+                dmg = new StatusEffectMove("Poison", damage, 4, 0.5f, true, false, 0);
             }
         }
         for (int i = 0; i < attackCount; i++) {

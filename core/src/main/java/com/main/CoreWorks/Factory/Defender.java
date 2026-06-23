@@ -88,6 +88,9 @@ public class Defender extends Building{
             case ("Shield") -> {
                 move = new ShieldMove(value, 0);
             }
+            case ("ShieldOT") -> {
+                move = new StatusEffectMove("Fortitude", value, 4, .5f, true, true, 0);
+            }
         }
         if (move!= null) {
             for (int i = 0; i < defCount; i++) {

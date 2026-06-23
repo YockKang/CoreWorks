@@ -7,11 +7,13 @@ public class StatusEffect {
     private int duration;
     private int currDuration;
     private float reductionMultiplier;
+    private boolean onSelf;
 
-    public StatusEffect(String type, int value, int dur, float reductionMultiplier, boolean immediateAct) {
+    public StatusEffect(String type, int value, int dur, float reductionMultiplier, boolean immediateAct, boolean onSelf) {
         this.type = type;
         this.value = value;
         this.duration = dur;
+        this.onSelf = onSelf;
         if (immediateAct) {
             this.currDuration = 0;
         } else {
@@ -42,6 +44,10 @@ public class StatusEffect {
 
     public int getValue() {
         return value;
+    }
+
+    public boolean isOnSelf() {
+        return onSelf;
     }
 
     public int getCurrDuration() {

@@ -185,8 +185,22 @@ public class CombatSim {
                 }
             }
             case StatusEffectMove statusEffectMove -> {
+                if (statusEffectMove.getEffect().isOnSelf()) {
+                    move.execute(attacker);
+                    addLog(tick, String.format("%s aplied %s %s to self", attacker.displayName(), move.getValue(), statusEffectMove.getEffect().getType()));
+                } else {
+                    move.execute(target);
+                    addLog(tick, String.format("%s aplied %s %s to %s", attacker.displayName(), move.getValue(), statusEffectMove.getEffect().getType(), target.displayName()));
+                }
+            }
+
+            case TrueDamageMove trueDamageMove -> {
+                int oldHP = target.displayCurrentHp();
                 move.execute(target);
-                addLog(tick, String.format("%s aplied %s %s to %s", attacker.displayName(), move.getValue(), statusEffectMove.getEffect().getType(), target.displayName()));
+                int newHP = target.displayCurrentHp();
+                if (oldHP != newHP) {
+                    addLog(tick, String.format("%s dealt %s piercing damage to %s", attacker.displayName(), move.getValue(), target.displayName()));
+                }
             }
 
             default -> {
@@ -209,6 +223,12 @@ public class CombatSim {
                         Move mv = new TrueDamageMove(value, 0);
                         mv.execute(character);
                         addLog(tick, String.format("%s received %s Poison damage", character.displayName(), value));
+                    }
+
+                    case "Fortitude" -> {
+                        Move mv = new ShieldMove(value, 0);
+                        mv.execute(character);
+                        addLog(tick, String.format("%s gained %s shield", character.displayName(), value));
                     }
 
                     default -> {

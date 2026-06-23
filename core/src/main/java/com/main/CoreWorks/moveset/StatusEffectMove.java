@@ -8,9 +8,9 @@ public class StatusEffectMove extends Move {
 
     private StatusEffect effect;
 
-    public StatusEffectMove(String type, int value, int effectDur, float reductMult, boolean instantAct, int chargeTime) {
+    public StatusEffectMove(String type, int value, int effectDur, float reductMult, boolean instantAct, boolean onSelf, int chargeTime) {
         super("Status Effect", "Applies " + value + " " + type, chargeTime);
-        this.effect = new StatusEffect(type, value, effectDur, reductMult, instantAct);
+        this.effect = new StatusEffect(type, value, effectDur, reductMult, instantAct, onSelf);
     }
 
     public StatusEffectMove(StatusEffect se, int chargeTime) {
