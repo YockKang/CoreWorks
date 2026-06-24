@@ -1,0 +1,27 @@
+{
+  "Release": {
+    "Buildings": [
+      "Defenders.json",
+      "Miners.json",
+      "Refiners.json",
+      "Shooters.json"
+    ],
+    "Recipes": [
+      "Recipes.json"
+    ],
+    "Resources": [
+      "Resources.json"
+    ]
+  },
+  "Dev": {
+    "Buildings": [
+      "DevBuildings.json"
+    ],
+    "Recipes": [
+      "DevRecipes.json"
+    ],
+    "Resources": [
+      "DevResources.json"
+    ]
+  }
+}

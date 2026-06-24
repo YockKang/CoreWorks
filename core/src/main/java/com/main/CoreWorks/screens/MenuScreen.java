@@ -1,6 +1,7 @@
 package com.main.CoreWorks.screens;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Coreworks;
@@ -35,6 +36,7 @@ public class MenuScreen implements Screen {
         //draw text. Remember that x and y are in meters
         game.font.draw(game.batch, "Welcome to Coreworks!!! ", Coreworks.VIEWPORT_WIDTH /2f - 120, Coreworks.VIEWPORT_HEIGHT /2f + 50);
         game.font.draw(game.batch, "Tap anywhere to begin!", Coreworks.VIEWPORT_WIDTH /2f - 120, Coreworks.VIEWPORT_HEIGHT /2f - 50);
+
         game.batch.end();
 
         if (Gdx.input.justTouched()) {

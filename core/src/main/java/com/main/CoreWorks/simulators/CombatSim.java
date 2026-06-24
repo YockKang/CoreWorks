@@ -33,7 +33,7 @@ public class CombatSim {
     }
 
     private void addLog(int tick, String log) {
-        if (combatLog.size >= 4) {
+        if (combatLog.size >= 50) {
             combatLog.removeIndex(0);
         }
         combatLog.add("Tick " + tick + ": " + log);

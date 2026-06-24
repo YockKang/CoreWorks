@@ -74,6 +74,7 @@ public abstract class Building extends Structure implements Updatable, Comparabl
         this.idNum = data.getInt("idNum");
         this.recipe = null;
 
+
         inputBuffer = new Array<>(0);
         outputBuffer = new Array<>(0);
 

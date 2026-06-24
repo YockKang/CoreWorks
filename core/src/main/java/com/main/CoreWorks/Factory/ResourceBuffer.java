@@ -43,7 +43,7 @@ public class ResourceBuffer {
     }
 
     public String getResourceId() {
-        return resourceName;
+        return resourceId;
     }
 
     public int getCapacity() {
@@ -139,7 +139,7 @@ public class ResourceBuffer {
     public static void directTransfer(ResourceBuffer from, ResourceBuffer to, int amount) {
         if (amount > 0) {
             for (int i = 0; i < amount; i++) {
-                from.buffer.addLast(from.buffer.removeFirst());
+                to.buffer.addLast(from.buffer.removeFirst());
             }
         }
     }

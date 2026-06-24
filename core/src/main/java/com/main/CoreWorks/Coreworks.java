@@ -22,6 +22,11 @@ public class Coreworks extends Game {
     public static final float VIEWPORT_WIDTH = 1280;
     public static final float VIEWPORT_HEIGHT = 720;
 
+    private Array<FileHandle> resourceFiles = new Array<>();
+    private Array<FileHandle> recipeFiles = new Array<>();
+    private Array<FileHandle> buildingFiles = new Array<>();
+    private boolean devMode = true;
+
     @Override
     public void create() {
         camera = new OrthographicCamera();
@@ -39,35 +44,35 @@ public class Coreworks extends Game {
         font.getData().setScale(720f / 480f);
 
         // load game assets and databases
-        Array<FileHandle> resourceFiles = new Array<>();
-        fileScanner(resourceFiles, Gdx.files.internal("assets/FactoryData/Resources"));
-        resourceFiles.iterator().forEach(
-            fh -> ResourceDatabase.register(JsonProcessor.read(fh)));
+        // 1. load FactoryData
 
-        Array<FileHandle> recipeFiles = new Array<>();
-        fileScanner(recipeFiles, Gdx.files.internal("assets/FactoryData/Recipes"));
-        recipeFiles.iterator().forEach(
-            fh -> RecipeDatabase.register(JsonProcessor.read(fh)));
+        JsonValue manifestData = JsonProcessor.read(Gdx.files.internal("FactoryData/Manifest.json"));
+        fileScanner(manifestData, "Release");
+        if (devMode) {
+            fileScanner(manifestData, "Dev");
+        }
 
+
+        for (FileHandle fileHandle : resourceFiles) {
+            ResourceDatabase.register(JsonProcessor.read(fileHandle));
+        }
+
+        for (FileHandle fileHandle : recipeFiles) {
+            RecipeDatabase.register(JsonProcessor.read(fileHandle));
+        }
         RecipeGroupDatabase.update();
 
-        Array<FileHandle> buildingFiles = new Array<>();
-        fileScanner(buildingFiles, Gdx.files.internal("assets/FactoryData/Buildings"));
-        buildingFiles.iterator().forEach(
-            fh -> BuildingDatabase.register(JsonProcessor.read(fh)));
-        buildingFiles.iterator().forEach(
-            fh -> BuildingTierDatabase.register(JsonProcessor.read(fh)));
+        for (FileHandle fileHandle : buildingFiles) {
+            BuildingDatabase.register(JsonProcessor.read(fileHandle));
+            BuildingTierDatabase.register(JsonProcessor.read(fileHandle));
+        }
 
+        FileHandle enemyFile = Gdx.files.internal("Enemies/Enemies.json");
+        EnemyDatabase.register(JsonProcessor.read(enemyFile));
 
-        Array<FileHandle> enemyFiles = new Array<>();
-        fileScanner(enemyFiles, Gdx.files.internal("assets/Enemies"));
-        enemyFiles.iterator().forEach(
-            fh -> EnemyDatabase.register(JsonProcessor.read(fh)));
+        FileHandle enemyGroupFile = Gdx.files.internal("Enemies/EnemyGroups/EnemyGroups.json");
+        EnemyGroupDatabase.register(JsonProcessor.read(enemyGroupFile));
 
-        Array<FileHandle> enemyGroupFiles = new Array<>();
-        fileScanner(enemyGroupFiles, Gdx.files.internal("assets/EnemyGroups"));
-        enemyGroupFiles.iterator().forEach(
-            fh -> EnemyGroupDatabase.register(JsonProcessor.read(fh)));
 
         UpgradeTypeRegistry.registerDefault();
 
@@ -106,14 +111,23 @@ public class Coreworks extends Game {
         super.resize(width, height);
     }
 
-    private void fileScanner(Array<FileHandle> out, FileHandle folder) {
-        for (FileHandle child : folder.list()) {
-            if (child.isDirectory()) {
-                fileScanner(out, child);
-            }
-            else if (child.extension().equals("json")) {
-                out.add(child);
-            }
+    private void fileScanner(JsonValue manifestData, String group) {
+        JsonValue groupData = manifestData.get(group);
+        for (String file : groupData.get("Resources").asStringArray()) {
+            FileHandle fileHandle = Gdx.files.internal("FactoryData/Resources/" + file);
+            resourceFiles.add(fileHandle);
         }
+
+        for (String file : groupData.get("Recipes").asStringArray()) {
+            FileHandle fileHandle = Gdx.files.internal("FactoryData/Recipes/" + file);
+            recipeFiles.add(fileHandle);
+        }
+        RecipeGroupDatabase.update();
+
+        for (String file : groupData.get("Buildings").asStringArray()) {
+            FileHandle fileHandle = Gdx.files.internal("FactoryData/Buildings/" + file);
+            buildingFiles.add(fileHandle);
+        }
+
     }
 }

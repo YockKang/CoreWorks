@@ -1,0 +1,12 @@
+[
+  {
+    "id" : "shooter0",
+    "Tier" : 0,
+    "Type" : "Shooter",
+    "Name" : "Generic Shooter",
+    "Cooldown" : 2,
+    "Shape" : [[true]],
+    "MagSize": 5,
+    "BaseDmg": 1
+  }
+]

@@ -3,6 +3,9 @@ package com.main.CoreWorks.Factory.BuildingTemplate;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.reflect.*;
 import com.main.CoreWorks.Factory.Building;
+import org.apache.fory.shaded.org.codehaus.janino.ITypeVariableOrIClass;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class BuildingTemplate {
     Class<? extends Building> clazz;

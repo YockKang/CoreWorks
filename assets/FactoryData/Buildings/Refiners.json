@@ -1,0 +1,38 @@
+[
+  {
+    "id" : "refiner1",
+    "Tier" : 0,
+    "Type" : "Refiner",
+    "Name" : "Smelter",
+    "Shape" : [[true]],
+    "Ports" : [
+      {
+        "x" : 0,
+        "y" : 0,
+        "dir" : 0,
+        "rate" : 1
+      }
+    ],
+    "Group" : "Refiner T1",
+    "DefaultRecipe" : "SmeltIron"
+  },
+  {
+    "id" : "refiner2",
+    "Tier" : 1,
+    "Type" : "Refiner",
+    "Name" : "CannonBaller",
+    "Shape" : [
+      [true]
+    ],
+    "Ports" : [
+      {
+        "x" : 0,
+        "y" : 0,
+        "dir" : 0,
+        "rate" : 1
+      }
+    ],
+    "Group" : "Refiner T2",
+    "DefaultRecipe" : "IronCannonBall"
+  }
+]
