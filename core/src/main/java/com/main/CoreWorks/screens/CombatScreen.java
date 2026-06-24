@@ -122,7 +122,7 @@ public class CombatScreen implements Screen {
         if (isPaused) {
             topTable.add(new Label("PAUSED \nPress Space to Continue", skin)).pad(10);
         }
-        topTable.add(new Label("Use Mousewheel to scroll \nthe enemy display \nand combat Log", skin)).pad(10);
+        topTable.add(new Label("Use Mousewheel to scroll\nthe enemy display and\ncombat Log when paused", skin)).pad(10);
         table.add(topTable).colspan(3).expandX().row();
 
         // Create a middle table to handle other parts of the HUD
@@ -425,9 +425,11 @@ public class CombatScreen implements Screen {
             Coords coords = building.getGlobalCoord(0, 0);
             float nameX = gridStartX + coords.x * tileSize + 15;
             float nameY = gridEndY - coords.y * tileSize - 35;
+            game.font.getData().setScale(0.75f);
             game.font.draw(game.batch, building.displayName(), nameX, nameY);
         }
 
+        game.font.getData().setScale(1f);
         game.batch.end();
     }
 

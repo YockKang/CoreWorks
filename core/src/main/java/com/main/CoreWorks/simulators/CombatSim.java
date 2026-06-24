@@ -187,10 +187,10 @@ public class CombatSim {
             case StatusEffectMove statusEffectMove -> {
                 if (statusEffectMove.getEffect().isOnSelf()) {
                     move.execute(attacker);
-                    addLog(tick, String.format("%s aplied %s %s to self", attacker.displayName(), move.getValue(), statusEffectMove.getEffect().getType()));
+                    addLog(tick, String.format("%s applied %s %s to self", attacker.displayName(), move.getValue(), statusEffectMove.getEffect().getType()));
                 } else {
                     move.execute(target);
-                    addLog(tick, String.format("%s aplied %s %s to %s", attacker.displayName(), move.getValue(), statusEffectMove.getEffect().getType(), target.displayName()));
+                    addLog(tick, String.format("%s applied %s %s to %s", attacker.displayName(), move.getValue(), statusEffectMove.getEffect().getType(), target.displayName()));
                 }
             }
 
