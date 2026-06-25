@@ -20,10 +20,10 @@ public class UpgradeTypeRegistry {
 
     public static void registerDefault() {
         register("Generic", new Array<>(new String[]{"FlatSpeed", "SpeedMult", "Buffer"}));
-        register("Miner", new Array<>(new String[]{"FlatSpeed", "SpeedMult", "Buffer", "MineMult", "ResourceMod"}));
+        register("Miner", new Array<>(new String[]{"FlatSpeed", "SpeedMult", "Buffer", "MineMult"}));
         register("Shooter", new Array<>(new String[]{"FlatSpeed", "SpeedMult", "Buffer", "BaseDamage", "DamageMult"}));
         register("Defender", new Array<>(new String[]{"FlatSpeed", "SpeedMult", "Buffer"}));
-        register("Refiner", new Array<>(new String[]{"FlatSpeed", "SpeedMult", "Buffer", "ResourceMod"}));
+        register("Refiner", new Array<>(new String[]{"FlatSpeed", "SpeedMult", "Buffer"}));
         ObjectSet<String> allTypes = new ObjectSet<>();
         UpgradeTypeReg.values().forEach(allTypes::addAll);
         Array<String> array = allTypes.iterator().toArray();
