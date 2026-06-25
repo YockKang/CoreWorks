@@ -7,7 +7,7 @@
   {
     "id" : "CannonBall",
     "Name" : "Cannonball",
-    "DmgMult" : 3
+    "DmgMult" : 3.5
   },
   {
     "id" : "CopperOre",
@@ -17,7 +17,7 @@
   {
     "id" : "PoisonBall",
     "Name" : "Poison Cannonball",
-    "DmgMult" : 1.5,
+    "DmgMult" : 2,
     "Modifiers" : [
       {
         "type" : "DamageType",
@@ -33,7 +33,7 @@
   {
     "id" : "PiercingBall",
     "Name" : "Piercing Cannonball",
-    "DmgMult" : 2,
+    "DmgMult" : 3,
     "Modifiers" : [
       {
         "type" : "DamageType",

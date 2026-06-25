@@ -30,11 +30,11 @@ public class Resource {
                 for (JsonValue mod : mods) {
                     String type = mod.getString("type");
                     float val = 0;
-                    if (data.get("value") != null) {
+                    if (mod.get("value") != null) {
                         val = mod.getFloat("value");
                     }
                     String str = null;
-                    if (data.get("str") != null && !Objects.equals(mod.getString("str"), "")) {
+                    if (mod.get("str") != null && !Objects.equals(mod.getString("str"), "")) {
                         str = mod.getString("str");
                     }
                     Modifier newMod = new Modifier(type, val, str);
