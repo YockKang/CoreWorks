@@ -22,7 +22,7 @@ public class BuildingTierDatabase {
     }
 
     public static Building getRandomBuilding(Random random) {
-        int key = random.nextInt(BuildingTierDB.size - 1);
+        int key = random.nextInt(BuildingTierDB.size);
         Array<String> tier = null;
         int i = 0;
         for (Array<String> value : BuildingTierDB.values()) {
@@ -34,7 +34,7 @@ public class BuildingTierDatabase {
         if (tier == null) {
             return null;
         } else {
-            return BuildingDatabase.getBuilding(tier.get(random.nextInt(tier.size - 1)));
+            return BuildingDatabase.getBuilding(tier.get(random.nextInt(tier.size)));
         }
     }
 
@@ -45,7 +45,7 @@ public class BuildingTierDatabase {
         } else if (tier.size == 1) {
             return BuildingDatabase.getBuilding(tier.get(0));
         } else {
-            return BuildingDatabase.getBuilding(tier.get(random.nextInt(tier.size - 1)));
+            return BuildingDatabase.getBuilding(tier.get(random.nextInt(tier.size)));
         }
     }
 

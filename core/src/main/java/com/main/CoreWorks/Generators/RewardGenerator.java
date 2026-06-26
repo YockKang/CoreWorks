@@ -38,23 +38,27 @@ public class RewardGenerator {
     // Handles the building reward generation with the following odds:
     // Tier 0: 70%, Tier 1: 20%, Tier 2: 9%, Tier 3: 1%
     private static Reward randomBuildingReward(RunState runState) {
-        int num = runState.getRandom().nextInt(100);
+        Random random = runState.getRandom();
+        double multiplier = Math.pow(runState.getCurrNode().getMultiplier(), 2);
+        int num = random.nextInt(100);
+        double t3Odds = (1 * multiplier);
+        double t2Odds = (9 * multiplier);
+        double t1Odds = (15 * multiplier);
 
-        if (num <= 70) {
-            return new AddBuildingReward(BuildingTierDatabase.getRandomBuilding(runState.getRandom(), 0));
-        } else if (num <= 90) {
-            return new AddBuildingReward(BuildingTierDatabase.getRandomBuilding(runState.getRandom(), 1));
-        } else if (num <= 98) {
-            return new AddBuildingReward(BuildingTierDatabase.getRandomBuilding(runState.getRandom(), 2));
-        } else {
+        if (num <= t3Odds) {
             return new AddBuildingReward(BuildingTierDatabase.getRandomBuilding(runState.getRandom(), 3));
+        } else if (num <= t3Odds + t2Odds) {
+            return new AddBuildingReward(BuildingTierDatabase.getRandomBuilding(runState.getRandom(), 2));
+        } else if (num <= t3Odds + t2Odds + t1Odds) {
+            return new AddBuildingReward(BuildingTierDatabase.getRandomBuilding(runState.getRandom(), 1));
+        } else {
+            return new AddBuildingReward(BuildingTierDatabase.getRandomBuilding(runState.getRandom(), 0));
         }
     }
 
     private static Reward randomUpgradeReward(RunState runState) {
         Random random = runState.getRandom();
         MapNode node = runState.getCurrNode();
-        return new AddUpgradeReward(UpgradeFactory.randomTypedUpgrade(random, node.getMultiplier(), "Refiner"));
-        // return new AddUpgradeReward(UpgradeFactory.randomUpgrade(random, node.getMultiplier()));
+        return new AddUpgradeReward(UpgradeFactory.randomUpgrade(random, node.getMultiplier()));
     }
 }

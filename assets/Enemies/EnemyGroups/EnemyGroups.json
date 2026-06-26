@@ -21,6 +21,10 @@
   },
   {
     "Tier" : "Elite1",
-    "Enemies" : ["MissileDrone", "MissileDrone","AnnoyingDrone", "DisableDrone"]
+    "Enemies" : ["MissileDrone", "MissileDrone", "AnnoyingDrone", "AnnoyingDrone", "DisableDrone"]
+  },
+  {
+    "Tier" : "Elite1",
+    "Enemies" : ["ShieldDrone", "ShieldDrone", "MissileDrone", "AnnoyingDrone", "AnnoyingDrone"]
   }
 ]

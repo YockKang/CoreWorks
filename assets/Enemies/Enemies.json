@@ -65,8 +65,8 @@
   {
     "id": "FirstBoss",
     "Name": "Deadly Drone",
-    "HP": 100,
-    "GracePeriod": 3,
+    "HP": 130,
+    "GracePeriod": 5,
     "Moveset": [
       {
         "Type": "Disable",

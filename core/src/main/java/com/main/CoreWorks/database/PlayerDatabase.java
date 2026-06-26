@@ -10,7 +10,6 @@ public class PlayerDatabase {
         // Add starting relics
         // Add any passives here
         player.addBuilding(BuildingDatabase.getBuilding("Shooter0"));
-        player.addBuilding(BuildingDatabase.getBuilding("Healer1"));
         player.addBuilding(BuildingDatabase.getBuilding("BigIronMiner"));
         player.addBuilding(BuildingDatabase.getBuilding("Cannonballer"));
         return player;

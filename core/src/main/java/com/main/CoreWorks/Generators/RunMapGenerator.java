@@ -4,9 +4,7 @@ import com.badlogic.gdx.utils.Array;
 import com.main.CoreWorks.RunPersistence.*;
 
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Set;
 
 /*
 Summary of how nodes are built:
@@ -26,7 +24,7 @@ public class RunMapGenerator {
         CombatNode combat2 = new CombatNode(CombatGenerator.createCombat(1, 1f, random), 1, 1f, 450, 500);
         CombatNode combat3 = new CombatNode(CombatGenerator.createCombat(1, 1.1f, random), 1, 1.1f, 750, 500);
         CombatNode combat4 = new CombatNode(CombatGenerator.createCombat(1, 1.5f, random), 1, 1.5f, 1050, 500);
-        RestNode rest1 = new RestNode(1, 1.1f,750, 250);
+        RestNode rest1 = new RestNode(1, 1.1f, 750, 250);
         BossNode boss1 = new BossNode(CombatGenerator.createCombat("Boss1", 1.8f, random), 1, 1.8f, 1500, 500);
 
         // Determine how the nodes link to other nodes
@@ -77,7 +75,7 @@ public class RunMapGenerator {
         int startCol = totalCols / 2;
         float startX = generateXCoords(startCol, totalCols, leftBound, rightBound);
         float startY = generateYCoords(0, totalRows, topBound, bottomBound);
-        MapNode startNode = new CombatNode(CombatGenerator.createCombat(1,0.9f, random), 0, startCol, 1, 0.9f, startX, startY);
+        MapNode startNode = new CombatNode(CombatGenerator.createCombat(1, 0.9f, random), 0, startCol, 1, 0.9f, startX, startY);
         startRowNode.add(startNode);
         allNodes.add(startRowNode);
 
@@ -88,8 +86,8 @@ public class RunMapGenerator {
             // lognormal distribution (dont worry abt it)
             double m = 1.2;
             double var = Math.pow(1 / m, 2) / 2;
-            double s2 = Math.log(1 + var / (m*m));
-            double mu  = Math.log(m) - s2/2;
+            double s2 = Math.log(1 + var / (m * m));
+            double mu = Math.log(m) - s2 / 2;
             double nodes = Math.expm1(random.nextGaussian(mu, Math.sqrt(s2))) + 1;
 
             int numNodes = (int) Math.min(3 + nodes, totalCols); // Guarantees a certain number of nodes, but never more than the number of cols available
@@ -119,7 +117,7 @@ public class RunMapGenerator {
         int bossCol = totalCols / 2;
         float bossX = generateXCoords(bossCol, totalCols, leftBound, rightBound);
         float bossY = generateYCoords(totalRows - 1, totalRows, topBound, bottomBound);
-        bossRowNode.add(new BossNode(CombatGenerator.createCombat("Boss1",2f, random), totalRows - 1, bossCol, 1, 2f, bossX, bossY));
+        bossRowNode.add(new BossNode(CombatGenerator.createCombat("Boss1", 1f, random), totalRows - 1, bossCol, 1, 1f, bossX, bossY));
         allNodes.add(bossRowNode);
 
         // Connect the rows
@@ -252,24 +250,20 @@ public class RunMapGenerator {
         float difficulty = 0.8f + row * 0.1f;
         int val = random.nextInt(100);
 
+        int restNodeOdds = 15;
+        int eliteCombatRatio = 20;
+
         // If it is the 2nd last row (ie before boss), give a higher chance for rest node
         if (row == totalRows - 2) {
-            if (val < 50) {
-                return new RestNode(1, row, col, difficulty, x, y);
-            } else if (val < 90) {
-                return new CombatNode(CombatGenerator.createCombat(1, difficulty, random), row, col, 1, difficulty, x, y);
-            } else {
-                return new EliteNode(CombatGenerator.createCombat("Elite1", difficulty, random), row, col, 1, difficulty, x, y);
-            }
+            restNodeOdds = 67;
         }
 
-        // Else, most likely should be a combat node
-        if (val < 15) {
+        if (val < restNodeOdds) {
             return new RestNode(1, row, col, difficulty, x, y);
-        } else if (val < 75) {
-            return new CombatNode(CombatGenerator.createCombat(1, difficulty, random), row, col, 1, difficulty, x, y);
+        } else if (val < ((100 - restNodeOdds) / eliteCombatRatio) + restNodeOdds) {
+            return new EliteNode(CombatGenerator.createCombat("Elite1", difficulty, random), row, col, 1, difficulty + .2f, x, y);
         } else {
-            return new EliteNode(CombatGenerator.createCombat("Elite1", difficulty, random), row, col, 1, difficulty, x, y);
+            return new CombatNode(CombatGenerator.createCombat(1, difficulty, random), row, col, 1, difficulty, x, y);
         }
     }
 }

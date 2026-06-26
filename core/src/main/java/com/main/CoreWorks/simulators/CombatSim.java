@@ -258,10 +258,12 @@ public class CombatSim {
     public void winLoss() {
         if (player.isDead()) {
             lost = true;
+            player.clearStatusEffects();
         }
 
         if (enemies.size == 0) {
             win = true;
+            player.clearStatusEffects();
         }
     }
 

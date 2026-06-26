@@ -1,17 +1,17 @@
 [
   {
-    "id" : "Coal",
-    "Name" : "Coal",
+    "id" : "A",
+    "Name" : "A",
     "DmgMult" : 0.5
   },
   {
-    "id" : "SteelIngot",
-    "Name" : "Steel Ingot",
-    "DmgMult" : 3
+    "id" : "B",
+    "Name" : "B",
+    "DmgMult" : 0.5
   },
   {
-    "id" : "SteelCannonBall",
-    "Name" : "Steel Cannonball",
-    "DmgMult" : 7
+    "id" : "C",
+    "Name" : "C",
+    "DmgMult" : 10
   }
 ]

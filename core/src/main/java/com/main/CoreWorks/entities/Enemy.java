@@ -27,7 +27,7 @@ public class Enemy extends Character {
             try {
                 String type = mv.getString("Type");
                 int value = (int) (mv.getInt("Value") * multiplier);
-                int charge = (int) Math.ceil(mv.getFloat("Charge") / multiplier);
+                int charge = (int) Math.ceil(mv.getFloat("Charge") / Math.sqrt(multiplier));
                 switch (type) {
                     case "Damage":
                         addMove(new DamageMove(value, charge));

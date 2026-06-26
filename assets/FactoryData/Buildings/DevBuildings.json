@@ -1,9 +1,9 @@
 [
   {
-    "id" : "coalMiner",
+    "id" : "AMiner",
     "Tier" : 0,
     "Type" : "Miner",
-    "Name" : "Coal Miner",
+    "Name" : "A Miner",
     "Shape" : [[true]],
     "MineMult" : 1,
     "Ports" : [
@@ -14,13 +14,30 @@
         "rate" : 1
       }
     ],
-    "DefaultRecipe" : "MineCoal"
+    "DefaultRecipe" : "MineA"
   },
   {
-    "id": "steelSmelter",
+    "id" : "BMiner",
+    "Tier" : 0,
+    "Type" : "Miner",
+    "Name" : "B Miner",
+    "Shape" : [[true]],
+    "MineMult" : 1,
+    "Ports" : [
+      {
+        "x" : 0,
+        "y" : 0,
+        "dir" : 0,
+        "rate" : 1
+      }
+    ],
+    "DefaultRecipe" : "MineB"
+  },
+  {
+    "id": "CSmelter",
     "Tier" : 0,
     "Type": "Refiner",
-    "Name": "Steel Smelter",
+    "Name": "C Smelter",
     "Shape": [
       [
         true
@@ -34,51 +51,6 @@
         "rate": 1
       }
     ],
-    "DefaultRecipe": "SmeltSteel"
-  },
-  {
-    "id": "steelCannonball",
-    "Tier" : 1,
-    "Type": "Refiner",
-    "Name": "Steel Cannonball-er",
-    "Shape": [
-      [
-        true
-      ]
-    ],
-    "Ports": [
-      {
-        "x": 0,
-        "y": 0,
-        "dir": 0,
-        "rate": 1
-      }
-    ],
-    "DefaultRecipe": "SteelCannonBall"
-  },
-  {
-    "id" : "OPshooter",
-    "Tier" : 3,
-    "Type" : "Shooter",
-    "Name" : "OPShooter",
-    "Cooldown" : 1,
-    "Shape" : ["S", 1],
-    "MagSize": 5,
-    "BaseDmg": 2,
-    "AttackCount" : 3
-  },
-  {
-    "id" : "PoisonShooter",
-    "Tier" : 2,
-    "Type" : "Shooter",
-    "Name" : "Poison Shooter",
-    "Cooldown" : 1,
-    "Shape" : ["S", 2],
-    "MagSize": 5,
-    "BaseDmg": 2,
-    "AttackCount" : 1,
-    "Damage Type" : "Poison"
+    "DefaultRecipe": "DevRecipeC"
   }
-
-
 ]

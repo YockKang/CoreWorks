@@ -1,32 +1,32 @@
 [
-    {
-    "id" : "MineCoal",
-    "Name" : "Mine Coal",
+  {
+    "id" : "MineA",
+    "Name" : "MineA",
     "InputId"    : [],
     "InputMult"  : [],
-    "OutputId"   : ["Coal"],
+    "OutputId"   : ["A"],
     "OutputMult" : [1],
     "duration" : 2,
     "Groups" : ["Miner"]
   },
   {
-    "id" : "SmeltSteel",
-    "Name" : "Smelt Steel",
-    "InputId"    : ["IronOre", "Coal"],
+    "id" : "MineB",
+    "Name" : "MineB",
+    "InputId"    : [],
+    "InputMult"  : [],
+    "OutputId"   : ["B"],
+    "OutputMult" : [1],
+    "duration" : 2,
+    "Groups" : ["Miner"]
+  },
+  {
+    "id" : "DevRecipeC",
+    "Name" : "A + B -> C",
+    "InputId"    : ["A", "B"],
     "InputMult"  : [1, 1],
-    "OutputId"   : ["SteelIngot"],
+    "OutputId"   : ["C"],
     "OutputMult" : [1],
     "duration" : 2,
     "Groups" : ["Refiner T1", "Refiner T2"]
-  },
-  {
-    "id" : "SteelCannonBall",
-    "Name" : "Make Steel Cannonball",
-    "InputId"    : ["SteelIngot", "Coal"],
-    "InputMult"  : [2, 1],
-    "OutputId"   : ["SteelCannonBall"],
-    "OutputMult" : [1],
-    "duration" : 1,
-    "Groups" : ["Refiner T2"]
   }
 ]

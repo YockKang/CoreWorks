@@ -88,6 +88,10 @@ public abstract class Character {
         }
     }
 
+    public void clearStatusEffects() {
+        statusEffects.clear();
+    }
+
     @Override
     public String toString() {
         return String.format("Name: %s \nHP: %s/%s \nShield: %s", this.name, this.hp, this.maxHp, this.shield);
