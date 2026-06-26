@@ -251,7 +251,7 @@ public class RunMapGenerator {
         int val = random.nextInt(100);
 
         int restNodeOdds = 15;
-        int eliteCombatRatio = 20;
+        float eliteCombatRatio = 0.2f;
 
         // If it is the 2nd last row (ie before boss), give a higher chance for rest node
         if (row == totalRows - 2) {
