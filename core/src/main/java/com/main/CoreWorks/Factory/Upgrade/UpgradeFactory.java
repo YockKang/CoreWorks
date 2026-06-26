@@ -103,7 +103,7 @@ public class UpgradeFactory {
                 upgradesGroup.removeValue(category, true);
             }
             double m = strength + .3;
-            double var = Math.pow(1 / strength, 2) / 2;
+            double var = (Math.pow(1 / strength, 2) - .5) / 2;
             double s2 = Math.log(1 + var / m*m);
             double mu  = Math.log(m) - s2/2;
             double power = Math.expm1(random.nextGaussian(mu, Math.sqrt(s2)))+ 1;
