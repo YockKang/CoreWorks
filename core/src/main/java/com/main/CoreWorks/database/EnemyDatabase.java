@@ -10,7 +10,7 @@ public class EnemyDatabase {
 
     public static Enemy register(JsonValue data) {
         if (data.isArray()) {
-            data.forEach(com.main.CoreWorks.database.EnemyDatabase::register);
+            data.forEach(EnemyDatabase::register);
             return null;
         } else {
             EnemyFactory tp = new EnemyFactory(data);

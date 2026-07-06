@@ -18,12 +18,25 @@ public abstract class Character {
         this.name = name;
     }
 
+    public Character(JsonValue data) {
+        this.maxHp = data.getInt("HP");
+        this.hp = maxHp;
+        this.name = data.getString("Name");
+        if (data.get("Shield") != null) {
+            this.shield = data.getInt("Shield");
+        } else {
+            this.shield = 0;
+        }
+    }
+
     public Character(JsonValue data, float multiplier) {
         this.maxHp = (int) (data.getInt("HP") * multiplier);
         this.hp = maxHp;
         this.name = data.getString("Name");
         if (data.get("Shield") != null) {
             this.shield = (int) (data.getInt("Shield") * multiplier);
+        } else {
+            this.shield = 0;
         }
     }
 

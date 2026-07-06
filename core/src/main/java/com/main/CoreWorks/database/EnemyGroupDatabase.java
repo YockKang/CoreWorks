@@ -10,7 +10,7 @@ public class EnemyGroupDatabase {
 
     public static Array<Enemy> register(JsonValue data) {
         if (data.isArray()) {
-            data.forEach(com.main.CoreWorks.database.EnemyGroupDatabase::register);
+            data.forEach(EnemyGroupDatabase::register);
             return null;
         } else {
             String tier = data.getString("Tier");
@@ -39,7 +39,9 @@ public class EnemyGroupDatabase {
 
     public static Array<Enemy> getGroup(String tier, int num, float multiplier) {
         Array<Enemy> arr = new Array<>();
-        EnemyGroupDB.get(tier).get(num).forEach(enemyFactory -> arr.add(enemyFactory.of(multiplier)));
+        for (EnemyFactory enemyFactory : EnemyGroupDB.get(tier).get(num)) {
+            arr.add(enemyFactory.of(multiplier));
+        }
         return arr;
     }
 
@@ -54,7 +56,9 @@ public class EnemyGroupDatabase {
     public static Array<Enemy> getRandomGroup(String tier, float multiplier, Random random) {
         Array<Enemy> arr = new Array<>();
         Array<Array<EnemyFactory>> group = EnemyGroupDB.get(tier);
-        group.get(random.nextInt(group.size)).forEach(enemyFactory -> arr.add(enemyFactory.of(multiplier)));
+        for (EnemyFactory enemyFactory : group.get(random.nextInt(group.size))) {
+            arr.add(enemyFactory.of(multiplier));
+        }
         return arr;
     }
 
