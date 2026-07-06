@@ -1,6 +1,7 @@
 package com.main.CoreWorks.entities;
 
 import com.badlogic.gdx.utils.*;
+import com.google.errorprone.annotations.Var;
 import com.main.CoreWorks.Factory.Building;
 import com.main.CoreWorks.Factory.FactoryGrid;
 import com.main.CoreWorks.database.BuildingDatabase;
@@ -13,12 +14,14 @@ public class Player extends Character{
     private Array<Building> inventory;
     private Array<Relic> relics;
     private FactoryGrid factoryGrid;
+    private int money;
     // Passives Implementation TBD
 
     public Player(int hp, int shield, String name, FactoryGrid factoryGrid) {
         super(hp, shield, name);
         this.inventory = new Array<>();
         this.factoryGrid = factoryGrid;
+        this.money = 0;
     }
 
     public Player(JsonValue data) {
@@ -38,6 +41,7 @@ public class Player extends Character{
                 addRelic(RelicDatabase.get(r));
             }
         }
+        this.money = 0;
     }
 
     public void addBuilding(Building building) {
@@ -58,6 +62,25 @@ public class Player extends Character{
 
     public Building getBuildingAt(int index) {
         return inventory.get(index);
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public boolean canAfford(int price) {
+        return money >= price;
+    }
+
+    public void gainMoney(int gain) {
+        money += gain;
+    }
+
+    public void loseMoney(int loss) {
+        money -= loss;
+        if (money < 0) {
+            money = 0;
+        }
     }
 
     @Override
