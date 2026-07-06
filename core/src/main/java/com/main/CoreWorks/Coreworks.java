@@ -78,10 +78,10 @@ public class Coreworks extends Game {
         UpgradeTypeRegistry.registerDefault();
         ModifierRegistry.registerDefault();
 
-        JsonValue relicManifest = JsonProcessor.read(Gdx.files.internal("Relics/RelicManifest.json"));
+        JsonValue relicManifest = JsonProcessor.read(Gdx.files.internal("Relics/RelicsManifest.json"));
         RelicDatabase.register(relicManifest);
 
-        JsonValue playerCharacters = JsonProcessor.read(Gdx.files.internal("FactoryData/Manifest.json"));
+        JsonValue playerCharacters = JsonProcessor.read(Gdx.files.internal("Characters/Characters.json"));
         PlayerDatabase.register(playerCharacters);
 
 

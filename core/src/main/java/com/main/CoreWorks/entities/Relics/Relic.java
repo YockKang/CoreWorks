@@ -10,9 +10,11 @@ public abstract class Relic {
     protected String description;
     protected String tier;
 
-    public Relic(String name, String description) {
+    public Relic(String id, String name, String description, String tier) {
+        this.id = id;
         this.name = name;
         this.description = description;
+        this.tier = tier;
     }
 
     public String getName() {
@@ -32,16 +34,16 @@ public abstract class Relic {
     }
 
     // Called when relic has on-collection effects
-    public abstract void onAcquire(RunState runState);
+    public void onAcquire(RunState runState) {};
 
     // Called when relic has on-combat-start effects
-    public abstract void onCombatStart(RunState runState);
+    public void onCombatStart(RunState runState) {};
 
     // Called when relic has on-each-tick effects
-    public abstract void onTick(RunState runState);
+    public void onTick(RunState runState) {};
 
     // Called when relic has on-combat-end effects
-    public abstract void onCombatEnd(RunState runState);
+    public void onCombatEnd(RunState runState) {};
 
     @Override
     public boolean equals(Object obj) {

@@ -1,7 +1,7 @@
 [
   {
     "id" : "Engineer",
-    "Name" : "",
+    "Name" : "Engineer",
     "Grid" : [6, 6],
     "HP" : 50,
     "Buildings" : ["Shooter0", "BigIronMiner", "Cannonballer"],
