@@ -45,22 +45,22 @@ public class CombatScreen implements Screen {
 
     // Hardcoded grid size for milestone 1 testing purposes
     // Should be deleted eventually since it should be handled by the global runState which carries over the factory
-    private final int gridWidth = 6;
-    private final int gridHeight = 6;
+    private final int gridWidth;
+    private final int gridHeight;
 
     // Temp Layout since we have not decided how we want the final UI to look like yet
     // Rmb that everything is drawn in a coordinate system (check Coreworks class for the public static final screen size)
     private final int gridSize = 450;
 
-    private final int tileSize = Math.min(gridSize / gridWidth, gridSize / gridHeight);
+    private final int tileSize;
 
     private final int gridMidX = (int) (Coreworks.VIEWPORT_WIDTH / 2);
     private final int gridMidY = 300;
 
-    private final int gridStartX = gridMidX - tileSize * gridWidth / 2 ;
-    private final int gridEndX = gridMidX - tileSize * gridWidth / 2;
-    private final int gridEndY = gridMidY + tileSize * gridHeight / 2;
-    private final int gridStartY = gridMidY - tileSize * gridHeight / 2;
+    private final int gridStartX;
+    private final int gridEndX;
+    private final int gridEndY;
+    private final int gridStartY;
 
     private final int inventoryStartX = 512;
     private final int inventoryStartY = 40;
@@ -74,9 +74,19 @@ public class CombatScreen implements Screen {
 
         this.game = game;
         this.runState = runstate;
+        // Initialize the controllers
         FactorySim factorySim = new FactorySim(runstate.getFactoryGrid());
         CombatSim combatSim = new CombatSim(runstate.getPlayer(), enemies);
         this.controller = new CombatController(factorySim, combatSim);
+        // Initialize the grid based on what is present in the player's factory grid
+        this.gridWidth = runstate.getPlayer().getFactoryGrid().getMaxWidth();
+        this.gridHeight = runstate.getPlayer().getFactoryGrid().getMaxHeight();
+        this.tileSize = Math.min(gridSize / gridWidth, gridSize / gridHeight);
+        this.gridStartX = gridMidX - tileSize * gridWidth / 2 ;
+        this.gridEndX = gridMidX - tileSize * gridWidth / 2;
+        this.gridEndY = gridMidY + tileSize * gridHeight / 2;
+        this.gridStartY = gridMidY - tileSize * gridHeight / 2;
+
     }
 
     @Override
