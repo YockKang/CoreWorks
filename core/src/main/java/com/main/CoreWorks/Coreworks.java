@@ -80,6 +80,7 @@ public class Coreworks extends Game {
 
         JsonValue relicManifest = JsonProcessor.read(Gdx.files.internal("Relics/RelicsManifest.json"));
         RelicDatabase.register(relicManifest);
+        RelicGroupDatabase.register();
 
         JsonValue playerCharacters = JsonProcessor.read(Gdx.files.internal("Characters/Characters.json"));
         PlayerDatabase.register(playerCharacters);
