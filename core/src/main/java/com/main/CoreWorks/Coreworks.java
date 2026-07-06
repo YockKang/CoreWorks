@@ -78,6 +78,11 @@ public class Coreworks extends Game {
         UpgradeTypeRegistry.registerDefault();
         ModifierRegistry.registerDefault();
 
+        JsonValue relicManifest = JsonProcessor.read(Gdx.files.internal("Relics/RelicManifest.json"));
+        RelicDatabase.register(relicManifest);
+
+        JsonValue playerCharacters = JsonProcessor.read(Gdx.files.internal("FactoryData/Manifest.json"));
+        PlayerDatabase.register(playerCharacters);
 
 
         // For now, starting the game leads to a placeholder menu screen
