@@ -19,7 +19,10 @@ public class RewardGenerator {
         rewards.add(randomBuildingReward(runState));
         rewards.add(randomUpgradeReward(runState));
         rewards.add(randomUpgradeReward(runState));
-        rewards.add(randomRelicReward(runState));
+        Reward relicReward = randomRelicReward(runState);
+        if (relicReward != null) {
+            rewards.add(relicReward);
+        }
 
         // Return statement below
         return rewards;
