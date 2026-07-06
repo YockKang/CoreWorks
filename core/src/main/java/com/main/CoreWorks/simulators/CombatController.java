@@ -27,7 +27,10 @@ public class CombatController {
         // On start (tick 0), trigger all on-start relic effects
         if (tick == 0) {
             for (Relic relic : runState.getRelics()) {
-                relic.onCombatStart(runState);
+                boolean happened = relic.onCombatStart(runState);
+                if (happened) {
+                    combatSim.addLog(tick, relic.getLog());
+                }
             }
         }
 
@@ -39,7 +42,10 @@ public class CombatController {
 
         // Settle all relic on-tick effects first
         for (Relic relic : runState.getRelics()) {
-            relic.onTick(runState);
+            boolean happened = relic.onTick(runState);
+            if (happened) {
+                combatSim.addLog(tick, relic.getLog());
+            }
         }
 
         // Lastly, resolve combat

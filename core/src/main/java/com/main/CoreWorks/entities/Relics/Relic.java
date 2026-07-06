@@ -9,11 +9,13 @@ public abstract class Relic {
     protected String name;
     protected String description;
     protected String tier;
+    protected String log;
 
-    public Relic(String id, String name, String description, String tier) {
+    public Relic(String id, String name, String description, String log, String tier) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.log = log;
         this.tier = tier;
     }
 
@@ -29,6 +31,10 @@ public abstract class Relic {
         return description;
     }
 
+    public String getLog() {
+        return log;
+    }
+
     public String getTier() {
         return tier;
     }
@@ -37,10 +43,10 @@ public abstract class Relic {
     public void onAcquire(RunState runState) {};
 
     // Called when relic has on-combat-start effects
-    public void onCombatStart(RunState runState) {};
+    public boolean onCombatStart(RunState runState) { return false; };
 
     // Called when relic has on-each-tick effects
-    public void onTick(RunState runState) {};
+    public boolean onTick(RunState runState) { return false; };
 
     // Called when relic has on-combat-end effects
     public void onCombatEnd(RunState runState) {};
