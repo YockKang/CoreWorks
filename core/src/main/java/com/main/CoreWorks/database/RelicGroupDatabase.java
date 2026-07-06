@@ -58,6 +58,16 @@ public class RelicGroupDatabase {
         return getRandomRelic(String.valueOf(tier), random, relics);
     }
 
+    public static Array<Relic> getUnobtained(String tier, Array<Relic> relics) {
+        Array<Relic> tierRelics = new Array<>(RelicGroupDB.get(tier));
+        tierRelics.removeAll(relics, false);
+        return tierRelics;
+    }
+
+    public static Array<Relic> getUnobtained(int tier, Array<Relic> relics) {
+        return getUnobtained(String.valueOf(tier), relics);
+    }
+
     public static String showDB(){
         return RelicGroupDB.toString();
     }

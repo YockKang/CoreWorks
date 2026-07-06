@@ -32,7 +32,7 @@ public class CombatSim {
         this.grid = grid;
     }
 
-    private void addLog(int tick, String log) {
+    public void addLog(int tick, String log) {
         if (combatLog.size >= 50) {
             combatLog.removeIndex(0);
         }

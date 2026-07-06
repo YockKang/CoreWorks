@@ -5,6 +5,7 @@ import com.main.CoreWorks.Factory.Upgrade.*;
 import com.main.CoreWorks.Rewards.*;
 import com.main.CoreWorks.RunPersistence.*;
 import com.main.CoreWorks.database.*;
+import com.main.CoreWorks.entities.Relics.Relic;
 
 import java.util.Random;
 
@@ -70,14 +71,51 @@ public class RewardGenerator {
         double t2Odds = (9 * multiplier);
         double t1Odds = (15 * multiplier);
 
+        int startTier = 0;
+        int currTier = 0;
+        boolean srcUp = true;
+
         if (num <= t3Odds) {
-            return new AddRelicReward(RelicGroupDatabase.getRandomRelic("0", random, runState.getRelics()));
+            startTier = 3;
+            currTier = 3;
         } else if (num <= t3Odds + t2Odds) {
-            return new AddRelicReward(RelicGroupDatabase.getRandomRelic("1", random, runState.getRelics()));
+            startTier = 2;
+            currTier = 2;
         } else if (num <= t3Odds + t2Odds + t1Odds) {
-            return new AddRelicReward(RelicGroupDatabase.getRandomRelic("2", random, runState.getRelics()));
-        } else {
-            return new AddRelicReward(RelicGroupDatabase.getRandomRelic("3", random, runState.getRelics()));
+            startTier = 1;
+            currTier = 1;
         }
+
+        Relic relic = null;
+
+        while (relic == null) {
+
+            Array<Relic> thisTier = RelicGroupDatabase.getUnobtained(currTier, runState.getRelics());
+            if (thisTier.size > 0) {
+                relic = RelicGroupDatabase.getRandomRelic(currTier, random, runState.getRelics());
+            } else {
+                if (currTier >= 3) {
+                    srcUp = false;
+                    currTier = startTier;
+                }
+                if (srcUp) {
+                    currTier++;
+                } else {
+                    currTier--;
+                }
+                if (currTier < 0) {
+                    break;
+                }
+            }
+        }
+
+        if (relic != null) {
+            return new AddRelicReward(relic);
+        } else {
+            return null;
+        }
+
+
+
     }
 }
