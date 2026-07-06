@@ -2,15 +2,15 @@ package com.main.CoreWorks.entities.Relics;
 
 import com.main.CoreWorks.RunPersistence.RunState;
 
-public class MoneyRelic extends Relic {
+public class MoneyRelic2 extends Relic {
 
-    private static int MONEY = 50;
+    private static int MONEY = 100;
 
-    public MoneyRelic() {
-        super("MoneyRelic",
-            "Money Goblet",
+    public MoneyRelic2() {
+        super("MoneyRelic2",
+            "Money Pot",
             "Gives " + MONEY + " coins on acquisition",
-            "0");
+            "1");
     }
 
     // Called when relic has on-collection effects

@@ -214,6 +214,9 @@ public class CombatScreen implements Screen {
 
         table.add(body).expand().fill().row();
 
+        // Simple String-based UI to display all relics at the bottom (To be improved on eventually)
+        table.add(new Label("Relics: " + runState.getRelics(), skin)).row();
+
         needRefresh = false;
     }
 

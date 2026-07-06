@@ -18,7 +18,7 @@ public class RewardGenerator {
         rewards.add(randomBuildingReward(runState));
         rewards.add(randomUpgradeReward(runState));
         rewards.add(randomUpgradeReward(runState));
-        rewards.add(randomUpgradeReward(runState));
+        rewards.add(randomRelicReward(runState));
 
         // Return statement below
         return rewards;
@@ -60,5 +60,24 @@ public class RewardGenerator {
         Random random = runState.getRandom();
         MapNode node = runState.getCurrNode();
         return new AddUpgradeReward(UpgradeFactory.randomUpgrade(random, node.getMultiplier()));
+    }
+
+    private static Reward randomRelicReward(RunState runState) {
+        Random random = runState.getRandom();
+        double multiplier = Math.pow(runState.getCurrNode().getMultiplier(), 2);
+        int num = random.nextInt(100);
+        double t3Odds = (1 * multiplier);
+        double t2Odds = (9 * multiplier);
+        double t1Odds = (15 * multiplier);
+
+        if (num <= t3Odds) {
+            return new AddRelicReward(RelicGroupDatabase.getRandomRelic("0", random, runState.getRelics()));
+        } else if (num <= t3Odds + t2Odds) {
+            return new AddRelicReward(RelicGroupDatabase.getRandomRelic("1", random, runState.getRelics()));
+        } else if (num <= t3Odds + t2Odds + t1Odds) {
+            return new AddRelicReward(RelicGroupDatabase.getRandomRelic("2", random, runState.getRelics()));
+        } else {
+            return new AddRelicReward(RelicGroupDatabase.getRandomRelic("3", random, runState.getRelics()));
+        }
     }
 }

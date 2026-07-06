@@ -2,6 +2,7 @@ package com.main.CoreWorks.simulators;
 
 
 import com.main.CoreWorks.RunPersistence.RunState;
+import com.main.CoreWorks.entities.Relics.Relic;
 
 public class CombatController {
     private FactorySim factorySim;
@@ -16,7 +17,18 @@ public class CombatController {
     public void advanceTick(RunState runState, int tick) {
         if (combatSim.isWin() || combatSim.isLost()) {
             factorySim.clear();
+            // When win/loss is resolved, trigger all relic on-end effects
+            for (Relic relic : runState.getRelics()) {
+                relic.onCombatEnd(runState);
+            }
             return;
+        }
+
+        // On start (tick 0), trigger all on-start relic effects
+        if (tick == 0) {
+            for (Relic relic : runState.getRelics()) {
+                relic.onCombatStart(runState);
+            }
         }
 
         // Firstly, tick the factory
@@ -24,6 +36,11 @@ public class CombatController {
 
         // Then, transfer the factory actions to combat
         combatSim.enqueueMoves(factorySim.returnMoves());
+
+        // Settle all relic on-tick effects first
+        for (Relic relic : runState.getRelics()) {
+            relic.onTick(runState);
+        }
 
         // Lastly, resolve combat
         combatSim.advanceTick(runState, tick);

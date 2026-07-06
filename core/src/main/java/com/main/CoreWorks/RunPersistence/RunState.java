@@ -14,19 +14,23 @@ public class RunState {
     private RunMap runMap;
     private MapNode currNode;
     private Random random;
-    private Array<Relic> relics;
+    private Array<Relic> relics = new Array<>();
 
     public RunState(Player player) {
         this.player = player;
         this.factoryGrid = player.getFactoryGrid();
-        this.relics = player.getRelics();
+        for (Relic relic : player.getRelics()) {
+            addRelic(relic);
+        }
         this.random = new Random();
     }
 
     public RunState(Player player, long seed) {
         this.player = player;
         this.factoryGrid = player.getFactoryGrid();
-        this.relics = player.getRelics();
+        for (Relic relic : player.getRelics()) {
+            addRelic(relic);
+        }
         this.random = new Random(seed);
     }
 
@@ -67,5 +71,14 @@ public class RunState {
 
     public Random getRandom() {
         return random;
+    }
+
+    public void addRelic(Relic relic) {
+        relics.add(relic);
+        relic.onAcquire(this);
+    }
+
+    public Array<Relic> getRelics() {
+        return relics;
     }
 }

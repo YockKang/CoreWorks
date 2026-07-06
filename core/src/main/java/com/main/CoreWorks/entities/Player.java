@@ -19,6 +19,7 @@ public class Player extends Character{
 
     public Player(int hp, int shield, String name, FactoryGrid factoryGrid) {
         super(hp, shield, name);
+        this.relics = new Array<>();
         this.inventory = new Array<>();
         this.factoryGrid = factoryGrid;
         this.money = 0;
@@ -27,6 +28,7 @@ public class Player extends Character{
     public Player(JsonValue data) {
         super(data);
         this.inventory = new Array<>();
+        this.relics = new Array<>();
         int[] gridSize = data.get("Grid").asIntArray();
         this.factoryGrid = new FactoryGrid(gridSize[0], gridSize[1]);
         if (data.get("Buildings") != null) {
@@ -85,7 +87,7 @@ public class Player extends Character{
 
     @Override
     public String toString() {
-        return super.toString();
+        return String.format("%s\nMoney: %s", super.toString(), this.money);
     }
 
     public FactoryGrid getFactoryGrid() {
