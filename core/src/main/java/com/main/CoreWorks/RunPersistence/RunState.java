@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Factory.Building;
 import com.main.CoreWorks.Factory.FactoryGrid;
 import com.main.CoreWorks.entities.Player;
+import com.main.CoreWorks.entities.Relics.Relic;
 
 import java.util.Random;
 
@@ -13,16 +14,19 @@ public class RunState {
     private RunMap runMap;
     private MapNode currNode;
     private Random random;
+    private Array<Relic> relics;
 
-    public RunState(Player player, FactoryGrid factoryGrid) {
+    public RunState(Player player) {
         this.player = player;
-        this.factoryGrid = factoryGrid;
+        this.factoryGrid = player.getFactoryGrid();
+        this.relics = player.getRelics();
         this.random = new Random();
     }
 
-    public RunState(Player player, FactoryGrid factoryGrid, long seed) {
+    public RunState(Player player, long seed) {
         this.player = player;
-        this.factoryGrid = factoryGrid;
+        this.factoryGrid = player.getFactoryGrid();
+        this.relics = player.getRelics();
         this.random = new Random(seed);
     }
 

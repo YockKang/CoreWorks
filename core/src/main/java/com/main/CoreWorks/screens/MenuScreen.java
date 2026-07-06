@@ -61,7 +61,7 @@ public class MenuScreen implements Screen {
                 // Creates the initial runState
                 // For now, hardcoded one player type only, eventually might allow selection of different player types with unique abilities for more replayability
                 Player player = PlayerDatabase.getPlayer("Engineer");
-                RunState runState = new RunState(player, player.getFactoryGrid());
+                RunState runState = new RunState(player);
                 // Generates hardcoded RunMap for testing (Uncomment)
                 // RunMap runMap = RunMapGenerator.generateHardcodedRunMap(runState);
                 // Generates procedurally generated runMap

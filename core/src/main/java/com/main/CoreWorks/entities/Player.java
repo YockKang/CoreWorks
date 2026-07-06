@@ -91,4 +91,8 @@ public class Player extends Character{
     public FactoryGrid getFactoryGrid() {
         return factoryGrid;
     }
+
+    public Array<Relic> getRelics() {
+        return relics;
+    }
 }
