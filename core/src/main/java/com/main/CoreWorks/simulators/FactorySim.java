@@ -5,6 +5,7 @@ import com.main.CoreWorks.Factory.*;
 import com.main.CoreWorks.Factory.ResourceRequest.*;
 import com.main.CoreWorks.Factory.Tubes.TubeNet;
 import com.main.CoreWorks.Resources.Resource;
+import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.moveset.*;
 
 import java.util.Objects;
@@ -20,7 +21,7 @@ public class FactorySim {
         this.grid = grid;
     }
 
-    public void advanceTick() {
+    public void advanceTick(RunState runState) {
         pendingMoves.clear();
         Array<Building> buildings = grid.getBuildings();
 
@@ -29,7 +30,7 @@ public class FactorySim {
         Array<ResourceRequest> requests = new Array<>();
 
         for (Building building : buildings) {
-            requests.addAll(building.generateDemandRequests());
+            requests.addAll(building.generateDemandRequests(runState));
         }
 
         requests.sort((a, b) -> a.getPriority() - b.getPriority());

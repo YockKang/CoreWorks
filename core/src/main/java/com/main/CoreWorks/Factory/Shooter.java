@@ -3,6 +3,7 @@ package com.main.CoreWorks.Factory;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Factory.ResourceRequest.*;
 import com.main.CoreWorks.Resources.Resource;
+import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.moveset.*;
 
 public class Shooter extends Building {
@@ -116,7 +117,7 @@ public class Shooter extends Building {
     }
 
     @Override
-    public Array<ResourceRequest> generateDemandRequests() {
+    public Array<ResourceRequest> generateDemandRequests(RunState runState) {
         Array<ResourceRequest> requests = new Array<>();
         int magMissing = magSize - magazine.size;
         if (magMissing > 0) {

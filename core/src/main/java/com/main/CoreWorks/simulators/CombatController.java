@@ -20,7 +20,7 @@ public class CombatController {
         }
 
         // Firstly, tick the factory
-        factorySim.advanceTick();
+        factorySim.advanceTick(runState);
 
         // Then, transfer the factory actions to combat
         combatSim.enqueueMoves(factorySim.returnMoves());

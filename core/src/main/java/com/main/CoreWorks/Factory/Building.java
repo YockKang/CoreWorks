@@ -1,6 +1,7 @@
 package com.main.CoreWorks.Factory;
 
 import com.badlogic.gdx.utils.*;
+import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.util.*;
 import com.main.CoreWorks.Factory.ResourceRequest.*;
 import com.main.CoreWorks.Factory.Tubes.*;
@@ -504,7 +505,7 @@ public abstract class Building extends Structure implements Updatable, Comparabl
     }
 
 
-    public Array<ResourceRequest> generateDemandRequests() {
+    public Array<ResourceRequest> generateDemandRequests(RunState runState) {
         Array<ResourceRequest> requests = new Array<>();
         for (int i = 0; i < inputBuffer.size; i++) {
             ResourceRequest thisRequest = inputBuffer.get(i).generateDemandRequest(this);
