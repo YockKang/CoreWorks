@@ -27,7 +27,7 @@ public class RelicDatabase {
             }
             Relic relic = null;
             try {
-                relic = clazz.getConstructor(JsonValue.class).newInstance();
+                relic = clazz.getConstructor().newInstance();
             } catch (Exception e) {
                 System.out.println("Relic Generation Error");
             }
