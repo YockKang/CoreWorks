@@ -13,12 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Coreworks;
 import com.main.CoreWorks.Factory.Building;
-import com.main.CoreWorks.Generators.RewardGenerator;
 import com.main.CoreWorks.Generators.RunMapGenerator;
-import com.main.CoreWorks.Rewards.Reward;
-import com.main.CoreWorks.RunPersistence.MapNode;
 import com.main.CoreWorks.RunPersistence.RunMap;
 import com.main.CoreWorks.RunPersistence.RunState;
+import com.main.CoreWorks.TextParser.Sentence;
 import com.main.CoreWorks.database.PlayerDatabase;
 import com.main.CoreWorks.entities.Player;
 import com.main.CoreWorks.entities.Relics.Relic;
@@ -76,7 +74,9 @@ public class CharacterSelectScreen implements Screen {
         previewTable.setBackground(skin.newDrawable("default-round", Color.BLUE));
         previewTable.pad(15);
         table.add(previewTable).pad(20).row();
+        previewTable.setName("previewTable");
         refreshPreview(previewTable);
+
 
         // Builds the character selection cards + table
         Table selectionCardTable = new Table();
@@ -147,7 +147,8 @@ public class CharacterSelectScreen implements Screen {
             return;
         }
 
-        preview.add(new Label(selectedPlayer.toString(), skin)).row();
+        Sentence playerInfo = new Sentence(selectedPlayer.toString(), true);
+        preview.add(playerInfo.toTable(skin)).row();
         preview.add(new Label(String.format("Grid size: %s x %s", selectedPlayer.getFactoryGrid().getMaxWidth(), selectedPlayer.getFactoryGrid().getMaxHeight()), skin)).row();
         preview.add(new Label("Starter buildings:", skin)).row();
         for (Building building : selectedPlayer.getInventory()) {

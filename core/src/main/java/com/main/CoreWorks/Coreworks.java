@@ -45,11 +45,12 @@ public class Coreworks extends Game {
         font.setUseIntegerPositions(false);
         font.getData().setScale(720f / 480f);
 
-        // load game assets and databases
-        // 1. load FactoryData
-
         JsonValue keywords = JsonProcessor.read(Gdx.files.internal("Keywords/Keywords.json"));
         KeywordDatabase.register(keywords);
+        System.out.println(KeywordDatabase.showDB());
+
+        // load game assets and databases
+        // 1. load FactoryData
 
         JsonValue manifestData = JsonProcessor.read(Gdx.files.internal("FactoryData/Manifest.json"));
         fileScanner(manifestData, "Release");

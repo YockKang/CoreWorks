@@ -8,5 +8,10 @@
     "Word" : "True Damage",
     "Color" : [0, 255, 255],
     "Description" : "Damage ignores Shield"
+  },
+  {
+    "Word" : "Money",
+    "Color" : "yellow",
+    "Description" : "Money. Spend it at the shop."
   }
 ]

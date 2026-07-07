@@ -26,8 +26,8 @@ public class KeywordDatabase {
 
     public static Array<String> getKeywords() {return KeywordDB.keys().toArray(); }
 
-    public static boolean hasWord(String id) {
-        return KeywordDB.containsKey(id.toLowerCase());
+    public static boolean hasWord(String word) {
+        return KeywordDB.containsKey(word.toLowerCase());
     }
 
     public static String showDB(){

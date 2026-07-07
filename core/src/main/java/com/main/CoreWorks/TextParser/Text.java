@@ -2,16 +2,24 @@ package com.main.CoreWorks.TextParser;
 
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.utils.JsonValue;
-import com.main.CoreWorks.entities.Relics.Relic;
 
 public class Text {
     public final String text;
     public final Color color;
+    public final boolean newline;
+
+    public Text(String text, Color color, boolean newline) {
+        this.text = text;
+        this.color = color;
+        this.newline = newline;
+    }
 
     public Text(String text, Color color) {
         this.text = text;
         this.color = color;
+        this.newline = false;
     }
 
     public Text(JsonValue data) {
@@ -29,19 +37,22 @@ public class Text {
                 color1 = new Color(rgba[0], rgba[1], rgba[2], 1);
             }
         } else if (colorData.isString()) {
-            try {
-                color1 = Color.valueOf(colorData.asString().toUpperCase());
-            } catch (Exception e) {
-                color1 = Color.WHITE;
+            color1 = Colors.get(colorData.asString().toUpperCase());
+            if (color1 == null) {
+                try {
+                    color1 = Color.valueOf(colorData.asString().toUpperCase());
+                } catch (Exception e) {
+                    color1 = Color.WHITE;
+                }
             }
-
-        } else if (colorData.isNumber()){
+        } else if (colorData.isNumber()) {
             int rgba8888 = colorData.asInt();
             color1 = new Color(rgba8888);
         } else {
             color1 = Color.WHITE;
         }
         this.color = color1;
+        this.newline = false;
     }
 
     @Override
