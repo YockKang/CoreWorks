@@ -47,7 +47,6 @@ public class Coreworks extends Game {
 
         JsonValue keywords = JsonProcessor.read(Gdx.files.internal("Keywords/Keywords.json"));
         KeywordDatabase.register(keywords);
-        System.out.println(KeywordDatabase.showDB());
 
         // load game assets and databases
         // 1. load FactoryData

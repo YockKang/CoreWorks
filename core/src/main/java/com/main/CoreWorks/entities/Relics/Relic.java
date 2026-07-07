@@ -1,20 +1,21 @@
 package com.main.CoreWorks.entities.Relics;
 
 import com.main.CoreWorks.RunPersistence.RunState;
+import com.main.CoreWorks.TextParser.Sentence;
 
 import java.util.Objects;
 
 public abstract class Relic {
     protected String id;
     protected String name;
-    protected String description;
+    protected Sentence description;
     protected String tier;
     protected String log;
 
     public Relic(String id, String name, String description, String log, String tier) {
         this.id = id;
         this.name = name;
-        this.description = description;
+        this.description = new Sentence(description, true);
         this.log = log;
         this.tier = tier;
     }
@@ -27,7 +28,7 @@ public abstract class Relic {
         return id;
     }
 
-    public String getDescription() {
+    public Sentence getDescription() {
         return description;
     }
 

@@ -160,7 +160,10 @@ public class CharacterSelectScreen implements Screen {
         label2.setColor(Color.ORANGE);
         preview.add(label2).row();
         for (Relic relic : selectedPlayer.getRelics()) {
-            preview.add(new Label(String.format("- %s: %s", relic.getName(), relic.getDescription()), skin)).row();
+            Table row = new Table();
+            row.add(new Label(relic.getName() + ": ", skin));
+            row.add(relic.getDescription().toTable(skin));
+            preview.add(row);
         }
     }
 
