@@ -11,9 +11,9 @@
   {
     "id" : "Chemist",
     "Name" : "Chemist",
-    "Grid" : [6, 6],
-    "HP" : 40,
-    "Buildings" : ["Shooter0", "IronMiner", "PoisonBaller"],
+    "Grid" : [5, 5],
+    "HP" : 35,
+    "Buildings" : ["Shooter0", "CopperMiner", "IronMiner", "Cannonballer", "PoisonBaller"],
     "Relics" : ["MoneyRelic2"]
   },
 

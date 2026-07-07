@@ -150,11 +150,15 @@ public class CharacterSelectScreen implements Screen {
         Sentence playerInfo = new Sentence(selectedPlayer.toString(), true);
         preview.add(playerInfo.toTable(skin)).row();
         preview.add(new Label(String.format("Grid size: %s x %s", selectedPlayer.getFactoryGrid().getMaxWidth(), selectedPlayer.getFactoryGrid().getMaxHeight()), skin)).row();
-        preview.add(new Label("Starter buildings:", skin)).row();
+        Label label1 = new Label("Starter buildings:", skin);
+        label1.setColor(Color.ORANGE);
+        preview.add(label1).row();
         for (Building building : selectedPlayer.getInventory()) {
             preview.add(new Label(String.format("- %s", building.displayName()), skin)).row();
         }
-        preview.add(new Label("Starter Relics:", skin)).row();
+        Label label2 = new Label("Starter Relics:", skin);
+        label2.setColor(Color.ORANGE);
+        preview.add(label2).row();
         for (Relic relic : selectedPlayer.getRelics()) {
             preview.add(new Label(String.format("- %s: %s", relic.getName(), relic.getDescription()), skin)).row();
         }
