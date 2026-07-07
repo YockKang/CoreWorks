@@ -139,6 +139,7 @@ public class Sentence {
                 displayText.setColor(txt.color);
                 if (txt instanceof Keyword keyword) {
                     TextTooltip tooltip = new TextTooltip(keyword.description, skin);
+                    tooltip.setInstant(true);
                     displayText.addListener(tooltip);
                 }
                 row.add(displayText);
@@ -148,17 +149,4 @@ public class Sentence {
         return table;
     }
 
-    public Table toVertTable(Skin skin) {
-        Table table = new Table();
-        for (Text fragment : text) {
-            Label displayText = new Label(fragment.text, skin);
-            displayText.setColor(fragment.color);
-            if (fragment instanceof Keyword keyword) {
-                TextTooltip tooltip = new TextTooltip(keyword.description, skin);
-                displayText.addListener(tooltip);
-            }
-            table.add(displayText).row();
-        }
-        return table;
-    }
 }
