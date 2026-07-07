@@ -1,6 +1,7 @@
 package com.main.CoreWorks.Generators;
 
 import com.badlogic.gdx.utils.*;
+import com.main.CoreWorks.Factory.FactoryGrid;
 import com.main.CoreWorks.Factory.Upgrade.*;
 import com.main.CoreWorks.Rewards.*;
 import com.main.CoreWorks.RunPersistence.*;
@@ -16,13 +17,13 @@ public class RewardGenerator {
         // Add the Rewards in the code below
         rewards.add(randomBuildingReward(runState));
         rewards.add(randomBuildingReward(runState));
-        rewards.add(randomBuildingReward(runState));
         rewards.add(randomUpgradeReward(runState));
         rewards.add(randomUpgradeReward(runState));
         Reward relicReward = randomRelicReward(runState);
         if (relicReward != null) {
             rewards.add(relicReward);
         }
+        rewards.add(randomExpansionReward(runState));
 
         // Return statement below
         return rewards;
@@ -37,6 +38,34 @@ public class RewardGenerator {
 
         // Return statement below
         return rewards;
+    }
+
+    // Handles grid expansion reward generation
+    // If grid rows > column, more likely to get column and vice versa
+    private static Reward randomExpansionReward(RunState runState) {
+        Random random = runState.getRandom();
+        int odds = random.nextInt(100);
+        FactoryGrid factoryGrid = runState.getFactoryGrid();
+
+        if (factoryGrid.getMaxHeight() > factoryGrid.getMaxWidth()) {
+            if (odds < 80) {
+                return new ExpandGridColumnReward();
+            } else {
+                return new ExpandGridRowReward();
+            }
+        } else if (factoryGrid.getMaxHeight() < factoryGrid.getMaxWidth()) {
+            if (odds < 20) {
+                return new ExpandGridColumnReward();
+            } else {
+                return new ExpandGridRowReward();
+            }
+        } else {
+            if (odds < 50) {
+                return new ExpandGridColumnReward();
+            } else {
+                return new ExpandGridRowReward();
+            }
+        }
     }
 
     // Handles the building reward generation with the following odds:
