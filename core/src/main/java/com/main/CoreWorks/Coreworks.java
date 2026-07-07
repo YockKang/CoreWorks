@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.viewport.*;
 import com.main.CoreWorks.Factory.Upgrade.*;
 import com.main.CoreWorks.Resources.*;
+import com.main.CoreWorks.TextParser.Sentence;
 import com.main.CoreWorks.database.*;
 import com.main.CoreWorks.screens.*;
 
@@ -85,6 +86,8 @@ public class Coreworks extends Game {
         JsonValue playerCharacters = JsonProcessor.read(Gdx.files.internal("Characters/Characters.json"));
         PlayerDatabase.register(playerCharacters);
 
+        JsonValue keywords = JsonProcessor.read(Gdx.files.internal("Keywords/Keywords.json"));
+        KeywordDatabase.register(keywords);
 
         // For now, starting the game leads to a placeholder menu screen
         this.setScreen(new MenuScreen(this)); // eventually will replace with the Main Menu screen

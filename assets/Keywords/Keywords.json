@@ -1,0 +1,12 @@
+[
+  {
+    "Word" : "Poison",
+    "Color" : "green",
+    "Description" : "Deals x True Damage every 4 ticks and halves"
+  },
+  {
+    "Word" : "True Damage",
+    "Color" : [0, 255, 255],
+    "Description" : "Damage ignores Shield"
+  }
+]
