@@ -48,6 +48,9 @@ public class Coreworks extends Game {
         // load game assets and databases
         // 1. load FactoryData
 
+        JsonValue keywords = JsonProcessor.read(Gdx.files.internal("Keywords/Keywords.json"));
+        KeywordDatabase.register(keywords);
+
         JsonValue manifestData = JsonProcessor.read(Gdx.files.internal("FactoryData/Manifest.json"));
         fileScanner(manifestData, "Release");
         if (devMode) {
@@ -85,9 +88,6 @@ public class Coreworks extends Game {
 
         JsonValue playerCharacters = JsonProcessor.read(Gdx.files.internal("Characters/Characters.json"));
         PlayerDatabase.register(playerCharacters);
-
-        JsonValue keywords = JsonProcessor.read(Gdx.files.internal("Keywords/Keywords.json"));
-        KeywordDatabase.register(keywords);
 
         // For now, starting the game leads to a placeholder menu screen
         this.setScreen(new MenuScreen(this)); // eventually will replace with the Main Menu screen
