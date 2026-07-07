@@ -55,23 +55,13 @@ public class MenuScreen implements Screen {
 
         // Adds the start button
         TextButton startButton = new TextButton("Start a new Game", skin);
+        startButton.setColor(Color.GREEN);
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Creates the initial runState
-                // For now, hardcoded one player type only, eventually might allow selection of different player types with unique abilities for more replayability
-                Player player = PlayerDatabase.getPlayer("Engineer");
-                RunState runState = new RunState(player);
-                // Generates hardcoded RunMap for testing (Uncomment)
-                // RunMap runMap = RunMapGenerator.generateHardcodedRunMap(runState);
-                // Generates procedurally generated runMap
-                RunMap runMap = RunMapGenerator.generateRandomRunMapF1(runState);
-                runState.setRunMap(runMap);
-                runState.setCurrNode(runMap.getStartNode());
-
-                // Moves to map screen
+                // Moves to character screen
                 game.resetCamera();
-                game.setScreen(new MapScreen(game, runState));
+                game.setScreen(new CharacterSelectScreen(game));
                 dispose();
             }
         });
