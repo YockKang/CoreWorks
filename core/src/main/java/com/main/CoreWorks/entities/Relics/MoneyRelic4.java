@@ -9,7 +9,7 @@ public class MoneyRelic4 extends Relic {
     public MoneyRelic4() {
         super("MoneyRelic4",
             "Money Bank",
-            "Gives " + MONEY + " coins on acquisition",
+            "Gives " + MONEY + " money on acquisition",
             "Money Bank gave one-time grant of " + MONEY + " coins",
             "3");
     }

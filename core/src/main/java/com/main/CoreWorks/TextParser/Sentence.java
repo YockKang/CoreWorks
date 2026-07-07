@@ -8,8 +8,6 @@ import com.badlogic.gdx.utils.Array;
 import com.main.CoreWorks.database.KeywordDatabase;
 import regexodus.*;
 
-import javax.swing.plaf.basic.BasicBorders;
-
 
 public class Sentence {
     public final Array<Text> text;
@@ -147,6 +145,18 @@ public class Sentence {
             table.add(row).row();
         }
         return table;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        for (Text frag : text) {
+            str.append(frag.text);
+            if (frag.newline) {
+                str.append('\n');
+            }
+        }
+        return str.toString();
     }
 
 }
