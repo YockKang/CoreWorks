@@ -2,13 +2,9 @@ package com.main.CoreWorks.screens;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Coreworks;
@@ -147,24 +143,48 @@ public class CharacterSelectScreen implements Screen {
             return;
         }
 
+        // Sets the tooltips for player info
         Sentence playerInfo = new Sentence(selectedPlayer.toString(), true);
         preview.add(playerInfo.toTable(skin)).row();
         preview.add(new Label(String.format("Grid size: %s x %s", selectedPlayer.getFactoryGrid().getMaxWidth(), selectedPlayer.getFactoryGrid().getMaxHeight()), skin)).row();
+
+        // Sets the tooltips for starter buildings (max 3 per row)
         Label label1 = new Label("Starter buildings:", skin);
         label1.setColor(Color.ORANGE);
         preview.add(label1).row();
+        Table buildingTable = new Table();
+        int countBuilding = 0;
         for (Building building : selectedPlayer.getInventory()) {
-            preview.add(new Label(String.format("- %s", building.displayName()), skin)).row();
+            Label buildingLabel = new Label(String.format("- %s ", building.displayName()), skin);
+            buildingLabel.setColor(Color.CYAN);
+            buildingTable.add(buildingLabel).pad(3);
+            // Add future tooltips for description here
+            countBuilding++;
+            if (countBuilding % 3 == 0) {
+                buildingTable.row();
+            }
         }
+        preview.add(buildingTable).row();
+
+        // Sets the tooltips for starter relics
         Label label2 = new Label("Starter Relics:", skin);
         label2.setColor(Color.ORANGE);
         preview.add(label2).row();
+        Table relicTable = new Table();
+        int countRelic = 0;
         for (Relic relic : selectedPlayer.getRelics()) {
-            Table row = new Table();
-            row.add(new Label(relic.getName() + ": ", skin));
-            row.add(relic.getDescription().toTable(skin));
-            preview.add(row);
+            Label label3 = new Label("- " + relic.getName(), skin);
+            label3.setColor(Color.GOLD);
+            Tooltip<Table> descToolTip = new Tooltip<>(relic.getDescription().toTable(skin));
+            descToolTip.setInstant(true);
+            label3.addListener(descToolTip);
+            relicTable.add(label3);
+            countRelic++;
+            if (countRelic % 5 == 0) {
+                relicTable.row();
+            }
         }
+        preview.add(relicTable);
     }
 
     @Override

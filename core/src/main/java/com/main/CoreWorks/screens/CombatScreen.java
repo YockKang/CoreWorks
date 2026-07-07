@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Coreworks;
+import com.main.CoreWorks.entities.Relics.Relic;
 import com.main.CoreWorks.util.*;
 import com.main.CoreWorks.Factory.*;
 import com.main.CoreWorks.Factory.Tubes.Tube;
@@ -215,7 +216,17 @@ public class CombatScreen implements Screen {
         table.add(body).expand().fill().row();
 
         // Simple String-based UI to display all relics at the bottom (To be improved on eventually)
-        table.add(new Label("Relics: " + runState.getRelics(), skin)).row();
+        table.add(new Label("Relics:", skin)).row();
+        Table relicTable = new Table();
+        for (Relic relic : runState.getRelics()) {
+            Label label3 = new Label("- " + relic.getName(), skin);
+            label3.setColor(Color.GOLD);
+            Tooltip<Table> descToolTip = new Tooltip<>(relic.getDescription().toTable(skin));
+            descToolTip.setInstant(true);
+            label3.addListener(descToolTip);
+            relicTable.add(label3);
+        }
+        table.add(relicTable).row();
 
         needRefresh = false;
     }
