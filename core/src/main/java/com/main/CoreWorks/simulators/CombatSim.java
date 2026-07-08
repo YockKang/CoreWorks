@@ -16,6 +16,7 @@ public class CombatSim {
     private boolean lost = false;
     private Array<String> combatLog = new Array<>(10);
     private FactoryGrid grid;
+    private int logsThisTick = 0;
 
 
     public CombatSim(Player player, Array<Enemy> enemies) {
@@ -38,6 +39,7 @@ public class CombatSim {
             combatLog.removeIndex(0);
         }
         combatLog.add("Tick " + tick + ": " + log);
+        logsThisTick++;
     }
 
     /*
@@ -54,6 +56,7 @@ public class CombatSim {
      */
 
     public void advanceTick(RunState runState, int tick) {
+        logsThisTick = 0;
         if (win || lost) {
             return;
         }
@@ -292,5 +295,9 @@ public class CombatSim {
 
     public Array<String> getCombatLog() {
         return combatLog;
+    }
+
+    public int getLogsThisTick() {
+        return logsThisTick;
     }
 }

@@ -558,24 +558,29 @@ public abstract class Building extends Structure implements Updatable, Comparabl
     public void setRecipe(Recipe rec) {
         // write new recipe
         this.recipe = rec;
-        this.cooldownTimer = this.recipe.getDuration();
+        if (rec == null) {
+            this.inputBuffer.clear();
+            this.outputBuffer.clear();
+        } else {
+            this.cooldownTimer = this.recipe.getDuration();
 
-        // grab new inputs
-        Array<String> inputs = this.recipe.getInputs();
-        Array<Integer> inputMults = this.recipe.getInputMultipliers();
-        // reset queues
-        this.inputBuffer.clear();
-        for (int i = 0; i < inputs.size; i++) {
-            this.inputBuffer.add(new ResourceBuffer(inputs.get(i), capacityMult * inputMults.get(i)));
-        }
+            // grab new inputs
+            Array<String> inputs = this.recipe.getInputs();
+            Array<Integer> inputMults = this.recipe.getInputMultipliers();
+            // reset queues
+            this.inputBuffer.clear();
+            for (int i = 0; i < inputs.size; i++) {
+                this.inputBuffer.add(new ResourceBuffer(inputs.get(i), capacityMult * inputMults.get(i)));
+            }
 
-        // grab new outputs
-        Array<String> outputs = this.recipe.getOutputs();
-        Array<Integer> outputMults = this.recipe.getOutputMultipliers();
-        // reset queues
-        this.outputBuffer.clear();
-        for (int i = 0; i < outputs.size; i++) {
-            this.outputBuffer.add(new ResourceBuffer(outputs.get(i), capacityMult * outputMults.get(i)));
+            // grab new outputs
+            Array<String> outputs = this.recipe.getOutputs();
+            Array<Integer> outputMults = this.recipe.getOutputMultipliers();
+            // reset queues
+            this.outputBuffer.clear();
+            for (int i = 0; i < outputs.size; i++) {
+                this.outputBuffer.add(new ResourceBuffer(outputs.get(i), capacityMult * outputMults.get(i)));
+            }
         }
     }
 

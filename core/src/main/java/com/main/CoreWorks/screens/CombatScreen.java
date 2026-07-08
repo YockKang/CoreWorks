@@ -4,8 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.*;
@@ -24,7 +23,7 @@ public class CombatScreen implements Screen {
     RunState runState;
     CombatController controller;
     private float accumulator = 0f;
-    private static final float TIME_STEP = 1/4f; // 4 Ticks per second
+    private static final float TIME_STEP = 1 / 4f; // 4 Ticks per second
     private int tickCount = 0;
     private Vector2 mouse2DCoords = new Vector2();
     private ShapeRenderer shapeRenderer;
@@ -36,6 +35,9 @@ public class CombatScreen implements Screen {
     private boolean tubeMode = false;
     DirectedCoords downPoint;
     DirectedCoords upPoint;
+
+    // recipe UI fields
+    private boolean recipeUIOn = false;
 
 
     // Below field handles the scene2D UI
@@ -56,7 +58,7 @@ public class CombatScreen implements Screen {
     private final int tileSize;
 
     private final int gridMidX = (int) (Coreworks.VIEWPORT_WIDTH / 2);
-    private final int gridMidY = 300;
+    private final int gridMidY = 420;
 
     private final int gridStartX;
     private final int gridEndX;
@@ -71,6 +73,9 @@ public class CombatScreen implements Screen {
 
     private Building selectedBuilding;
 
+    private ObjectMap<String, Actor> UIElements = new ObjectMap<>();
+    private Queue<Label> combatLog = new Queue<>();
+
     public CombatScreen(Coreworks game, RunState runstate, Array<Enemy> enemies) {
 
         this.game = game;
@@ -83,7 +88,7 @@ public class CombatScreen implements Screen {
         this.gridWidth = runstate.getPlayer().getFactoryGrid().getMaxWidth();
         this.gridHeight = runstate.getPlayer().getFactoryGrid().getMaxHeight();
         this.tileSize = Math.min(gridSize / gridWidth, gridSize / gridHeight);
-        this.gridStartX = gridMidX - tileSize * gridWidth / 2 ;
+        this.gridStartX = gridMidX - tileSize * gridWidth / 2;
         this.gridEndX = gridMidX - tileSize * gridWidth / 2;
         this.gridEndY = gridMidY + tileSize * gridHeight / 2;
         this.gridStartY = gridMidY - tileSize * gridHeight / 2;
@@ -107,14 +112,135 @@ public class CombatScreen implements Screen {
     public void buildCombatUI() {
         stage.clear();
 
+        // assign all fixed UI elements
+        UIElements.put("MasterTable", new Table(skin));
+
+        // top bar
+        UIElements.put("infotableL", new Table(skin));
+        UIElements.put("infotableR", new Table(skin));
+        UIElements.put("title", new Label("Coreworks", skin));
+        UIElements.put("tickcount", new Label("Tick:\n" + tickCount, skin));
+        UIElements.put("playerdata", new Label(runState.getPlayer().toString(), skin));
+        UIElements.put("buildingselect", new Label("Selected: None ", skin));
+        // UIElements.put("buildingselect", new Label("Selected: " + selectedBuilding.displayName(), skin));
+        // UIElements.put("rotationhelp", new Label("Press Q/E to rotate \n Current rotation: " + selectedBuilding.getRotation(), skin));
+        UIElements.put("tubemode", new Label("Adding Tubes\nPress T to exit", skin));
+        UIElements.put("tubemode", new Label("Press T to add Tubes", skin));
+        UIElements.put("scrollenemies", new Label("Use Mousewheel to scroll\nthe enemy display and\ncombat Log when paused", skin));
+
+        UIElements.put("paused", new Label("PAUSED\nPress Space to Continue", skin));
+
+
+        // combat log
+        UIElements.put("logtable", new Table(skin));
+        UIElements.put("logheader", new Label("Combat Log:", skin));
+        UIElements.put("logbody", new Table(skin));
+
+
+        // enemies
+        UIElements.put("enemytable", new Table(skin));
+        UIElements.put("enemyheader", new Label("Enemies:", skin));
+        UIElements.put("enemybody", new Table(skin));
+
+        // inventory
+        UIElements.put("inventorytable", new Table(skin));
+        UIElements.put("inventoryheader", new Label("Inventory", skin));
+        UIElements.put("inventorybody", new Table(skin));
+
+        // relics
+        UIElements.put("relictable", new Table(skin));
+        UIElements.put("relicheader", new Label("Relics:", skin));
+        UIElements.put("relicbody", new Table(skin));
+
+        Actor factoryViewport = new Actor();
+        UIElements.put("factoryviewport", factoryViewport);
+
+        Table maintable = (Table) UIElements.get("MasterTable");
+        maintable.setFillParent(true);
+        stage.addActor(maintable);
+
+        // subsections of the screen
+        Table topBar = new Table(skin);
+        Table bottomBar = new Table(skin);
+        Table middle = new Table(skin);
+        Table leftBar = new Table(skin);
+        Table rightBar = new Table(skin);
+        Table upperBar = new Table(skin);
+
+        // debugging box boundaries
+        /*
+        topBar.setBackground("default-round");
+        bottomBar.setBackground("default-round");
+        leftBar.setBackground("default-round");
+        rightBar.setBackground("default-round");
+         */
+
+        // assembling middle
+        middle.add(topBar).growX().height(Coreworks.VIEWPORT_HEIGHT - gridEndY).row();
+        middle.add(factoryViewport).size(gridSize);
+
+        // assembling upperBar
+        upperBar.add(leftBar).width((Coreworks.VIEWPORT_WIDTH - gridSize) / 2).growY();
+        upperBar.add(middle).expand().fill();
+        upperBar.add(rightBar).width((Coreworks.VIEWPORT_WIDTH - gridSize) / 2).growY();
+
+        // assembling maintable
+        maintable.add(upperBar);
+        maintable.row();
+        maintable.add(bottomBar).growX().height(gridStartY);
+
+        // making UI elements
+        // top-left info
+        Table infotableL = (Table) (UIElements.get("infotableL"));
+        infotableL.add(UIElements.get("title"));
+        infotableL.add(UIElements.get("tickcount")).row();
+        infotableL.add(UIElements.get("playerdata"));
+        infotableL.add(UIElements.get("buildingselect"));
+
+        // top-right info
+        Table infotableR = (Table) (UIElements.get("infotableR"));
+        infotableR.add(UIElements.get("tubemode"));
+
+        // inventory
+        Table inventoryTable = (Table) UIElements.get("inventorytable");
+        inventoryTable.add(UIElements.get("inventoryheader")).pad(10).row();
+        inventoryTable.add(UIElements.get("inventorybody")).growY().row();
+        updateInventoryUI();
+
+        // combat log (empty, to be filled when actions happen)
+        Table logTable = (Table) UIElements.get("logtable");
+        logTable.add(UIElements.get("logheader")).row();
+        logTable.add(UIElements.get("logbody")).pad(10).growY().row();
+        updateCombatLog();
+
+        // Enemy Cards (empty, to be filled on start)
+        Table enemyTable = (Table) UIElements.get("enemytable");
+        enemyTable.add(UIElements.get("enemyheader")).row();
+        enemyTable.add(UIElements.get("enemybody")).pad(10).growY().row();
+        updateEnemies();
+
+        // filling in contents
+        leftBar.add(infotableL).top().pad(10).row();
+        leftBar.add(inventoryTable).growY().row();
+
+        rightBar.add(infotableR).pad(10).top().row();
+        rightBar.add(logTable).growY().row();
+
+        bottomBar.add(enemyTable).pad(5);
+
+
+        // OLD CODE DELETE LATER
+        /*
         Table table = new Table();
         table.setFillParent(true);
-        stage.addActor(table);
+        table.setName("MainTable");
+        // stage.addActor(table);
 
         table.top();
 
         // The below builds the top part of the UI + pause screen
         Table topTable = new Table();
+        topTable.setName("TopBar");
         topTable.top().left().pad(10);
         topTable.add(new Label("Coreworks", skin)).pad(10);
         topTable.add(new Label("Tick:\n" + tickCount, skin)).pad(10);
@@ -123,7 +249,7 @@ public class CombatScreen implements Screen {
             topTable.add(new Label("Selected: None ", skin)).pad(10);
         } else {
             topTable.add(new Label("Selected: " + selectedBuilding.displayName(), skin)).pad(10);
-            topTable.add(new Label("Press R to rotate \n Current rotation: " + selectedBuilding.getRotation(), skin)).pad(10);
+            topTable.add(new Label("Press Q/E to rotate \n Current rotation: " + selectedBuilding.getRotation(), skin)).pad(10);
         }
         if (tubeMode) {
             topTable.add(new Label("Adding Tubes\nPress T to exit", skin)).pad(10);
@@ -144,7 +270,8 @@ public class CombatScreen implements Screen {
         logTable.top().center();
         logTable.add(new Label("Combat Log:", skin)).row();
         Array<String> log = controller.getCombatSim().getCombatLog();
-        int start = Math.max(0, log.size - 8); // displays the 8 most recent interactions
+        int logsThisTick = controller.getCombatSim().getLogsThisTick();
+        int start = Math.max(0, log.size - logsThisTick);
         for (int i = start; i < log.size; i++) {
             logTable.add(new Label(log.get(i), skin)).right().row();
         }
@@ -192,13 +319,15 @@ public class CombatScreen implements Screen {
             if (building == selectedBuilding) {
                 buildingButton.setColor(Color.GREEN);
             }
-            buildingButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    selectedBuilding = building;
-                    needRefresh = true;
-                }
-            });
+            if (!recipeUIOn) {
+                buildingButton.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        selectedBuilding = building;
+                        needRefresh = true;
+                    }
+                });
+            }
             buildingsInInv.add(buildingButton);
             buildingCount++;
             if (buildingCount % maxBuildingsPerRow == 0) {
@@ -228,13 +357,104 @@ public class CombatScreen implements Screen {
         }
         table.add(relicTable).row();
 
+        if (recipeUIOn) {
+            Table recipeTable = new Table();
+            recipeTable.setFillParent(true);
+            recipeTable.setName("RecipeUI");
+            recipeTable.top().center();
+            recipeTable.add(new Label("hi fafuiwhiulGFWRYkjlHWDPFGAWOPIKL;FMNBQHWGUIFKJNWMEDVHIUOAPq  kmnqbjGUYIUHIJURGVNJhaio tbftryugibkjgvFRY5 J HYGCTBDJrbfynhrjgytnb", skin));
+
+            stage.addActor(recipeTable);
+
+        }
+
+         */
+        needRefresh = false;
+    }
+
+    private void updateEnemies() {
+        // The below builds the enemy display
+        Table enemyTable = (Table) UIElements.get("enemybody");
+        enemyTable.clear();
+        enemyTable.defaults().width(185);
+        Array<Enemy> enemies = controller.getCombatSim().getEnemies();
+        int enemyCount = 0;
+        int maxEnemyPerRow = 15;
+        for (Enemy enemy : enemies) {
+            // Draw the enemy in a table (disguised as a card) to look neater
+            Table enemyCard = new Table(skin);
+            enemyCard.setBackground("default-round");
+            enemyCard.defaults().pad(2);
+            enemyCard.add(new Label(enemy.toString(), skin));
+            enemyTable.add(enemyCard).pad(2);
+            enemyCount++;
+            if (enemyCount % maxEnemyPerRow == 0) {
+                enemyTable.row();
+            }
+        }
+    }
+
+    private void updateCombatLog() {
+        Table logTable = (Table) UIElements.get("logbody");
+        Array<String> log = controller.getCombatSim().getCombatLog();
+        int newlines = controller.getCombatSim().getLogsThisTick();
+        System.out.println(newlines);
+        int start = Math.max(0, log.size - newlines);
+        for (int i = start; i < log.size; i++) {
+            Label newlog = new Label(log.get(i), skin);
+            logTable.add(newlog).right().row();
+            combatLog.addLast(newlog);
+        }
+        while (combatLog.size > 10) {
+            System.out.println("log has "+combatLog.size);
+            Label oldlog = combatLog.removeFirst();
+            oldlog.remove();
+        }
+    }
+
+    private void updateInventoryUI() {
+        // The below rebuilds the inventorybody
+        Table buildingsInInv = (Table) UIElements.get("inventorybody");
+        buildingsInInv.clear();
+        buildingsInInv.defaults().width(120).height(60).pad(5);
+        Array<Building> inventory = controller.getCombatSim().getPlayer().getInventory();
+        int maxBuildingsPerRow = 3;
+        int buildingCount = 0;
+
+        for (Building building : inventory) {
+            TextButton buildingButton = new TextButton(building.displayName(), skin);
+            if (building == selectedBuilding) {
+                buildingButton.setColor(Color.GREEN);
+            }
+            buildingButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if (!recipeUIOn) {
+                        // dont allow building selecting with recipe UI enabled
+                        selectedBuilding = building;
+                        needRefresh = true;
+                    }
+                }
+            });
+            buildingsInInv.add(buildingButton);
+            buildingCount++;
+            if (buildingCount % maxBuildingsPerRow == 0) {
+                buildingsInInv.row();
+            }
+        }
+    }
+
+    private void updateUI() {
+        updateInventoryUI();
+        updateCombatLog();
+        updateEnemies();
         needRefresh = false;
     }
 
     @Override
     public void render(float delta) {
         // Anti-"Lag spike spiral of death" code
-        delta = Math.min(delta, 1/8f);
+        delta = Math.min(delta, 1 / 8f);
 
         externalInput();
 
@@ -267,7 +487,7 @@ public class CombatScreen implements Screen {
 
         // Draws the Scene2D UI
         if (needRefresh) {
-            buildCombatUI();
+            updateUI();
         }
         stage.act(delta);
         stage.draw();
@@ -478,13 +698,25 @@ public class CombatScreen implements Screen {
 
     private void externalInput() {
         // Keyboard inputs handled below
+        if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
+            System.out.println(selectedBuilding);
+        }
 
-        // Press R to rotate building
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            if (selectedBuilding == null) {
+        // Press E to rotate building CW, Q for CCW
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            if (selectedBuilding == null || selectedBuilding.isOnGrid()) {
                 return;
             }
             int nextRotation = (selectedBuilding.getRotation() + 1) % 4;
+            selectedBuilding.setRotation(nextRotation);
+            needRefresh = true;
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+            if (selectedBuilding == null || selectedBuilding.isOnGrid()) {
+                return;
+            }
+            int nextRotation = (selectedBuilding.getRotation() - 1) % 4;
             selectedBuilding.setRotation(nextRotation);
             needRefresh = true;
         }
@@ -531,14 +763,25 @@ public class CombatScreen implements Screen {
             needRefresh = true;
         }
 
+        // Recipe selection is R (for now)
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            if (selectedBuilding != null && selectedBuilding.isOnGrid()) {
+                recipeUIOn = !recipeUIOn;
+                needRefresh = true;
+            }
+        }
+
         // Mouse inputs handled below
         Vector2 mouseTranslatedCoords = translateMouseToWorld();
 
         float mouseTranslatedX = mouseTranslatedCoords.x;
         float mouseTranslatedY = mouseTranslatedCoords.y;
 
-        // Handles potential bugs with scene2D UI and grid inputs by prioritizing scene2D UI if there is an overlap
-        if (stage.hit(mouseTranslatedX, mouseTranslatedY, true) != null) {
+        Actor hit = stage.hit(mouseTranslatedX, mouseTranslatedY, true);
+
+        // Handles potential bugs with scene2D UI and grid inputs by prioritizing scene2D UI if there is an overlap (except the reserved space for the grid itself)
+        if (stage.hit(mouseTranslatedX, mouseTranslatedY, true) != null &&
+            hit != UIElements.get("factoryviewport")) {
             return;
         }
 
@@ -619,23 +862,28 @@ public class CombatScreen implements Screen {
     }
 
     /*
-    Right clicks will handle (c.a.a Milestone 1)
+    Right clicks will handle (c.a.a Milestone 3)
         1. Deselecting a building
         2. Removing building from the grid if grid is clicked back into inventory
+        3. exiting recipe UI
      */
 
     private void rightClick(float mouseTranslatedX, float mouseTranslatedY) {
-        Coords coords = getGridAt(mouseTranslatedX, mouseTranslatedY);
-        if (selectedBuilding != null || coords == null) {
-            selectedBuilding = null;
-            needRefresh = true;
+        if (recipeUIOn) {
+            recipeUIOn = false;
         } else {
-            Building building = controller.getFactorySim().getGrid().removeBuilding(coords.x, coords.y);
-            if (building != null) {
-                controller.getCombatSim().getPlayer().addBuilding(building);
+            Coords coords = getGridAt(mouseTranslatedX, mouseTranslatedY);
+            if (selectedBuilding != null || coords == null) {
+                selectedBuilding = null;
+            } else {
+                Building building = controller.getFactorySim().getGrid().removeBuilding(coords.x, coords.y);
+                if (building != null) {
+                    controller.getCombatSim().getPlayer().addBuilding(building);
+                }
             }
-            needRefresh = true;
         }
+        needRefresh = true;
+
     }
 
     // draws pipes
@@ -644,31 +892,31 @@ public class CombatScreen implements Screen {
         switch (rot) {
             case 0 -> {
                 shapeRenderer.rect(
-                    tileX + (float) tileSize /3,
-                    tileY + (float) tileSize /3,
-                    (float) tileSize /3,
-                    (float) (2 * tileSize) /3);
+                    tileX + (float) tileSize / 3,
+                    tileY + (float) tileSize / 3,
+                    (float) tileSize / 3,
+                    (float) (2 * tileSize) / 3);
             }
             case 1 -> {
                 shapeRenderer.rect(
-                    tileX + (float) tileSize /3,
-                    tileY + (float) tileSize /3,
-                    (float) (2 * tileSize) /3,
-                    (float) tileSize /3);
+                    tileX + (float) tileSize / 3,
+                    tileY + (float) tileSize / 3,
+                    (float) (2 * tileSize) / 3,
+                    (float) tileSize / 3);
             }
             case 2 -> {
                 shapeRenderer.rect(
-                    tileX + (float) tileSize /3,
+                    tileX + (float) tileSize / 3,
                     tileY,
-                    (float) tileSize /3,
-                    (float) (2 * tileSize) /3);
+                    (float) tileSize / 3,
+                    (float) (2 * tileSize) / 3);
             }
             case 3 -> {
                 shapeRenderer.rect(
                     tileX,
-                    tileY + (float) tileSize /3,
-                    (float) (2 * tileSize) /3,
-                    (float) tileSize /3);
+                    tileY + (float) tileSize / 3,
+                    (float) (2 * tileSize) / 3,
+                    (float) tileSize / 3);
             }
         }
     }
