@@ -16,6 +16,18 @@ public class RunState {
     private Random random;
     private Array<Relic> relics = new Array<>();
 
+    // Code below stores modifiers that relics can manipulate to increase / decrease damage
+    // Each new damage "type" will need its own unique modifiers (not very good implementation but works)
+    // Below handles the TEMPORARY modifiers
+    private int tempPlayerBonusDmg = 0;
+    private int tempPlayerBonusPoisonDmg = 0;
+    private int tempPlayerBonusTrueDmg = 0;
+
+    // Below handles the PERMANENT modifiers
+    private int permPlayerBonusDmg = 0;
+    private int permPlayerBonusPoisonDmg = 0;
+    private int permPlayerBonusTrueDmg = 0;
+
     public RunState(Player player) {
         this.player = player;
         this.factoryGrid = player.getFactoryGrid();
@@ -67,6 +79,62 @@ public class RunState {
         arr.addAll(factoryGrid.getBuildings());
         arr.addAll(player.getInventory());
         return arr;
+    }
+
+    // Handles Temp modifiers
+    public void addTempPlayerBonusDmg(int amt) {
+        this.tempPlayerBonusDmg += amt;
+    }
+
+    public void addTempPlayerBonusPoisonDmg(int amt) {
+        this.tempPlayerBonusPoisonDmg += amt;
+    }
+
+    public void addTempPlayerBonusTrueDmg(int amt) {
+        this.tempPlayerBonusTrueDmg += amt;
+    }
+
+    public int getTempPlayerBonusDmg() {
+        return tempPlayerBonusDmg;
+    }
+
+    public int getTempPlayerBonusPoisonDmg() {
+        return tempPlayerBonusPoisonDmg;
+    }
+
+    public int getTempPlayerBonusTrueDmg() {
+        return tempPlayerBonusTrueDmg;
+    }
+
+    public void resetTempCombatModifiers() {
+        this.tempPlayerBonusDmg = 0;
+        this.tempPlayerBonusPoisonDmg = 0;
+        this.tempPlayerBonusTrueDmg = 0;
+    }
+
+    // Handles Perm modifiers
+    public void addPermPlayerBonusDmg(int amt) {
+        this.permPlayerBonusDmg += amt;
+    }
+
+    public void addPermPlayerBonusPoisonDmg(int amt) {
+        this.permPlayerBonusPoisonDmg += amt;
+    }
+
+    public void addPermPlayerBonusTrueDmg(int amt) {
+        this.permPlayerBonusTrueDmg += amt;
+    }
+
+    public int getPermPlayerBonusDmg() {
+        return permPlayerBonusDmg;
+    }
+
+    public int getPermPlayerBonusPoisonDmg() {
+        return permPlayerBonusPoisonDmg;
+    }
+
+    public int getPermPlayerBonusTrueDmg() {
+        return permPlayerBonusTrueDmg;
     }
 
     public Random getRandom() {

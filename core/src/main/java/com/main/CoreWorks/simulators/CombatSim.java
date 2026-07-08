@@ -49,9 +49,9 @@ public class CombatSim {
         3. Checks if player has won / lost
         4. If not, enemies now resolve their attacks (if any)
         5. Checks and removes any dead enemies (status effects deaths)
-        6. Checks if player has won / lost once more
-        7. If not, player now resolve their status effects (if any)
-        8. Kills the player if dead (status effects death)
+        6. If not, player now resolve their status effects (if any)
+        7. Resolve all relic effects that occur based on ticks
+        8. Remove all dead enemies (death due to relics) or heals the player to prevent death (if healing relics)
         9. Checks if player has won / lost once more
      */
 
@@ -169,6 +169,10 @@ public class CombatSim {
 
             case DamageMove damageMove -> {
                 int oldHP = target.displayCurrentHp();
+                if (attacker == player) {
+                    int newDmg = damageMove.getValue() + runState.getTempPlayerBonusDmg() + runState.getPermPlayerBonusDmg();
+                    move = new DamageMove(newDmg, move.getChargeTime());
+                }
                 move.execute(target);
                 int newHP = target.displayCurrentHp();
                 if (oldHP != newHP) {
@@ -204,6 +208,10 @@ public class CombatSim {
 
             case TrueDamageMove trueDamageMove -> {
                 int oldHP = target.displayCurrentHp();
+                if (attacker == player) {
+                    int newDmg = trueDamageMove.getValue() + runState.getTempPlayerBonusTrueDmg() + runState.getPermPlayerBonusTrueDmg();
+                    move = new TrueDamageMove(newDmg, move.getChargeTime());
+                }
                 move.execute(target);
                 int newHP = target.displayCurrentHp();
                 if (oldHP != newHP) {
