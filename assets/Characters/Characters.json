@@ -5,7 +5,7 @@
     "Grid" : [6, 6],
     "HP" : 50,
     "Buildings" : ["Shooter0", "BigIronMiner", "Cannonballer"],
-    "Relics" : ["MoneyRelic2"]
+    "Relics" : ["MoneyRelic2", "PhoenixCoreRelic"]
   },
 
   {

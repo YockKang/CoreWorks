@@ -4,7 +4,7 @@ import com.main.CoreWorks.RunPersistence.RunState;
 
 public class MoneyRelic3 extends Relic {
 
-    private static int MONEY = 150;
+    private static int MONEY = 80;
 
     public MoneyRelic3() {
         super("MoneyRelic3",
@@ -14,7 +14,7 @@ public class MoneyRelic3 extends Relic {
             "2");
     }
 
-    // Called when relic has on-collection effects
+    @Override
     public void onAcquire(RunState runState) { runState.getPlayer().gainMoney(MONEY); };
 
 }

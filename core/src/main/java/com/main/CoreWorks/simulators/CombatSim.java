@@ -5,6 +5,7 @@ import com.main.CoreWorks.Factory.*;
 import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.entities.*;
 import com.main.CoreWorks.entities.Character;
+import com.main.CoreWorks.entities.Relics.Relic;
 import com.main.CoreWorks.moveset.*;
 
 public class CombatSim {
@@ -70,11 +71,15 @@ public class CombatSim {
         }
         updateEnemies(runState, tick);
         removeDead();
-        winLoss();
-        if (win || lost) {
-            return;
-        }
         updatePlayerSE(runState, tick);
+        removeDead();
+        // Handles all relic on tick effects as the last input
+        for (Relic relic : runState.getRelics()) {
+            boolean happened = relic.onTick(runState);
+            if (happened) {
+                this.addLog(tick, relic.getLog());
+            }
+        }
         removeDead();
         winLoss();
     }

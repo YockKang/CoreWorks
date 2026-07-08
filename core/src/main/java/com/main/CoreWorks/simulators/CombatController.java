@@ -40,15 +40,7 @@ public class CombatController {
         // Then, transfer the factory actions to combat
         combatSim.enqueueMoves(factorySim.returnMoves());
 
-        // Settle all relic on-tick effects first
-        for (Relic relic : runState.getRelics()) {
-            boolean happened = relic.onTick(runState);
-            if (happened) {
-                combatSim.addLog(tick, relic.getLog());
-            }
-        }
-
-        // Lastly, resolve combat
+        // Lastly, resolve combat (All on tick relic effects are handled here)
         combatSim.advanceTick(runState, tick);
     }
 
