@@ -16,6 +16,10 @@
     "Enemies" : ["DisableDrone", "DisableDrone"]
   },
   {
+    "Tier" : 1,
+    "Enemies" : ["SwarmDrone", "SwarmDrone", "SwarmDrone"]
+  },
+  {
     "Tier" : "Boss1",
     "Enemies" : ["FirstBoss"]
   },
@@ -26,5 +30,9 @@
   {
     "Tier" : "Elite1",
     "Enemies" : ["ShieldDrone", "ShieldDrone", "MissileDrone", "AnnoyingDrone", "AnnoyingDrone"]
+  },
+  {
+    "Tier" : "Elite1",
+    "Enemies" : ["SwarmDrone", "SwarmDrone", "SwarmDrone", "SwarmDrone", "SwarmDrone","SwarmDrone","SwarmDrone"]
   }
 ]

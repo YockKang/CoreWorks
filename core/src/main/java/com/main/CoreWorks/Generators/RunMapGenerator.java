@@ -106,7 +106,7 @@ public class RunMapGenerator {
                 int randomCol = uniqueCols.get(j);
                 float randomX = generateXCoords(randomCol, totalCols, leftBound, rightBound);
                 float randomY = generateYCoords(i, totalRows, topBound, bottomBound);
-                MapNode randomNode = createRandomNodeF1(i, totalRows, randomCol, randomX, randomY, random);
+                MapNode randomNode = createRandomNodeF1(i, totalRows, randomCol, randomX, randomY, runState);
                 middleRowNodes.add(randomNode);
             }
             allNodes.add(middleRowNodes);
@@ -246,11 +246,12 @@ public class RunMapGenerator {
 
     // Helper function that generates a random node for floor 1, scaling based on the row
     // Eventually when we add more nodes and node screens, there will be more variety
-    private static MapNode createRandomNodeF1(int row, int totalRows, int col, float x, float y, Random random) {
+    private static MapNode createRandomNodeF1(int row, int totalRows, int col, float x, float y, RunState runState) {
         float difficulty = 0.8f + row * 0.1f;
+        Random random = runState.getRandom();
         int val = random.nextInt(100);
 
-        int restNodeOdds = 15;
+        int restNodeOdds = 100;
         float eliteCombatRatio = 0.2f;
 
         // If it is the 2nd last row (ie before boss), give a higher chance for rest node
@@ -259,7 +260,11 @@ public class RunMapGenerator {
         }
 
         if (val < restNodeOdds) {
-            return new RestNode(1, row, col, difficulty, x, y);
+            if (random.nextBoolean()) {
+                return new RestNode(1, row, col, difficulty, x, y);
+            } else {
+                return new ShopNode(1, row, col, difficulty, x, y);
+            }
         } else if (val < ((100 - restNodeOdds) * eliteCombatRatio) + restNodeOdds) {
             return new EliteNode(CombatGenerator.createCombat("Elite1", difficulty, random), row, col, 1, difficulty + .2f, x, y);
         } else {

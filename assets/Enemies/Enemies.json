@@ -63,6 +63,19 @@
     ]
   },
   {
+    "id": "SwarmDrone",
+    "Name": "Mini Drone",
+    "HP": 6,
+    "GracePeriod": 5,
+    "Moveset": [
+      {
+        "Type": "Attack",
+        "Value": 1,
+        "Charge": 7
+      }
+    ]
+  },
+  {
     "id": "FirstBoss",
     "Name": "Deadly Drone",
     "HP": 130,

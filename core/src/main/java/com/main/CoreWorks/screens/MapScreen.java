@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Coreworks;
+import com.main.CoreWorks.Generators.ShopOfferGenerator;
+import com.main.CoreWorks.Rewards.ShopOffer;
 import com.main.CoreWorks.RunPersistence.*;
 
 public class MapScreen implements Screen {
@@ -234,6 +236,15 @@ public class MapScreen implements Screen {
             runState.setCurrNode(node);
             game.resetCamera();
             game.setScreen(new CombatScreen(game, runState, eliteNode.getEnemies()));
+            return;
+        }
+
+        // Handles ShopNode
+        if (node instanceof ShopNode shopNode) {
+            runState.setCurrNode(node);
+            game.resetCamera();
+            Array<ShopOffer> offers = ShopOfferGenerator.generateShopOffers(runState);
+            game.setScreen(new ShopScreen(game, runState, offers));
             return;
         }
     }

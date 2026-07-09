@@ -89,6 +89,10 @@ public class MapNodeActor extends Actor {
             return Color.PURPLE;
         }
 
+        if (node instanceof ShopNode) {
+            return Color.BLUE;
+        }
+
         // Default color for everything else not specifically included
         return Color.MAGENTA;
     }
