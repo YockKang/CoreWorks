@@ -18,12 +18,12 @@ public class RunState {
 
     // Code below stores modifiers that relics can manipulate to increase / decrease damage
     // Each new damage "type" will need its own unique modifiers (not very good implementation but works)
-    // Below handles the TEMPORARY modifiers
+    // Below handles the TEMPORARY modifiers (cleared every combat)
     private int tempPlayerBonusDmg = 0;
     private int tempPlayerBonusPoisonDmg = 0;
     private int tempPlayerBonusTrueDmg = 0;
 
-    // Below handles the PERMANENT modifiers
+    // Below handles the PERMANENT modifiers (persist thru combat)
     private int permPlayerBonusDmg = 0;
     private int permPlayerBonusPoisonDmg = 0;
     private int permPlayerBonusTrueDmg = 0;

@@ -5,11 +5,12 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Coreworks;
-import com.main.CoreWorks.entities.Relics.Relic;
+import com.main.CoreWorks.Recipe.Recipe;
 import com.main.CoreWorks.util.*;
 import com.main.CoreWorks.Factory.*;
 import com.main.CoreWorks.Factory.Tubes.Tube;
@@ -75,6 +76,7 @@ public class CombatScreen implements Screen {
 
     private ObjectMap<String, Actor> UIElements = new ObjectMap<>();
     private Queue<Label> combatLog = new Queue<>();
+    private Recipe selectedRecipe;
 
     public CombatScreen(Coreworks game, RunState runstate, Array<Enemy> enemies) {
 
@@ -115,18 +117,19 @@ public class CombatScreen implements Screen {
         // assign all fixed UI elements
         UIElements.put("MasterTable", new Table(skin));
 
-        // top bar
+        // Info Sheets
         UIElements.put("infotableL", new Table(skin));
         UIElements.put("infotableR", new Table(skin));
         UIElements.put("title", new Label("Coreworks", skin));
         UIElements.put("tickcount", new Label("Tick:\n" + tickCount, skin));
         UIElements.put("playerdata", new Label(runState.getPlayer().toString(), skin));
         UIElements.put("buildingselect", new Label("Selected: None ", skin));
-        // UIElements.put("buildingselect", new Label("Selected: " + selectedBuilding.displayName(), skin));
-        // UIElements.put("rotationhelp", new Label("Press Q/E to rotate \n Current rotation: " + selectedBuilding.getRotation(), skin));
-        UIElements.put("tubemode", new Label("Adding Tubes\nPress T to exit", skin));
-        UIElements.put("tubemode", new Label("Press T to add Tubes", skin));
-        UIElements.put("scrollenemies", new Label("Use Mousewheel to scroll\nthe enemy display and\ncombat Log when paused", skin));
+        UIElements.put("rotationhelp", new Label("Q/E\nRotate Buildings", skin));
+        ((Label) UIElements.get("rotationhelp")).setAlignment(Align.center);
+        UIElements.put("recipeselecthelp", new Label("R\nChange Selected\nBuilding Recipe", skin));
+        ((Label) UIElements.get("recipeselecthelp")).setAlignment(Align.center);
+        UIElements.put("tubemode", new Label("T\nAdd Tubes", skin));
+        ((Label) UIElements.get("tubemode")).setAlignment(Align.center);
 
         UIElements.put("paused", new Label("PAUSED\nPress Space to Continue", skin));
 
@@ -152,6 +155,13 @@ public class CombatScreen implements Screen {
         UIElements.put("relicheader", new Label("Relics:", skin));
         UIElements.put("relicbody", new Table(skin));
 
+        // recipe
+        UIElements.put("recipetable", new Table(skin));
+        UIElements.put("recipeheader", new Label("Recipes for", skin));
+        UIElements.put("recipeselect", new Table(skin));
+        UIElements.put("recipedisplay", new Table(skin));
+        UIElements.put("recipeinfo", new Label("Recipes for", skin));
+
         Actor factoryViewport = new Actor();
         UIElements.put("factoryviewport", factoryViewport);
 
@@ -160,11 +170,24 @@ public class CombatScreen implements Screen {
         stage.addActor(maintable);
 
         // subsections of the screen
+        /*
+        +-------+---------+-------+
+        | left  | top bar | right |
+        | bar   +---------+ bar   |
+        |       | factory |       |
+        +-------+---------+-------+
+        |       bottom bar        |
+        +-------------------------+
+         */
         Table topBar = new Table(skin);
+        UIElements.put("topbar", topBar);
         Table bottomBar = new Table(skin);
+        UIElements.put("bottombar", bottomBar);
         Table middle = new Table(skin);
         Table leftBar = new Table(skin);
+        UIElements.put("leftbar", leftBar);
         Table rightBar = new Table(skin);
+        UIElements.put("rightbar", rightBar);
         Table upperBar = new Table(skin);
 
         // debugging box boundaries
@@ -192,14 +215,16 @@ public class CombatScreen implements Screen {
         // making UI elements
         // top-left info
         Table infotableL = (Table) (UIElements.get("infotableL"));
-        infotableL.add(UIElements.get("title"));
-        infotableL.add(UIElements.get("tickcount")).row();
-        infotableL.add(UIElements.get("playerdata"));
-        infotableL.add(UIElements.get("buildingselect"));
+        infotableL.add(UIElements.get("title")).pad(5);
+        infotableL.add(UIElements.get("tickcount")).pad(5).row();
+        infotableL.add(UIElements.get("playerdata")).pad(5);
+        infotableL.add(UIElements.get("buildingselect")).pad(5).growX();
 
         // top-right info
         Table infotableR = (Table) (UIElements.get("infotableR"));
-        infotableR.add(UIElements.get("tubemode"));
+        infotableR.add(UIElements.get("tubemode")).pad(5);
+        infotableR.add(UIElements.get("rotationhelp")).pad(5);
+        infotableR.add(UIElements.get("recipeselecthelp")).pad(5);
 
         // inventory
         Table inventoryTable = (Table) UIElements.get("inventorytable");
@@ -219,14 +244,77 @@ public class CombatScreen implements Screen {
         enemyTable.add(UIElements.get("enemybody")).pad(10).growY().row();
         updateEnemies();
 
+        // Recipe Select Cards (empty, to be filled when used)
+        Table recipeTable = (Table) UIElements.get("recipetable");
+        recipeTable.setFillParent(true);
+        recipeTable.top().center();
+        recipeTable.add(UIElements.get("recipeheader")).colspan(2).row();
+        UIElements.get("recipeselect").setWidth(200);
+        recipeTable.add(UIElements.get("recipeselect"));
+        UIElements.get("recipedisplay").setWidth(100);
+        ((Table) UIElements.get("recipedisplay")).add(UIElements.get("recipeinfo"));
+        recipeTable.add(UIElements.get("recipedisplay")).row();
+
+
+        TextButton cancelButton = new TextButton("Cancel", skin);
+        cancelButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                clearRecipeUI();
+            }
+        });
+        cancelButton.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                cancelButton.addAction(Actions.color(new Color(1, 0, 0, 1), 0.15f));
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                cancelButton.addAction(Actions.color(new Color(.75f, 0, 0, 1), 0.15f));
+            }
+        });
+
+        TextButton confirmButton = new TextButton("Confirm", skin);
+        confirmButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (selectedRecipe != null) {
+                    selectedBuilding.setRecipe(selectedRecipe);
+                    clearRecipeUI();
+                    needRefresh = true;
+                }
+            }
+        });
+        confirmButton.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                confirmButton.addAction(Actions.color(new Color(0, 1, 0, 1), 0.15f));
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                confirmButton.addAction(Actions.color(new Color(0, .75f, 0, 1), 0.15f));
+            }
+        });
+
+        recipeTable.add(cancelButton).right();
+        recipeTable.add(confirmButton).left();
+
+        recipeTable.setBackground("default-round");
+
         // filling in contents
-        leftBar.add(infotableL).top().pad(10).row();
+        leftBar.add(infotableL).growX().top().pad(20).row();
         leftBar.add(inventoryTable).growY().row();
 
-        rightBar.add(infotableR).pad(10).top().row();
+        rightBar.add(infotableR).pad(20).top().row();
         rightBar.add(logTable).growY().row();
 
         bottomBar.add(enemyTable).pad(5);
+
+        topBar.add(UIElements.get("paused"));
+
+
 
 
         // OLD CODE DELETE LATER
@@ -413,7 +501,7 @@ public class CombatScreen implements Screen {
     }
 
     private void updateInventoryUI() {
-        // The below rebuilds the inventorybody
+        // The below rebuilds the inventory body
         Table buildingsInInv = (Table) UIElements.get("inventorybody");
         buildingsInInv.clear();
         buildingsInInv.defaults().width(120).height(60).pad(5);
@@ -444,7 +532,59 @@ public class CombatScreen implements Screen {
         }
     }
 
+    private void rebuildRecipeUI() {
+        // The below rebuilds the recipe selection
+        ((Label) UIElements.get("recipeheader")).setText("Recipes for " + selectedBuilding.displayName());
+
+        Table recipeSelect = (Table) UIElements.get("recipeselect");
+        recipeSelect.clear();
+        recipeSelect.defaults().width(50).height(30).pad(5);
+        Array<Recipe> craftable = selectedBuilding.getValidRecipes();
+        int maxRecipesPerRow = 3;
+        int recipeCount = 0;
+
+        for (Recipe recipe : craftable) {
+            TextButton recipeButton = new TextButton(recipe.getName(), skin);
+            if (recipe == selectedRecipe) {
+                recipeButton.setColor(Color.GREEN);
+            }
+            recipeButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    selectedRecipe = recipe;
+                    displayRecipeSelection();
+                }
+            });
+            recipeSelect.add(recipeButton);
+            recipeCount++;
+            if (recipeCount % maxRecipesPerRow == 0) {
+                recipeSelect.row();
+            }
+        }
+    }
+
+    private void displayRecipeSelection() {
+        Label recipeInfo = (Label) UIElements.get("recipeinfo");
+        if (selectedRecipe == null) {
+            recipeInfo.setText("Selected: None");
+        } else {
+            recipeInfo.setText(selectedRecipe.toString());
+        }
+    }
+
+    private void clearRecipeUI() {
+        UIElements.get("recipetable").remove();
+        selectedRecipe = null;
+        recipeUIOn = false;
+    }
+
+
     private void updateUI() {
+        if (selectedBuilding != null) {
+            ((Label) UIElements.get("buildingselect")).setText("Selected: " + selectedBuilding.displayName());
+        } else {
+            ((Label) UIElements.get("buildingselect")).setText("Selected: None");
+        }
         updateInventoryUI();
         updateCombatLog();
         updateEnemies();
@@ -667,10 +807,13 @@ public class CombatScreen implements Screen {
 
         for (Building building : controller.getFactorySim().getGrid().getBuildings()) {
             Coords coords = building.getGlobalCoord(0, 0);
-            float nameX = gridStartX + coords.x * tileSize + 15;
-            float nameY = gridEndY - coords.y * tileSize - 35;
+            float nameX = gridStartX + coords.x * tileSize + 10;
+            float nameY = gridEndY - coords.y * tileSize - 20;
             game.font.getData().setScale(0.75f);
             game.font.draw(game.batch, building.gridName(), nameX, nameY);
+            if (building.getRecipe() != null) {
+                game.font.draw(game.batch, building.getRecipe().getName(), nameX, nameY - 30);
+            }
         }
 
         game.font.getData().setScale(1f);
@@ -724,6 +867,11 @@ public class CombatScreen implements Screen {
         // Pause will be tied to Spacebar
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             isPaused = !isPaused;
+            if (isPaused) {
+                ((Table) UIElements.get("topbar")).add(UIElements.get("paused"));
+            } else {
+                UIElements.get("paused").remove();
+            }
             needRefresh = true;
         }
 
@@ -765,9 +913,14 @@ public class CombatScreen implements Screen {
 
         // Recipe selection is R (for now)
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            if (selectedBuilding != null && selectedBuilding.isOnGrid()) {
+            if (selectedBuilding != null && selectedBuilding.isOnGrid() && selectedBuilding.getValidRecipes() != null) {
                 recipeUIOn = !recipeUIOn;
-                needRefresh = true;
+                if (recipeUIOn) {
+                    stage.addActor(UIElements.get("recipetable"));
+                    rebuildRecipeUI();
+                } else {
+                    clearRecipeUI();
+                }
             }
         }
 
@@ -831,6 +984,7 @@ public class CombatScreen implements Screen {
         }
     }
 
+
     // Translates mouse coordinates to world coordinates
     private Vector2 translateMouseToWorld() {
         mouse2DCoords.set(Gdx.input.getX(), Gdx.input.getY());
@@ -870,7 +1024,7 @@ public class CombatScreen implements Screen {
 
     private void rightClick(float mouseTranslatedX, float mouseTranslatedY) {
         if (recipeUIOn) {
-            recipeUIOn = false;
+            clearRecipeUI();
         } else {
             Coords coords = getGridAt(mouseTranslatedX, mouseTranslatedY);
             if (selectedBuilding != null || coords == null) {

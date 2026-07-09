@@ -4,7 +4,7 @@ import com.main.CoreWorks.RunPersistence.RunState;
 
 public class OxidiserRelic extends Relic {
 
-    private static int DMG = 2;
+    private static int DMG = 1;
 
     public OxidiserRelic() {
         super("OxidiserRelic",

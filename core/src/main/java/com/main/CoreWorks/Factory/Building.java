@@ -790,4 +790,12 @@ public abstract class Building extends Structure implements Updatable, Comparabl
     public String gridName() {
         return gridName;
     }
+
+    public Array<Recipe> getValidRecipes() {
+        return validRecipes;
+    }
+
+    public Recipe getRecipe() {
+        return recipe;
+    }
 }
