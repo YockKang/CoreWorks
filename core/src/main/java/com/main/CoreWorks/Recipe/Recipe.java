@@ -1,5 +1,8 @@
 package com.main.CoreWorks.Recipe;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Resources.Resource;
 import com.main.CoreWorks.database.*;
@@ -100,7 +103,7 @@ public class Recipe {
     public String toString() {
         StringBuilder inputStr = new StringBuilder(" ");
         for (int i = 0; i < this.input.size; i++) {
-            inputStr.append(input.get(i).toString()).append(" x");
+            inputStr.append(ResourceDatabase.getName(input.get(i)) ).append(" x");
             try {
                 inputStr.append(inputMult.get(i).toString());
             } catch (Exception e) {
@@ -110,7 +113,7 @@ public class Recipe {
         }
         StringBuilder outputStr = new StringBuilder(" ");
         for (int i = 0; i < this.output.size; i++) {
-            outputStr.append(output.get(i).toString()).append(" x");
+            outputStr.append(ResourceDatabase.getName(output.get(i))).append(" x");
             try {
                 outputStr.append(outputMult.get(i).toString());
             } catch (Exception e) {
@@ -147,5 +150,53 @@ public class Recipe {
 
     public String getName() {
         return name;
+    }
+
+    public Table displayStats(Skin skin) {
+        Table mainTable = new Table(skin);
+        mainTable.add(new Label(this.name, skin)).pad(2).row();
+
+
+        if (input.size > 0) {
+            Table inputTable = new Table(skin);
+            for (int i = 0; i < this.input.size; i++) {
+                StringBuilder inputStr = new StringBuilder(" ");
+                inputStr.append(ResourceDatabase.getName(input.get(i)) ).append(" x");
+                try {
+                    inputStr.append(inputMult.get(i).toString());
+                } catch (Exception e) {
+                    inputStr.append("0");
+                }
+                Label label = new Label(inputStr, skin);
+                Table labelBox = new Table(skin);
+                labelBox.setBackground("default-round");
+                labelBox.add(label);
+                inputTable.add(labelBox).pad(2);
+            }
+            mainTable.add(inputTable).pad(2).row();
+        }
+
+        mainTable.add(new Label(duration + " ticks", skin)).pad(2).row();
+
+        if (output.size > 0) {
+            Table outputTable = new Table(skin);
+            for (int i = 0; i < this.output.size; i++) {
+                StringBuilder outputStr = new StringBuilder(" ");
+                outputStr.append(ResourceDatabase.getName(output.get(i)) ).append(" x");
+                try {
+                    outputStr.append(outputMult.get(i).toString());
+                } catch (Exception e) {
+                    outputStr.append("0");
+                }
+                Label label = new Label(outputStr, skin);
+                Table labelBox = new Table(skin);
+                labelBox.setBackground("default-round");
+                labelBox.add(label);
+                outputTable.add(labelBox).pad(2);
+            }
+            mainTable.add(outputTable).pad(2).row();
+        }
+
+        return mainTable;
     }
 }

@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Coreworks;
 import com.main.CoreWorks.Recipe.Recipe;
+import com.main.CoreWorks.entities.Relics.Relic;
 import com.main.CoreWorks.util.*;
 import com.main.CoreWorks.Factory.*;
 import com.main.CoreWorks.Factory.Tubes.Tube;
@@ -116,6 +117,7 @@ public class CombatScreen implements Screen {
 
         // assign all fixed UI elements
         UIElements.put("MasterTable", new Table(skin));
+        UIElements.put("CenterStack", new Stack());
 
         // Info Sheets
         UIElements.put("infotableL", new Table(skin));
@@ -132,6 +134,7 @@ public class CombatScreen implements Screen {
         ((Label) UIElements.get("tubemode")).setAlignment(Align.center);
 
         UIElements.put("paused", new Label("PAUSED\nPress Space to Continue", skin));
+        ((Label) UIElements.get("paused")).setAlignment(Align.center);
 
 
         // combat log
@@ -152,22 +155,23 @@ public class CombatScreen implements Screen {
 
         // relics
         UIElements.put("relictable", new Table(skin));
-        UIElements.put("relicheader", new Label("Relics:", skin));
-        UIElements.put("relicbody", new Table(skin));
 
         // recipe
         UIElements.put("recipetable", new Table(skin));
         UIElements.put("recipeheader", new Label("Recipes for", skin));
         UIElements.put("recipeselect", new Table(skin));
         UIElements.put("recipedisplay", new Table(skin));
-        UIElements.put("recipeinfo", new Label("Recipes for", skin));
+        UIElements.put("recipeinfo", new Table(skin));
+        ((Table) UIElements.get("recipeinfo")).add(new Label("Selected: None", skin));
 
         Actor factoryViewport = new Actor();
         UIElements.put("factoryviewport", factoryViewport);
 
+        Stack centerStack = (Stack) UIElements.get("CenterStack");
         Table maintable = (Table) UIElements.get("MasterTable");
-        maintable.setFillParent(true);
-        stage.addActor(maintable);
+        centerStack.setFillParent(true);
+        stage.addActor(centerStack);
+        centerStack.add(maintable);
 
         // subsections of the screen
         /*
@@ -244,9 +248,27 @@ public class CombatScreen implements Screen {
         enemyTable.add(UIElements.get("enemybody")).pad(10).growY().row();
         updateEnemies();
 
+        // relics
+        Table relicTable = (Table) UIElements.get("relictable");
+        relicTable.clear();
+        topBar.add(relicTable);
+
+        for (Relic relic : runState.getRelics()) {
+            Table table = new Table(skin);
+            Label label3 = new Label(relic.getName(), skin);
+            label3.setColor(Color.GOLD);
+            Tooltip<Table> descToolTip = new Tooltip<>(relic.getDescription().toTable(skin));
+            descToolTip.setInstant(true);
+            label3.addListener(descToolTip);
+            table.setBackground("default-round");
+            table.add(label3);
+            relicTable.add(table).pad(2);
+        }
+
         // Recipe Select Cards (empty, to be filled when used)
         Table recipeTable = (Table) UIElements.get("recipetable");
-        recipeTable.setFillParent(true);
+        Container<Actor> recipeDiv = new Container<>(recipeTable);
+        UIElements.put("recipediv", recipeDiv);
         recipeTable.top().center();
         recipeTable.add(UIElements.get("recipeheader")).colspan(2).row();
         UIElements.get("recipeselect").setWidth(200);
@@ -298,8 +320,8 @@ public class CombatScreen implements Screen {
             }
         });
 
-        recipeTable.add(cancelButton).right();
-        recipeTable.add(confirmButton).left();
+        recipeTable.add(cancelButton).right().pad(2);
+        recipeTable.add(confirmButton).left().pad(2);
 
         recipeTable.setBackground("default-round");
 
@@ -311,10 +333,6 @@ public class CombatScreen implements Screen {
         rightBar.add(logTable).growY().row();
 
         bottomBar.add(enemyTable).pad(5);
-
-        topBar.add(UIElements.get("paused"));
-
-
 
 
         // OLD CODE DELETE LATER
@@ -494,7 +512,7 @@ public class CombatScreen implements Screen {
             combatLog.addLast(newlog);
         }
         while (combatLog.size > 10) {
-            System.out.println("log has "+combatLog.size);
+            System.out.println("log has " + combatLog.size);
             Label oldlog = combatLog.removeFirst();
             oldlog.remove();
         }
@@ -510,7 +528,7 @@ public class CombatScreen implements Screen {
         int buildingCount = 0;
 
         for (Building building : inventory) {
-            TextButton buildingButton = new TextButton(building.displayName(), skin);
+            TextButton buildingButton = new TextButton(building.gridName(), skin);
             if (building == selectedBuilding) {
                 buildingButton.setColor(Color.GREEN);
             }
@@ -538,7 +556,7 @@ public class CombatScreen implements Screen {
 
         Table recipeSelect = (Table) UIElements.get("recipeselect");
         recipeSelect.clear();
-        recipeSelect.defaults().width(50).height(30).pad(5);
+        recipeSelect.defaults().height(30).pad(5);
         Array<Recipe> craftable = selectedBuilding.getValidRecipes();
         int maxRecipesPerRow = 3;
         int recipeCount = 0;
@@ -564,22 +582,26 @@ public class CombatScreen implements Screen {
     }
 
     private void displayRecipeSelection() {
-        Label recipeInfo = (Label) UIElements.get("recipeinfo");
+        UIElements.get("recipeinfo").clear();
         if (selectedRecipe == null) {
-            recipeInfo.setText("Selected: None");
+            ((Table) UIElements.get("recipeinfo")).add(new Label("Selected: None", skin));
         } else {
-            recipeInfo.setText(selectedRecipe.toString());
+            ((Table) UIElements.get("recipeinfo")).add(selectedRecipe.displayStats(skin));
         }
     }
 
     private void clearRecipeUI() {
-        UIElements.get("recipetable").remove();
+        UIElements.get("recipediv").remove();
         selectedRecipe = null;
         recipeUIOn = false;
+        UIElements.get("recipeinfo").clear();
+        ((Table) UIElements.get("recipeinfo")).add(new Label("Selected: None", skin));
     }
 
 
     private void updateUI() {
+        ((Label) UIElements.get("tickcount")).setText("Tick:\n" + tickCount);
+        ((Label) UIElements.get("playerdata")).setText(runState.getPlayer().toString());
         if (selectedBuilding != null) {
             ((Label) UIElements.get("buildingselect")).setText("Selected: " + selectedBuilding.displayName());
         } else {
@@ -789,7 +811,11 @@ public class CombatScreen implements Screen {
         // Draws the outline of unoccupied grids
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
-        shapeRenderer.setColor(Color.WHITE);
+        if (isPaused) {
+            shapeRenderer.setColor(Color.RED);
+        } else {
+            shapeRenderer.setColor(Color.WHITE);
+        }
 
         for (int x = 0; x < gridWidth; x++) {
             for (int y = 0; y < gridHeight; y++) {
@@ -867,48 +893,52 @@ public class CombatScreen implements Screen {
         // Pause will be tied to Spacebar
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             isPaused = !isPaused;
+            /*
             if (isPaused) {
-                ((Table) UIElements.get("topbar")).add(UIElements.get("paused"));
+                stage.addActor(UIElements.get("paused"));
             } else {
                 UIElements.get("paused").remove();
             }
             needRefresh = true;
+             */
         }
 
         // Tube placement mode is T (for now)
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-            tubeMode = !tubeMode;
-            if (tubeMode) {
-                // deselect building
-                selectedBuilding = null;
-                // tube mode handling here for now
-                Gdx.input.setInputProcessor(new InputAdapter() {
+            if (!recipeUIOn) {
+                tubeMode = !tubeMode;
+                if (tubeMode) {
+                    // deselect building
+                    selectedBuilding = null;
+                    // tube mode handling here for now
+                    Gdx.input.setInputProcessor(new InputAdapter() {
 
-                    @Override
-                    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                        if (button == Input.Buttons.LEFT) {
-                            Vector2 mTCoords = translateMouseToWorld();
-                            downPoint = getGridQuadrantAt(mTCoords.x, mTCoords.y);
+                        @Override
+                        public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                            if (button == Input.Buttons.LEFT) {
+                                Vector2 mTCoords = translateMouseToWorld();
+                                downPoint = getGridQuadrantAt(mTCoords.x, mTCoords.y);
+                            }
+                            return true;
                         }
-                        return true;
-                    }
 
-                    @Override
-                    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-                        if (button == Input.Buttons.LEFT) {
-                            Vector2 mTCoords = translateMouseToWorld();
-                            upPoint = getGridQuadrantAt(mTCoords.x, mTCoords.y);
+                        @Override
+                        public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+                            if (button == Input.Buttons.LEFT) {
+                                Vector2 mTCoords = translateMouseToWorld();
+                                upPoint = getGridQuadrantAt(mTCoords.x, mTCoords.y);
+                            }
+                            return true;
                         }
-                        return true;
-                    }
 
-                });
-            } else {
-                Gdx.input.setInputProcessor(stage);
-                downPoint = null;
-                upPoint = null;
+                    });
+                } else {
+                    Gdx.input.setInputProcessor(stage);
+                    downPoint = null;
+                    upPoint = null;
+                }
+                needRefresh = true;
             }
-            needRefresh = true;
         }
 
         // Recipe selection is R (for now)
@@ -916,7 +946,7 @@ public class CombatScreen implements Screen {
             if (selectedBuilding != null && selectedBuilding.isOnGrid() && selectedBuilding.getValidRecipes() != null) {
                 recipeUIOn = !recipeUIOn;
                 if (recipeUIOn) {
-                    stage.addActor(UIElements.get("recipetable"));
+                    ((Stack) UIElements.get("CenterStack")).add(UIElements.get("recipediv"));
                     rebuildRecipeUI();
                 } else {
                     clearRecipeUI();
