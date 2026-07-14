@@ -13,10 +13,10 @@
     ]
   },
   {
-    "id" : "ShieldDrone",
-    "Name" : "Shield Drone",
-    "HP" : 10,
-    "Shield" : 5,
+    "id": "ShieldDrone",
+    "Name": "Shield Drone",
+    "HP": 10,
+    "Shield": 5,
     "GracePeriod": 3,
     "Moveset": [
       {
@@ -72,6 +72,27 @@
         "Type": "Attack",
         "Value": 1,
         "Charge": 7
+      }
+    ]
+  },
+  {
+    "id": "PoisonDrone",
+    "Name": "Poison Drone",
+    "HP": 10,
+    "GracePeriod": 7,
+    "Moveset": [
+      {
+        "Type": "StatusEffect",
+        "Value": 1,
+        "Charge": 7,
+        "Effect": {
+          "Type": "Poison",
+          "Value": 3,
+          "Duration": 4,
+          "OnSelf": false,
+          "Immediate": false,
+          "Reduction": 0.5
+        }
       }
     ]
   },

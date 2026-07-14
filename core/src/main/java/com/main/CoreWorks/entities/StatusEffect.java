@@ -1,5 +1,7 @@
 package com.main.CoreWorks.entities;
 
+import com.badlogic.gdx.utils.JsonValue;
+
 public class StatusEffect {
 
     private String type;
@@ -20,6 +22,20 @@ public class StatusEffect {
             this.currDuration = duration;
         }
         this.reductionMultiplier = reductionMultiplier;
+    }
+
+    public StatusEffect(JsonValue data, float multiplier) {
+        this.type = data.getString("Type");
+        this.value = (int) (data.getInt("Value") * multiplier);
+        this.duration = data.getInt("Duration");
+        this.onSelf = data.getBoolean("OnSelf");
+        boolean immediateAct = data.getBoolean("Immediate");
+        if (immediateAct) {
+            this.currDuration = 0;
+        } else {
+            this.currDuration = duration;
+        }
+        this.reductionMultiplier = data.getFloat("Reduction");
     }
 
     public int tick() {

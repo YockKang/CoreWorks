@@ -18,6 +18,7 @@ public class StatusEffectMove extends Move {
         this.effect = se;
     }
 
+
     @Override
     public void execute(Character target) {
         target.applyStatusEffect(effect);

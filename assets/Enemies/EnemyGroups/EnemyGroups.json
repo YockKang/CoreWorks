@@ -20,6 +20,10 @@
     "Enemies" : ["SwarmDrone", "SwarmDrone", "SwarmDrone"]
   },
   {
+    "Tier" : 1,
+    "Enemies" : ["PoisonDrone", "PoisonDrone"]
+  },
+  {
     "Tier" : "Boss1",
     "Enemies" : ["FirstBoss"]
   },
@@ -33,6 +37,10 @@
   },
   {
     "Tier" : "Elite1",
-    "Enemies" : ["SwarmDrone", "SwarmDrone", "SwarmDrone", "SwarmDrone", "SwarmDrone","SwarmDrone","SwarmDrone"]
+    "Enemies" : ["ShieldDrone", "ShieldDrone", "PoisonDrone", "PoisonDrone"]
+  },
+  {
+    "Tier" : "Elite1",
+    "Enemies" : ["SwarmDrone", "SwarmDrone", "SwarmDrone", "SwarmDrone", "SwarmDrone", "SwarmDrone", "SwarmDrone"]
   }
 ]

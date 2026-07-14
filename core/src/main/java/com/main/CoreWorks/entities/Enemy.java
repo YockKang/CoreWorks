@@ -29,7 +29,7 @@ public class Enemy extends Character {
                 int value = (int) (mv.getInt("Value") * multiplier);
                 int charge = (int) Math.ceil(mv.getFloat("Charge") / Math.sqrt(multiplier));
                 switch (type) {
-                    case "Damage":
+                    case "Damage", "Attack":
                         addMove(new DamageMove(value, charge));
                         break;
                     case "Heal":
@@ -40,6 +40,10 @@ public class Enemy extends Character {
                         break;
                     case "Disable":
                         addMove(new DisableBuildingMove(value, charge));
+                        break;
+                    case "StatusEffect":
+                        StatusEffect effect = new StatusEffect(mv.get("Effect"), multiplierIn);
+                        addMove(new StatusEffectMove(effect, charge));
                         break;
                 }
             } catch (Exception ignored) {

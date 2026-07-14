@@ -7,7 +7,7 @@
     "Cooldown" : 4,
     "Shape" : ["S", 1],
     "MagSize": 5,
-    "BaseDmg": 1,
+    "BaseDmg": 1.75,
     "AoE": "Random"
   },
   {
@@ -30,7 +30,7 @@
     "Shape" : ["S", 2],
     "MagSize": 5,
     "BaseDmg": 1,
-    "AoE": [[1,1], [2, 0.5]]
+    "AoE": [[1, 1], [2, 0.5], [3, 0.25]]
   },
   {
     "id" : "Shooter0000",
