@@ -3,7 +3,9 @@ package com.main.CoreWorks.Factory;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Factory.ResourceRequest.*;
 import com.main.CoreWorks.Resources.Resource;
+import com.main.CoreWorks.RunPersistence.CombatNode;
 import com.main.CoreWorks.RunPersistence.RunState;
+import com.main.CoreWorks.entities.Enemy;
 import com.main.CoreWorks.moveset.*;
 import com.main.CoreWorks.util.Pair;
 
@@ -129,48 +131,74 @@ public class Shooter extends Building {
         if (r.getModifiers().containsKey("ExtraDmg")) {
             modExtraDmg = (int) r.getModifiers().get("ExtraDmg").getValue();
         }
-        return (int) (baseDmg * r.getDmgMult() * aoeMod + flatDmg);
+        return (int) (baseDmg * r.getDmgMult() * aoeMod + flatDmg + modExtraDmg);
     }
 
     public Array<Move> shoot(RunState runState) {
-        Array<Move> result = new Array<>();
-        Resource ammo = magazine.removeFirst();
-        String dmgType;
-        if (forceDmgType != null) {
-            dmgType = forceDmgType;
-        } else if (ammo.getModifiers().containsKey("DamageType")) {
-            dmgType = ammo.getModifiers().get("DamageType").getStrValue();
+        boolean willHitSomething = false;
+        if (randomTarget) {
+            willHitSomething = true;
         } else {
-            dmgType = "Normal";
+            for (Pair<Integer, Float> atk : aoe) {
+                CombatNode node = (CombatNode) runState.getCurrNode();
+                if (Integer.signum(atk.first) > 0) {
+                    if (atk.first <= node.getEnemies().size) {
+                        willHitSomething = true;
+                        break;
+                    }
+                } else if (Integer.signum(atk.first) < 0) {
+                    if (atk.first > -node.getEnemies().size) {
+                        willHitSomething = true;
+                        break;
+                    }
+                } else if (Integer.signum(atk.first) == 0) {
+                    willHitSomething = true;
+                    break;
+                }
+            }
         }
-        Move dmg = null;
-        assert dmgType != null;
-        System.out.println("shooter "+ this.name + " adds moves:");
-        for (Pair<Integer, Float> atk : aoe) {
-            int damage = calculateDmg(ammo, atk.second, runState);
-            switch (dmgType) {
-                case "Normal" -> {
-                    dmg = new DamageMove(damage + runState.getTempPlayerBonusDmg() + runState.getPermPlayerBonusDmg(), 0);
-                }
-                case "True" -> {
-                    dmg = new TrueDamageMove(damage + runState.getTempPlayerBonusTrueDmg() + runState.getPermPlayerBonusTrueDmg(), 0);
-                }
-                case "Poison" -> {
-                    dmg = new StatusEffectMove("Poison", damage, 4, 0.5f, true, false, 0);
-                }
+        if (!willHitSomething) {
+            return null;
+        } else {
+            Array<Move> result = new Array<>();
+            Resource ammo = magazine.removeFirst();
+            String dmgType;
+            if (forceDmgType != null) {
+                dmgType = forceDmgType;
+            } else if (ammo.getModifiers().containsKey("DamageType")) {
+                dmgType = ammo.getModifiers().get("DamageType").getStrValue();
+            } else {
+                dmgType = "Normal";
             }
-            assert dmg != null;
-            dmg.setTarget(atk.first);
-            if (randomTarget) {
-                dmg.setRandomTarget(randomTarget);
+            Move dmg = null;
+            assert dmgType != null;
+            System.out.println("shooter " + this.name + " adds moves:");
+            for (Pair<Integer, Float> atk : aoe) {
+                int damage = calculateDmg(ammo, atk.second, runState);
+                switch (dmgType) {
+                    case "Normal" -> {
+                        dmg = new DamageMove(damage + runState.getTempPlayerBonusDmg() + runState.getPermPlayerBonusDmg(), 0);
+                    }
+                    case "True" -> {
+                        dmg = new TrueDamageMove(damage + runState.getTempPlayerBonusTrueDmg() + runState.getPermPlayerBonusTrueDmg(), 0);
+                    }
+                    case "Poison" -> {
+                        dmg = new StatusEffectMove("Poison", damage, 4, 0.5f, true, false, 0);
+                    }
+                }
+                assert dmg != null;
+                dmg.setTarget(atk.first);
+                if (randomTarget) {
+                    dmg.setRandomTarget(randomTarget);
+                }
+                for (int i = 0; i < attackCount; i++) {
+                    result.add(dmg);
+                }
+                System.out.println(dmg);
+                System.out.println(dmg.getTarget());
             }
-            for (int i = 0; i < attackCount; i++) {
-                result.add(dmg);
-            }
-            System.out.println(dmg);
-            System.out.println(dmg.getTarget());
+            return result;
         }
-        return result;
     }
 
     @Override
