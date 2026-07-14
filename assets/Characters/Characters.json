@@ -31,7 +31,7 @@
     "Name" : "Tester",
     "Grid" : [8, 8],
     "HP" : 1000,
-    "Buildings" : ["IronMiner", "Cannonballer", "Shooter0", "Shooter00", "Shooter000"],
+    "Buildings" : ["IronMiner", "Cannonballer", "Shooter0", "Shooter00", "Shooter000", "Shooter0000"],
     "Relics" : ["MoneyRelic"]
   }
 ]

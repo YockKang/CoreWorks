@@ -33,6 +33,17 @@
     "AoE": [[1,1], [2, 0.5]]
   },
   {
+    "id" : "Shooter0000",
+    "Tier" : 0,
+    "Type" : "Shooter",
+    "Name" : "Boomerang",
+    "Cooldown" : 4,
+    "Shape" : ["S", 1],
+    "MagSize": 5,
+    "BaseDmg": 1,
+    "AoE": [[-1,1]]
+  },
+  {
     "id" : "Shooter1",
     "Tier" : 1,
     "Type" : "Shooter",

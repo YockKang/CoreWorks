@@ -147,7 +147,7 @@ public class Shooter extends Building {
                         break;
                     }
                 } else if (Integer.signum(atk.first) < 0) {
-                    if (atk.first > -node.getEnemies().size) {
+                    if (atk.first >= -node.getEnemies().size) {
                         willHitSomething = true;
                         break;
                     }
@@ -158,7 +158,7 @@ public class Shooter extends Building {
             }
         }
         if (!willHitSomething) {
-            return null;
+            return new Array<>();
         } else {
             Array<Move> result = new Array<>();
             Resource ammo = magazine.removeFirst();

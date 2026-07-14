@@ -135,8 +135,8 @@ public class CombatSim {
                         target = enemies.get(tgtnum - 1);
                     }
                 } else if (Integer.signum(tgtnum) < 0) {
-                    if (tgtnum > -enemies.size) {
-                        target = enemies.get(enemies.size - tgtnum);
+                    if (tgtnum >= -enemies.size) {
+                        target = enemies.get(enemies.size + tgtnum);
                     }
                 } else {
                     target = enemies.get(0);
