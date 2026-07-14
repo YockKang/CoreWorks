@@ -42,7 +42,7 @@ public abstract class Building extends Structure implements Updatable, Comparabl
     protected Array<String> whitelist = null;
     protected Array<Recipe> validRecipes = null;
 
-    protected ObjectMap<String, Modifier> modifiers = new ObjectMap<>();
+    protected ObjectMap<String, Modifier> resourceModifiers = new ObjectMap<>();
 
     protected boolean[][] shape;
     /*
@@ -585,23 +585,23 @@ public abstract class Building extends Structure implements Updatable, Comparabl
     }
 
     public void addModifier(Modifier mod) {
-        if (!modifiers.containsKey(mod.getType())) {
-            modifiers.put(mod.getType(), mod);
+        if (!resourceModifiers.containsKey(mod.getType())) {
+            resourceModifiers.put(mod.getType(), mod);
         } else {
-            Modifier oldMod = modifiers.get(mod.getType());
+            Modifier oldMod = resourceModifiers.get(mod.getType());
             oldMod.changeValue(mod.getValue());
             oldMod.setStrValue(mod.getStrValue());
         }
     }
 
-    public ObjectMap<String, Modifier> getModifiers() {
-        return modifiers;
+    public ObjectMap<String, Modifier> getResourceModifiers() {
+        return resourceModifiers;
     }
 
     @Override
-    public Array<Move> updateTick() {
+    public Array<Move> updateTick(RunState runState) {
         if (isEnabled) {
-            return updateEnabled();
+            return updateEnabled(runState);
         } else {
             disabledDur--;
             if (disabledDur <= 0) {
@@ -612,7 +612,7 @@ public abstract class Building extends Structure implements Updatable, Comparabl
         }
     }
 
-    public abstract Array<Move> updateEnabled();
+    public abstract Array<Move> updateEnabled(RunState runState);
 
     public void clear() {
         for (ResourceBuffer b : inputBuffer) {

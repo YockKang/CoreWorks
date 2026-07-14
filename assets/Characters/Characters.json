@@ -24,5 +24,14 @@
     "HP" : 60,
     "Buildings" : ["Shooter1", "IronMiner", "Cannonballer"],
     "Relics" : ["MoneyRelic"]
+  },
+
+  {
+    "id" : "Tester",
+    "Name" : "Tester",
+    "Grid" : [8, 8],
+    "HP" : 1000,
+    "Buildings" : ["IronMiner", "Cannonballer", "Shooter0", "Shooter00", "Shooter000"],
+    "Relics" : ["MoneyRelic"]
   }
 ]

@@ -2,6 +2,7 @@ package com.main.CoreWorks.Factory;
 
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Recipe.Recipe;
+import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.moveset.*;
 
 public class Miner extends Building {
@@ -47,7 +48,7 @@ public class Miner extends Building {
     }
 
     @Override
-    public Array<Move> updateEnabled() {
+    public Array<Move> updateEnabled(RunState runState) {
         currCooldown += getSpeed();
         while (currCooldown >= cooldownTimer) {
             boolean mineSuccess = tryMine();
@@ -83,7 +84,7 @@ public class Miner extends Building {
         Array<Integer> mults = this.recipe.getOutputMultipliers();
         for (int i = 0; i < mults.size; i++) {
             ResourceBuffer currentBuffer = this.outputBuffer.get(i);
-            currentBuffer.addNew((int) (mults.get(i) * this.mineMultiplier), modifiers);
+            currentBuffer.addNew((int) (mults.get(i) * this.mineMultiplier), resourceModifiers);
         }
     }
 

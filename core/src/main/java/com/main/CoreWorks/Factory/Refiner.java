@@ -3,6 +3,7 @@ package com.main.CoreWorks.Factory;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Recipe.Recipe;
 import com.main.CoreWorks.Resources.*;
+import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.moveset.*;
 
 import java.util.Objects;
@@ -54,7 +55,7 @@ public class Refiner extends Building{
     }
 
     @Override
-    public Array<Move> updateEnabled() {
+    public Array<Move> updateEnabled(RunState runState) {
         if (!isCrafting) {
             if (tryStartCraft()) {
                 isCrafting = true;
@@ -134,7 +135,7 @@ public class Refiner extends Building{
             }
             productMods.put(entry.key, new Modifier(entry.key, avgVal, newStrVal));
         }
-        productMods.putAll(modifiers);
+        productMods.putAll(resourceModifiers);
     }
 
     public boolean tryEndCraft() {

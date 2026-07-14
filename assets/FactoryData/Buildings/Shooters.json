@@ -3,11 +3,34 @@
     "id" : "Shooter0",
     "Tier" : 0,
     "Type" : "Shooter",
-    "Name" : "Shooter",
+    "Name" : "ShooterRandom",
+    "Cooldown" : 4,
+    "Shape" : ["S", 1],
+    "MagSize": 5,
+    "BaseDmg": 1,
+    "AoE": "Random"
+  },
+  {
+    "id" : "Shooter00",
+    "Tier" : 0,
+    "Type" : "Shooter",
+    "Name" : "ShooterAll",
     "Cooldown" : 4,
     "Shape" : ["S", 2],
     "MagSize": 5,
-    "BaseDmg": 1
+    "BaseDmg": 1,
+    "AoE": "All"
+  },
+  {
+    "id" : "Shooter000",
+    "Tier" : 0,
+    "Type" : "Shooter",
+    "Name" : "ShooterPierce",
+    "Cooldown" : 4,
+    "Shape" : ["S", 2],
+    "MagSize": 5,
+    "BaseDmg": 1,
+    "AoE": [[1,1], [2, 0.5]]
   },
   {
     "id" : "Shooter1",

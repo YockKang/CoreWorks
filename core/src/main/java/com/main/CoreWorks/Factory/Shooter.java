@@ -5,6 +5,9 @@ import com.main.CoreWorks.Factory.ResourceRequest.*;
 import com.main.CoreWorks.Resources.Resource;
 import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.moveset.*;
+import com.main.CoreWorks.util.Pair;
+
+import java.util.Objects;
 
 public class Shooter extends Building {
 
@@ -14,6 +17,8 @@ public class Shooter extends Building {
     protected int flatDmg = 0;
     protected int attackCount = 1;
     protected String forceDmgType = null;
+    protected Array<Pair<Integer, Float>> aoe = new Array<>();
+    protected boolean randomTarget = false;
 
     public Shooter(int coolDown, int magSize, boolean[][] shape) {
         super(coolDown,
@@ -27,6 +32,7 @@ public class Shooter extends Building {
 
     public Shooter(JsonValue data) {
         super(data);
+        System.out.println("generating " + this.name);
         this.magSize = data.getInt("MagSize");
         this.magazine = new Queue<>(magSize);
         this.baseDmg = data.getFloat("BaseDmg");
@@ -36,6 +42,47 @@ public class Shooter extends Building {
         if (data.get("Damage Type") != null) {
             forceDmgType = data.getString("Damage Type");
         }
+        if (data.get("AoE") != null) {
+            System.out.println("has AoE");
+            if (data.get("AoE").isString()) {
+                if (Objects.equals(data.getString("AoE"), "Random")) {
+                    System.out.println("random");
+                    aoe.add(new Pair<>(1, 1f));
+                    randomTarget = true;
+                } else if (Objects.equals(data.getString("AoE"), "All")) {
+                    System.out.println("all");
+                    aoe.add(new Pair<>(0, 1f));
+                } else {
+                    System.out.println("invalid");
+                    aoe.add(new Pair<>(1, 1f));
+                }
+            } else {
+                System.out.println("special");
+                for (JsonValue val : data.get("AoE")) {
+                    float[] vals = val.asFloatArray();
+                    aoe.add(new Pair<>((int) vals[0], vals[1]));
+                }
+
+            }
+        } else {
+            aoe.add(new Pair<>(1, 1f));
+        }
+        aoe.sort((a, b) -> {
+            int aSign = Integer.signum(a.first);
+            int bSign = Integer.signum(b.first);
+            if (aSign > bSign) {
+                return 1;
+            } else if (bSign > aSign) {
+                return -1;
+            } else {
+                int comp = Integer.compare(a.first, b.first);
+                if (comp != 0) {
+                    return comp;
+                } else {
+                    return Float.compare(a.second, b.second);
+                }
+            }
+        });
     }
 
     @Override
@@ -54,13 +101,13 @@ public class Shooter extends Building {
     }
 
     @Override
-    public Array<Move> updateEnabled() {
+    public Array<Move> updateEnabled(RunState runState) {
         currCooldown += getSpeed();
         Array<Move> moves = new Array<>();
         while (currCooldown >= cooldownTimer) {
             if (magazine.notEmpty()) {
                 currCooldown -= cooldownTimer;
-                moves.addAll(shoot());
+                moves.addAll(shoot(runState));
             } else {
                 currCooldown = cooldownTimer - getSpeed();
                 break;
@@ -77,15 +124,15 @@ public class Shooter extends Building {
         magazine.addLast(x);
     }
 
-    private int calculateDmg(Resource r) {
+    private int calculateDmg(Resource r, float aoeMod, RunState runState) {
+        int modExtraDmg = 0;
         if (r.getModifiers().containsKey("ExtraDmg")) {
-            return (int) (baseDmg * r.getDmgMult() + flatDmg + r.getModifiers().get("ExtraDmg").getValue());
-        } else {
-            return (int) (baseDmg * r.getDmgMult() + flatDmg);
+            modExtraDmg = (int) r.getModifiers().get("ExtraDmg").getValue();
         }
+        return (int) (baseDmg * r.getDmgMult() * aoeMod + flatDmg);
     }
 
-    public Array<Move> shoot() {
+    public Array<Move> shoot(RunState runState) {
         Array<Move> result = new Array<>();
         Resource ammo = magazine.removeFirst();
         String dmgType;
@@ -98,20 +145,30 @@ public class Shooter extends Building {
         }
         Move dmg = null;
         assert dmgType != null;
-        int damage = calculateDmg(ammo);
-        switch (dmgType) {
-            case "Normal" -> {
-                dmg = new DamageMove(damage, 0);
+        System.out.println("shooter "+ this.name + " adds moves:");
+        for (Pair<Integer, Float> atk : aoe) {
+            int damage = calculateDmg(ammo, atk.second, runState);
+            switch (dmgType) {
+                case "Normal" -> {
+                    dmg = new DamageMove(damage + runState.getTempPlayerBonusDmg() + runState.getPermPlayerBonusDmg(), 0);
+                }
+                case "True" -> {
+                    dmg = new TrueDamageMove(damage + runState.getTempPlayerBonusTrueDmg() + runState.getPermPlayerBonusTrueDmg(), 0);
+                }
+                case "Poison" -> {
+                    dmg = new StatusEffectMove("Poison", damage, 4, 0.5f, true, false, 0);
+                }
             }
-            case "True" -> {
-                dmg = new TrueDamageMove(damage, 0);
+            assert dmg != null;
+            dmg.setTarget(atk.first);
+            if (randomTarget) {
+                dmg.setRandomTarget(randomTarget);
             }
-            case "Poison" -> {
-                dmg = new StatusEffectMove("Poison", damage, 4, 0.5f, true, false, 0);
+            for (int i = 0; i < attackCount; i++) {
+                result.add(dmg);
             }
-        }
-        for (int i = 0; i < attackCount; i++) {
-            result.add(dmg);
+            System.out.println(dmg);
+            System.out.println(dmg.getTarget());
         }
         return result;
     }
@@ -147,7 +204,9 @@ public class Shooter extends Building {
     }
 
     @Override
-    public void changeCapacityMult(int delta) { magSize += delta; }
+    public void changeCapacityMult(int delta) {
+        magSize += delta;
+    }
 
     public void changeBaseDamage(float delta) {
         baseDmg += delta;

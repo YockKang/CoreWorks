@@ -48,7 +48,7 @@ public class Defender extends Building{
     }
 
     @Override
-    public Array<Move> updateEnabled() {
+    public Array<Move> updateEnabled(RunState runState) {
         currCooldown += getSpeed();
         Array<Move> moves = new Array<>();
         while (currCooldown >= cooldownTimer) {

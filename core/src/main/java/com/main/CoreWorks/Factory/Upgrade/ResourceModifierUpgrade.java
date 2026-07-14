@@ -19,7 +19,7 @@ public class ResourceModifierUpgrade extends UpgradeAspect {
 
     @Override
     public String changes(Building b) {
-        ObjectMap<String, Modifier> bMods = b.getModifiers();
+        ObjectMap<String, Modifier> bMods = b.getResourceModifiers();
         if (bMods.containsKey(mod.getType())) {
             return new StringBuilder()
                 .append("Modifier: ")

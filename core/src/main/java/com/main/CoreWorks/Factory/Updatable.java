@@ -7,7 +7,7 @@ import com.main.CoreWorks.moveset.Move;
 
 public interface Updatable {
 
-    Array<Move> updateTick();
+    Array<Move> updateTick(RunState runState);
 
     Array<ResourceRequest> generateDemandRequests(RunState runState);
 }

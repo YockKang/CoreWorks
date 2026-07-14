@@ -16,14 +16,14 @@ public class RunState {
     private Random random;
     private Array<Relic> relics = new Array<>();
 
-    // Code below stores modifiers that relics can manipulate to increase / decrease damage
-    // Each new damage "type" will need its own unique modifiers (not very good implementation but works)
-    // Below handles the TEMPORARY modifiers (cleared every combat)
+    // Code below stores resourceModifiers that relics can manipulate to increase / decrease damage
+    // Each new damage "type" will need its own unique resourceModifiers (not very good implementation but works)
+    // Below handles the TEMPORARY resourceModifiers (cleared every combat)
     private int tempPlayerBonusDmg = 0;
     private int tempPlayerBonusPoisonDmg = 0;
     private int tempPlayerBonusTrueDmg = 0;
 
-    // Below handles the PERMANENT modifiers (persist thru combat)
+    // Below handles the PERMANENT resourceModifiers (persist thru combat)
     private int permPlayerBonusDmg = 0;
     private int permPlayerBonusPoisonDmg = 0;
     private int permPlayerBonusTrueDmg = 0;
@@ -81,7 +81,7 @@ public class RunState {
         return arr;
     }
 
-    // Handles Temp modifiers
+    // Handles Temp resourceModifiers
     public void addTempPlayerBonusDmg(int amt) {
         this.tempPlayerBonusDmg += amt;
     }
@@ -112,7 +112,7 @@ public class RunState {
         this.tempPlayerBonusTrueDmg = 0;
     }
 
-    // Handles Perm modifiers
+    // Handles Perm resourceModifiers
     public void addPermPlayerBonusDmg(int amt) {
         this.permPlayerBonusDmg += amt;
     }

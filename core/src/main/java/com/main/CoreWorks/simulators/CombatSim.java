@@ -124,20 +124,22 @@ public class CombatSim {
         if (attacker == player) {
             if (move.getRandomTarget()) {
                 if (enemies.size > 1) {
-                    target = enemies.get(runState.getRandom().nextInt(enemies.size - 1));
+                    target = enemies.get(runState.getRandom().nextInt(enemies.size));
                 } else {
                     target = enemies.get(0);
                 }
             } else {
                 int tgtnum = move.getTarget();
-                if (Integer.signum(tgtnum) >= 0) {
-                    if (tgtnum < enemies.size) {
-                        target = enemies.get(tgtnum);
+                if (Integer.signum(tgtnum) > 0) {
+                    if (tgtnum <= enemies.size) {
+                        target = enemies.get(tgtnum - 1);
                     }
-                } else {
+                } else if (Integer.signum(tgtnum) < 0) {
                     if (tgtnum > -enemies.size) {
                         target = enemies.get(enemies.size - tgtnum);
                     }
+                } else {
+                    target = enemies.get(0);
                 }
             }
         } else {
@@ -169,14 +171,60 @@ public class CombatSim {
 
             case DamageMove damageMove -> {
                 int oldHP = target.displayCurrentHp();
-                if (attacker == player) {
-                    int newDmg = damageMove.getValue() + runState.getTempPlayerBonusDmg() + runState.getPermPlayerBonusDmg();
-                    move = new DamageMove(newDmg, move.getChargeTime());
+                if (move.getTarget() != 0) {
+                    System.out.println(attacker.displayName() + " attacks " + target);
+                    move.execute(target);
+                    int newHP = target.displayCurrentHp();
+                    if (oldHP != newHP) {
+                        addLog(tick, String.format("%s dealt %s damage to %s", attacker.displayName(), move.getValue(), target.displayName()));
+                    }
+                } else {
+                    System.out.println("player attacks all");
+                    for (Enemy enemy : enemies) {
+                        oldHP = enemy.displayCurrentHp();
+                        move.execute(enemy);
+                        int newHP = enemy.displayCurrentHp();
+                        if (oldHP != newHP) {
+                            addLog(tick, String.format("%s dealt %s damage to %s", attacker.displayName(), move.getValue(), enemy.displayName()));
+                        }
+                    }
                 }
-                move.execute(target);
-                int newHP = target.displayCurrentHp();
-                if (oldHP != newHP) {
-                    addLog(tick, String.format("%s dealt %s damage to %s", attacker.displayName(), move.getValue(), target.displayName()));
+            }
+
+            case StatusEffectMove statusEffectMove -> {
+                if (statusEffectMove.getEffect().isOnSelf()) {
+                    move.execute(attacker);
+                    addLog(tick, String.format("%s applied %s %s to self", attacker.displayName(), move.getValue(), statusEffectMove.getEffect().getType()));
+                } else {
+                    if (move.getTarget() != 0) {
+                        move.execute(target);
+                        addLog(tick, String.format("%s applied %s %s to %s", attacker.displayName(), move.getValue(), statusEffectMove.getEffect().getType(), target.displayName()));
+                    } else {
+                        for (Enemy enemy : enemies) {
+                            move.execute(enemy);
+                            addLog(tick, String.format("%s applied %s %s to %s", attacker.displayName(), move.getValue(), statusEffectMove.getEffect().getType(), enemy.displayName()));
+                        }
+                    }
+                }
+            }
+
+            case TrueDamageMove trueDamageMove -> {
+                int oldHP = target.displayCurrentHp();
+                if (move.getTarget() != 0) {
+                    move.execute(target);
+                    int newHP = target.displayCurrentHp();
+                    if (oldHP != newHP) {
+                        addLog(tick, String.format("%s dealt %s piercing damage to %s", attacker.displayName(), move.getValue(), target.displayName()));
+                    }
+                } else {
+                    for (Enemy enemy : enemies) {
+                        oldHP = enemy.displayCurrentHp();
+                        move.execute(enemy);
+                        int newHP = enemy.displayCurrentHp();
+                        if (oldHP != newHP) {
+                            addLog(tick, String.format("%s dealt %s piercing damage to %s", attacker.displayName(), move.getValue(), enemy.displayName()));
+                        }
+                    }
                 }
             }
 
@@ -194,28 +242,6 @@ public class CombatSim {
 
                 if (building != null) {
                     addLog(tick, String.format("%s disabled %s for %s ticks", attacker.displayName(), building.displayName(), move.getValue()));
-                }
-            }
-            case StatusEffectMove statusEffectMove -> {
-                if (statusEffectMove.getEffect().isOnSelf()) {
-                    move.execute(attacker);
-                    addLog(tick, String.format("%s applied %s %s to self", attacker.displayName(), move.getValue(), statusEffectMove.getEffect().getType()));
-                } else {
-                    move.execute(target);
-                    addLog(tick, String.format("%s applied %s %s to %s", attacker.displayName(), move.getValue(), statusEffectMove.getEffect().getType(), target.displayName()));
-                }
-            }
-
-            case TrueDamageMove trueDamageMove -> {
-                int oldHP = target.displayCurrentHp();
-                if (attacker == player) {
-                    int newDmg = trueDamageMove.getValue() + runState.getTempPlayerBonusTrueDmg() + runState.getPermPlayerBonusTrueDmg();
-                    move = new TrueDamageMove(newDmg, move.getChargeTime());
-                }
-                move.execute(target);
-                int newHP = target.displayCurrentHp();
-                if (oldHP != newHP) {
-                    addLog(tick, String.format("%s dealt %s piercing damage to %s", attacker.displayName(), move.getValue(), target.displayName()));
                 }
             }
 
@@ -307,5 +333,9 @@ public class CombatSim {
 
     public int getLogsThisTick() {
         return logsThisTick;
+    }
+
+    public void assertLogUpdated() {
+        logsThisTick = 0;
     }
 }

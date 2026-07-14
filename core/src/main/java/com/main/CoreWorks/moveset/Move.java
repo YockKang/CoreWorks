@@ -7,7 +7,7 @@ public abstract class Move {
     protected String name;
     protected String description;
     protected int chargeTime;
-    protected int target = 0;
+    protected int target = 1;
     protected boolean randomTarget = false;
 
     public Move(String name, String description, int chargeTime) {
@@ -30,6 +30,10 @@ public abstract class Move {
     public abstract void execute(Building target);
 
     public abstract int getValue();
+
+    public void setTarget(int target) { this.target = target; }
+
+    public void setRandomTarget(boolean randomTarget) { this.randomTarget = randomTarget; }
 
     public int getTarget() {return target;}
 

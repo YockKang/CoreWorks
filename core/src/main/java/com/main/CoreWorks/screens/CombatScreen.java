@@ -504,7 +504,6 @@ public class CombatScreen implements Screen {
         Table logTable = (Table) UIElements.get("logbody");
         Array<String> log = controller.getCombatSim().getCombatLog();
         int newlines = controller.getCombatSim().getLogsThisTick();
-        System.out.println(newlines);
         int start = Math.max(0, log.size - newlines);
         for (int i = start; i < log.size; i++) {
             Label newlog = new Label(log.get(i), skin);
@@ -512,10 +511,10 @@ public class CombatScreen implements Screen {
             combatLog.addLast(newlog);
         }
         while (combatLog.size > 10) {
-            System.out.println("log has " + combatLog.size);
             Label oldlog = combatLog.removeFirst();
             oldlog.remove();
         }
+        controller.getCombatSim().assertLogUpdated();
     }
 
     private void updateInventoryUI() {
@@ -609,7 +608,6 @@ public class CombatScreen implements Screen {
         }
         updateInventoryUI();
         updateCombatLog();
-        updateEnemies();
         needRefresh = false;
     }
 
@@ -629,6 +627,7 @@ public class CombatScreen implements Screen {
                 controller.advanceTick(runState, tickCount);
                 tickCount += 1;
                 accumulator -= TIME_STEP;
+                updateEnemies();
                 needRefresh = true;
             }
         }

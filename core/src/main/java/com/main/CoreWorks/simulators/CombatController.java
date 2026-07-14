@@ -21,7 +21,7 @@ public class CombatController {
             for (Relic relic : runState.getRelics()) {
                 relic.onCombatEnd(runState);
             }
-            // Reset all temporary modifiers only
+            // Reset all temporary resourceModifiers only
             runState.resetTempCombatModifiers();
             return;
         }
