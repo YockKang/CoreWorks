@@ -79,7 +79,6 @@ public class UpgradeFactory {
 
         if (upgradesGroup.contains("Speed", true)) {
             upgradesGroup.removeValue("Speed", false);
-            upgradesGroup.add("FlatSpeed");
             upgradesGroup.add("SpeedMult");
         }
 

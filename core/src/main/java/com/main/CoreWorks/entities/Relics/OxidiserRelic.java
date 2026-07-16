@@ -16,7 +16,7 @@ public class OxidiserRelic extends Relic {
 
     @Override
     public void onCombatEnd(RunState runState) {
-        runState.addPermPlayerBonusDmg(DMG);
+        runState.addPermBonus("BonusDmg", DMG);
     }
 
 }

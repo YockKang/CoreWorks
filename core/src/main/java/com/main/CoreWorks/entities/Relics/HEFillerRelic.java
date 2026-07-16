@@ -16,7 +16,7 @@ public class HEFillerRelic extends Relic {
 
     @Override
     public boolean onCombatStart(RunState runState) {
-        runState.addTempPlayerBonusDmg(DMG);
+        runState.addTempBonus("BonusDmg", DMG);
         return true;
     }
 

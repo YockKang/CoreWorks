@@ -73,10 +73,6 @@ public class MapNodeActor extends Actor {
         }
 
         // Sets the colors of the different node types below
-        if (node instanceof CombatNode) {
-            return Color.ORANGE;
-        }
-
         if (node instanceof RestNode) {
             return Color.GREEN;
         }
@@ -87,6 +83,10 @@ public class MapNodeActor extends Actor {
 
         if (node instanceof EliteNode) {
             return Color.PURPLE;
+        }
+
+        if (node instanceof CombatNode) {
+            return Color.ORANGE;
         }
 
         if (node instanceof ShopNode) {

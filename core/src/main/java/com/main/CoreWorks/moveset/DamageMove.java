@@ -10,7 +10,6 @@ public class DamageMove extends Move {
     public DamageMove(int damage, int chargeTime) {
         super("Attack", "Deals " + damage + " damage", chargeTime);
         this.damage = damage;
-        this.target = 1;
     }
 
     @Override

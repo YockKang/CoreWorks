@@ -122,31 +122,11 @@ public class CombatSim {
     private void executeMove(RunState runState, Move move, Character attacker, int tick) {
         Character target = null;
         if (attacker == player) {
-            if (move.getRandomTarget()) {
-                if (enemies.size > 1) {
-                    target = enemies.get(runState.getRandom().nextInt(enemies.size));
-                } else {
-                    target = enemies.get(0);
-                }
-            } else {
-                int tgtnum = move.getTarget();
-                if (Integer.signum(tgtnum) > 0) {
-                    if (tgtnum <= enemies.size) {
-                        target = enemies.get(tgtnum - 1);
-                    }
-                } else if (Integer.signum(tgtnum) < 0) {
-                    if (tgtnum >= -enemies.size) {
-                        target = enemies.get(enemies.size + tgtnum);
-                    }
-                } else {
-                    target = enemies.get(0);
-                }
+            if (move.getTarget() != null) {
+                target = move.getTarget();
             }
         } else {
             target = player;
-        }
-        if (target == null) {
-            return;
         }
         switch (move) {
             // Healing for now only heals oneself
@@ -170,8 +150,8 @@ public class CombatSim {
             }
 
             case DamageMove damageMove -> {
-                int oldHP = target.displayCurrentHp();
-                if (move.getTarget() != 0) {
+                if (target != null) {
+                    int oldHP = target.displayCurrentHp();
                     System.out.println(attacker.displayName() + " attacks " + target);
                     move.execute(target);
                     int newHP = target.displayCurrentHp();
@@ -181,7 +161,7 @@ public class CombatSim {
                 } else {
                     System.out.println("player attacks all");
                     for (Enemy enemy : enemies) {
-                        oldHP = enemy.displayCurrentHp();
+                        int oldHP = enemy.displayCurrentHp();
                         move.execute(enemy);
                         int newHP = enemy.displayCurrentHp();
                         if (oldHP != newHP) {
@@ -196,7 +176,7 @@ public class CombatSim {
                     move.execute(attacker);
                     addLog(tick, String.format("%s applied %s %s to self", attacker.displayName(), move.getValue(), statusEffectMove.getEffect().getType()));
                 } else {
-                    if (move.getTarget() != 0) {
+                    if (target != null) {
                         move.execute(target);
                         addLog(tick, String.format("%s applied %s %s to %s", attacker.displayName(), move.getValue(), statusEffectMove.getEffect().getType(), target.displayName()));
                     } else {
@@ -209,8 +189,8 @@ public class CombatSim {
             }
 
             case TrueDamageMove trueDamageMove -> {
-                int oldHP = target.displayCurrentHp();
-                if (move.getTarget() != 0) {
+                if (target != null) {
+                    int oldHP = target.displayCurrentHp();
                     move.execute(target);
                     int newHP = target.displayCurrentHp();
                     if (oldHP != newHP) {
@@ -218,7 +198,7 @@ public class CombatSim {
                     }
                 } else {
                     for (Enemy enemy : enemies) {
-                        oldHP = enemy.displayCurrentHp();
+                        int oldHP = enemy.displayCurrentHp();
                         move.execute(enemy);
                         int newHP = enemy.displayCurrentHp();
                         if (oldHP != newHP) {

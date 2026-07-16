@@ -7,6 +7,7 @@ import com.main.CoreWorks.entities.Player;
 import com.main.CoreWorks.entities.Relics.Relic;
 
 import java.util.Random;
+import java.util.function.BinaryOperator;
 
 public class RunState {
     private Player player;
@@ -22,15 +23,11 @@ public class RunState {
 
     // Code below stores resourceModifiers that relics can manipulate to increase / decrease damage
     // Each new damage "type" will need its own unique resourceModifiers (not very good implementation but works)
-    // Below handles the TEMPORARY resourceModifiers (cleared every combat)
-    private int tempPlayerBonusDmg = 0;
-    private int tempPlayerBonusPoisonDmg = 0;
-    private int tempPlayerBonusTrueDmg = 0;
+    // Below handles the TEMPORARY playerModifiers (cleared every combat)
+    private ObjectMap<String, Float> tempBonuses = new ObjectMap<>();
 
-    // Below handles the PERMANENT resourceModifiers (persist thru combat)
-    private int permPlayerBonusDmg = 0;
-    private int permPlayerBonusPoisonDmg = 0;
-    private int permPlayerBonusTrueDmg = 0;
+    // Below handles the PERMANENT playerModifiers (persist thru combat)
+    private ObjectMap<String, Float> permBonuses = new ObjectMap<>();
 
     public RunState(Player player) {
         this.player = player;
@@ -85,61 +82,72 @@ public class RunState {
         return arr;
     }
 
-    // Handles Temp resourceModifiers
-    public void addTempPlayerBonusDmg(int amt) {
-        this.tempPlayerBonusDmg += amt;
+    // Handles Temp playerModifiers
+    public void addTempBonus(String name, float amt) {
+        if (!tempBonuses.containsKey(name)) {
+            tempBonuses.put(name, amt);
+        } else {
+            tempBonuses.put(name, tempBonuses.get(name) + amt);
+        }
     }
 
-    public void addTempPlayerBonusPoisonDmg(int amt) {
-        this.tempPlayerBonusPoisonDmg += amt;
+    public boolean hasTempBonus(String name) {
+        return tempBonuses.containsKey(name);
     }
 
-    public void addTempPlayerBonusTrueDmg(int amt) {
-        this.tempPlayerBonusTrueDmg += amt;
+    public float getTempBonus(String name, float fallback) {
+        if (tempBonuses.containsKey(name)) {
+            return tempBonuses.get(name);
+        } else {
+            return fallback;
+        }
     }
 
-    public int getTempPlayerBonusDmg() {
-        return tempPlayerBonusDmg;
+    public float getTempBonus(String name) {
+        return getTempBonus(name, 0);
     }
 
-    public int getTempPlayerBonusPoisonDmg() {
-        return tempPlayerBonusPoisonDmg;
+    // Handles Permanent playerModifiers
+    public void addPermBonus(String name, float amt) {
+        if (!permBonuses.containsKey(name)) {
+            permBonuses.put(name, amt);
+        } else {
+            permBonuses.put(name, permBonuses.get(name) + amt);
+        }
     }
 
-    public int getTempPlayerBonusTrueDmg() {
-        return tempPlayerBonusTrueDmg;
+    public float getPermBonus(String name, float fallback) {
+        if (permBonuses.containsKey(name)) {
+            return permBonuses.get(name);
+        } else {
+            return fallback;
+        }
+    }
+
+    public float getPermBonus(String name) {
+        return getPermBonus(name, 0);
+    }
+
+    public boolean hasPermBonus(String name) {
+        return permBonuses.containsKey(name);
+    }
+
+    public float getBonuses(String name, BinaryOperator<Float> operation, float fallback) {
+        return operation.apply(getTempBonus(name, fallback), getPermBonus(name, fallback));
+    }
+
+    public float getBonuses(String name, BinaryOperator<Float> operation) {
+        return getBonuses(name, operation, 0);
+    }
+
+    public boolean hasBonus(String name) {
+        return hasTempBonus(name) || hasPermBonus(name);
     }
 
     public void resetTempCombatModifiers() {
-        this.tempPlayerBonusDmg = 0;
-        this.tempPlayerBonusPoisonDmg = 0;
-        this.tempPlayerBonusTrueDmg = 0;
+        tempBonuses.clear();
     }
 
-    // Handles Perm resourceModifiers
-    public void addPermPlayerBonusDmg(int amt) {
-        this.permPlayerBonusDmg += amt;
-    }
-
-    public void addPermPlayerBonusPoisonDmg(int amt) {
-        this.permPlayerBonusPoisonDmg += amt;
-    }
-
-    public void addPermPlayerBonusTrueDmg(int amt) {
-        this.permPlayerBonusTrueDmg += amt;
-    }
-
-    public int getPermPlayerBonusDmg() {
-        return permPlayerBonusDmg;
-    }
-
-    public int getPermPlayerBonusPoisonDmg() {
-        return permPlayerBonusPoisonDmg;
-    }
-
-    public int getPermPlayerBonusTrueDmg() {
-        return permPlayerBonusTrueDmg;
-    }
 
     public Random getRandom() {
         return random;

@@ -2,13 +2,14 @@ package com.main.CoreWorks.moveset;
 
 import com.main.CoreWorks.Factory.Building;
 import com.main.CoreWorks.entities.Character;
+import com.main.CoreWorks.entities.Enemy;
 
 public abstract class Move {
     protected String name;
     protected String description;
     protected int chargeTime;
-    protected int target = 1;
-    protected boolean randomTarget = false;
+    protected Character target;
+    protected boolean hitAll;
 
     public Move(String name, String description, int chargeTime) {
         this.name = name;
@@ -27,15 +28,25 @@ public abstract class Move {
 
     public abstract void execute(Character target);
 
+    public void executeChar() {execute(target);};
+
     public abstract void execute(Building target);
 
     public abstract int getValue();
 
-    public void setTarget(int target) { this.target = target; }
+    public void setTarget(Character target) {
+        this.target = target;
+    }
 
-    public void setRandomTarget(boolean randomTarget) { this.randomTarget = randomTarget; }
+    public void setHitAll(boolean tf) {
+        this.hitAll = tf;
+    }
 
-    public int getTarget() {return target;}
+    public Character getTarget() {
+        return target;
+    }
 
-    public boolean getRandomTarget() {return randomTarget;}
+    public boolean getHitAll() {
+        return hitAll;
+    }
 }
