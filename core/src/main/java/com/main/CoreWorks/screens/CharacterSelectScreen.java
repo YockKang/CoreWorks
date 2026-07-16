@@ -122,6 +122,8 @@ public class CharacterSelectScreen implements Screen {
                     // RunMap runMap = RunMapGenerator.generateHardcodedRunMap(runState);
                     // Generates procedurally generated runMap
                     RunMap runMap = RunMapGenerator.generateRandomRunMapF1(runState);
+                    runState.addNextMap(RunMapGenerator.generateRandomRunMapF2(runState));
+                    runState.addNextMap(RunMapGenerator.generateRandomRunMapF3(runState));
                     runState.setRunMap(runMap);
                     runState.setCurrNode(runMap.getStartNode());
 

@@ -51,30 +51,51 @@ public class WinScreen implements Screen {
         // Create a temporary font to make the main text bigger
         BitmapFont titleFont = new BitmapFont();
         titleFont.getData().setScale(3f);
-        table.add(new Label("You Win!", new Label.LabelStyle(titleFont, Color.GREEN))).padBottom(60).row();
+        if (!(runState.getCurrNode().getNextNodes().size == 0)) {
+            table.add(new Label("You Win!", new Label.LabelStyle(titleFont, Color.GREEN))).padBottom(60).row();
+        } else if (runState.nextFloor()) {
+            table.add(new Label("You Defeated the Boss of this floor!", new Label.LabelStyle(titleFont, Color.GREEN))).padBottom(60).row();
+        } else {
+            table.add(new Label("You Defeated the Final Boss!", new Label.LabelStyle(titleFont, Color.GREEN))).padBottom(60).row();
+        }
 
         // Add a continue button
-        TextButton continueButton = new TextButton("Continue", skin);
-        continueButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // If there are no more next nodes, return back to main menu
-                // Will definitely be changed in the future when we have proper run end screen for winning / losing the whole game
-                if (runState.getCurrNode().getNextNodes().size == 0) {
-                    game.setScreen(new MenuScreen(game));
-                    return;
+        if (!(runState.getCurrNode().getNextNodes().size == 0)) {
+            // If it is not the boss node, use the classic continue button
+            TextButton continueButton = new TextButton("Continue", skin);
+            continueButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    runState.getCurrNode().setCompleted(true);
+                    for (MapNode next : runState.getCurrNode().getNextNodes()) {
+                        next.setUnlocked(true);
+                    }
+                    Array<Reward> rewards = RewardGenerator.generateCombatReward(runState);
+                    game.resetCamera();
+                    game.setScreen(new RewardScreen(game, runState, rewards));
+                    dispose();
                 }
-                runState.getCurrNode().setCompleted(true);
-                for (MapNode next : runState.getCurrNode().getNextNodes()) {
-                    next.setUnlocked(true);
+            });
+            table.add(continueButton).row();
+        } else if (runState.nextFloor()) {
+            // Else if it is the boss node and there is a next floor, use a next floor button
+            TextButton continueButton = new TextButton("Next floor", skin);
+            continueButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    // Set runMap as next floor map and Curr node as well (Get next maps is 0 indexed but floor is 1 indexed)
+                    runState.setRunMap(runState.getNextMaps().get(runState.getCurrFloor()));
+                    runState.setCurrNode(runState.getNextMaps().get(runState.getCurrFloor()).getStartNode());
+                    runState.setCurrFloor(runState.getCurrFloor() + 1);
+                    game.resetCamera();
+                    game.setScreen(new MapScreen(game, runState));
+                    dispose();
                 }
-                Array<Reward> rewards = RewardGenerator.generateCombatReward(runState);
-                game.resetCamera();
-                game.setScreen(new RewardScreen(game, runState, rewards));
-                dispose();
-            }
-        });
-        table.add(continueButton).row();
+            });
+            table.add(continueButton).row();
+        } else {
+            // Else, there is no next floor and no more nodes, so there should only be a quit run button
+        }
 
         // Adds a quit run button (in case of too tired)
         TextButton quitRunButton = new TextButton("Quit Run", skin);

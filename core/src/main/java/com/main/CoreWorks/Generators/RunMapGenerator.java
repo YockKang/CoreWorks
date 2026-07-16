@@ -140,6 +140,182 @@ public class RunMapGenerator {
 
     }
 
+    // Main RunMap generation code that generates the 2nd floor (can be copy-pasted and edited for generating another floor perhaps?)
+    public static RunMap generateRandomRunMapF2(RunState runState) {
+        // Determines how many rows and cols the map will have max (will not be using the full number ofc, just to scale the spacing)
+        int totalCols = 6;
+        int totalRows = 10;
+
+        // Determines the 4 bounds of the map
+        float leftBound = -100f;
+        float rightBound = 1500f;
+        float topBound = 575f;
+        float bottomBound = -800f;
+
+        RunMap runMap = new RunMap();
+        Random random = runState.getRandom();
+
+        // Nested array of arrays of nodes, each internal array represents rows, external array represents the full map
+        Array<Array<MapNode>> allNodes = new Array<>();
+
+        // Creates the start Node (Guaranteed to be a combat node)
+        Array<MapNode> startRowNode = new Array<>();
+        int startCol = totalCols / 2;
+        float startX = generateXCoords(startCol, totalCols, leftBound, rightBound);
+        float startY = generateYCoords(0, totalRows, topBound, bottomBound);
+        MapNode startNode = new CombatNode(CombatGenerator.createCombat(1, 0.9f, random), 0, startCol, 1, 1.9f, startX, startY);
+        startRowNode.add(startNode);
+        allNodes.add(startRowNode);
+
+        // Creates all random nodes in between, except the boss node
+        for (int i = 1; i < totalRows - 1; i++) {
+            Array<MapNode> middleRowNodes = new Array<>();
+
+            // lognormal distribution (dont worry abt it)
+            double m = 1.2;
+            double var = Math.pow(1 / m, 2) / 2;
+            double s2 = Math.log(1 + var / (m * m));
+            double mu = Math.log(m) - s2 / 2;
+            double nodes = Math.expm1(random.nextGaussian(mu, Math.sqrt(s2))) + 1;
+
+            int numNodes = (int) Math.min(3 + nodes, totalCols); // Guarantees a certain number of nodes, but never more than the number of cols available
+
+            // This will pick random unique columns to draw the node
+            Array<Integer> uniqueCols = new Array<>();
+            while (uniqueCols.size < numNodes) {
+                int uniqueCol = random.nextInt(totalCols);
+                if (!uniqueCols.contains(uniqueCol, false)) {
+                    uniqueCols.add(uniqueCol);
+                }
+            }
+
+            // This will create the actual node itself
+            for (int j = 0; j < uniqueCols.size; j++) {
+                int randomCol = uniqueCols.get(j);
+                float randomX = generateXCoords(randomCol, totalCols, leftBound, rightBound);
+                float randomY = generateYCoords(i, totalRows, topBound, bottomBound);
+                MapNode randomNode = createRandomNodeF2(i, totalRows, randomCol, randomX, randomY, runState);
+                middleRowNodes.add(randomNode);
+            }
+            allNodes.add(middleRowNodes);
+        }
+
+        // Creates the boss node
+        Array<MapNode> bossRowNode = new Array<>();
+        int bossCol = totalCols / 2;
+        float bossX = generateXCoords(bossCol, totalCols, leftBound, rightBound);
+        float bossY = generateYCoords(totalRows - 1, totalRows, topBound, bottomBound);
+        bossRowNode.add(new BossNode(CombatGenerator.createCombat("Boss1", 1f, random), totalRows - 1, bossCol, 1, 2f, bossX, bossY));
+        allNodes.add(bossRowNode);
+
+        // Connect the rows
+        for (int row = 0; row < allNodes.size - 1; row++) {
+            connectRows(allNodes.get(row), allNodes.get(row + 1), random);
+        }
+
+        // Add all the nodes to a RunMap
+        for (Array<MapNode> rowNodes : allNodes) {
+            for (MapNode node : rowNodes) {
+                runMap.addNode(node);
+            }
+        }
+
+        // Set the start Node as unlocked + starting Node
+        startNode.setUnlocked(true);
+        runMap.setStartNode(startNode);
+
+        return runMap;
+
+    }
+
+    // Main RunMap generation code that generates the 3rd floor (can be copy-pasted and edited for generating another floor perhaps?)
+    public static RunMap generateRandomRunMapF3(RunState runState) {
+        // Determines how many rows and cols the map will have max (will not be using the full number ofc, just to scale the spacing)
+        int totalCols = 6;
+        int totalRows = 10;
+
+        // Determines the 4 bounds of the map
+        float leftBound = -100f;
+        float rightBound = 1500f;
+        float topBound = 575f;
+        float bottomBound = -800f;
+
+        RunMap runMap = new RunMap();
+        Random random = runState.getRandom();
+
+        // Nested array of arrays of nodes, each internal array represents rows, external array represents the full map
+        Array<Array<MapNode>> allNodes = new Array<>();
+
+        // Creates the start Node (Guaranteed to be a combat node)
+        Array<MapNode> startRowNode = new Array<>();
+        int startCol = totalCols / 2;
+        float startX = generateXCoords(startCol, totalCols, leftBound, rightBound);
+        float startY = generateYCoords(0, totalRows, topBound, bottomBound);
+        MapNode startNode = new CombatNode(CombatGenerator.createCombat(1, 0.9f, random), 0, startCol, 1, 3.1f, startX, startY);
+        startRowNode.add(startNode);
+        allNodes.add(startRowNode);
+
+        // Creates all random nodes in between, except the boss node
+        for (int i = 1; i < totalRows - 1; i++) {
+            Array<MapNode> middleRowNodes = new Array<>();
+
+            // lognormal distribution (dont worry abt it)
+            double m = 1.2;
+            double var = Math.pow(1 / m, 2) / 2;
+            double s2 = Math.log(1 + var / (m * m));
+            double mu = Math.log(m) - s2 / 2;
+            double nodes = Math.expm1(random.nextGaussian(mu, Math.sqrt(s2))) + 1;
+
+            int numNodes = (int) Math.min(3 + nodes, totalCols); // Guarantees a certain number of nodes, but never more than the number of cols available
+
+            // This will pick random unique columns to draw the node
+            Array<Integer> uniqueCols = new Array<>();
+            while (uniqueCols.size < numNodes) {
+                int uniqueCol = random.nextInt(totalCols);
+                if (!uniqueCols.contains(uniqueCol, false)) {
+                    uniqueCols.add(uniqueCol);
+                }
+            }
+
+            // This will create the actual node itself
+            for (int j = 0; j < uniqueCols.size; j++) {
+                int randomCol = uniqueCols.get(j);
+                float randomX = generateXCoords(randomCol, totalCols, leftBound, rightBound);
+                float randomY = generateYCoords(i, totalRows, topBound, bottomBound);
+                MapNode randomNode = createRandomNodeF3(i, totalRows, randomCol, randomX, randomY, runState);
+                middleRowNodes.add(randomNode);
+            }
+            allNodes.add(middleRowNodes);
+        }
+
+        // Creates the boss node
+        Array<MapNode> bossRowNode = new Array<>();
+        int bossCol = totalCols / 2;
+        float bossX = generateXCoords(bossCol, totalCols, leftBound, rightBound);
+        float bossY = generateYCoords(totalRows - 1, totalRows, topBound, bottomBound);
+        bossRowNode.add(new BossNode(CombatGenerator.createCombat("Boss1", 1f, random), totalRows - 1, bossCol, 1, 3f, bossX, bossY));
+        allNodes.add(bossRowNode);
+
+        // Connect the rows
+        for (int row = 0; row < allNodes.size - 1; row++) {
+            connectRows(allNodes.get(row), allNodes.get(row + 1), random);
+        }
+
+        // Add all the nodes to a RunMap
+        for (Array<MapNode> rowNodes : allNodes) {
+            for (MapNode node : rowNodes) {
+                runMap.addNode(node);
+            }
+        }
+
+        // Set the start Node as unlocked + starting Node
+        startNode.setUnlocked(true);
+        runMap.setStartNode(startNode);
+
+        return runMap;
+
+    }
+
     // Helper function to connect the different rows
     private static void connectRows(Array<MapNode> fromRow, Array<MapNode> toRow, Random random) {
         // Sort nodes by column number to make the map less criss-crossy
@@ -248,6 +424,58 @@ public class RunMapGenerator {
     // Eventually when we add more nodes and node screens, there will be more variety
     private static MapNode createRandomNodeF1(int row, int totalRows, int col, float x, float y, RunState runState) {
         float difficulty = 0.8f + row * 0.1f;
+        Random random = runState.getRandom();
+        int val = random.nextInt(100);
+
+        int restNodeOdds = 15;
+        float eliteCombatRatio = 0.2f;
+
+        // If it is the 2nd last row (ie before boss), give a higher chance for rest node
+        if (row == totalRows - 2) {
+            restNodeOdds = 67;
+        }
+
+        if (val < restNodeOdds) {
+            if (random.nextBoolean()) {
+                return new RestNode(1, row, col, difficulty, x, y);
+            } else {
+                return new ShopNode(1, row, col, difficulty, x, y);
+            }
+        } else if (val < ((100 - restNodeOdds) * eliteCombatRatio) + restNodeOdds) {
+            return new EliteNode(CombatGenerator.createCombat("Elite1", difficulty, random), row, col, 1, difficulty + .2f, x, y);
+        } else {
+            return new CombatNode(CombatGenerator.createCombat(1, difficulty, random), row, col, 1, difficulty, x, y);
+        }
+    }
+
+    private static MapNode createRandomNodeF2(int row, int totalRows, int col, float x, float y, RunState runState) {
+        float difficulty = 2f + row * 0.1f;
+        Random random = runState.getRandom();
+        int val = random.nextInt(100);
+
+        int restNodeOdds = 15;
+        float eliteCombatRatio = 0.2f;
+
+        // If it is the 2nd last row (ie before boss), give a higher chance for rest node
+        if (row == totalRows - 2) {
+            restNodeOdds = 67;
+        }
+
+        if (val < restNodeOdds) {
+            if (random.nextBoolean()) {
+                return new RestNode(1, row, col, difficulty, x, y);
+            } else {
+                return new ShopNode(1, row, col, difficulty, x, y);
+            }
+        } else if (val < ((100 - restNodeOdds) * eliteCombatRatio) + restNodeOdds) {
+            return new EliteNode(CombatGenerator.createCombat("Elite1", difficulty, random), row, col, 1, difficulty + .2f, x, y);
+        } else {
+            return new CombatNode(CombatGenerator.createCombat(1, difficulty, random), row, col, 1, difficulty, x, y);
+        }
+    }
+
+    private static MapNode createRandomNodeF3(int row, int totalRows, int col, float x, float y, RunState runState) {
+        float difficulty = 3.2f + row * 0.1f;
         Random random = runState.getRandom();
         int val = random.nextInt(100);
 
