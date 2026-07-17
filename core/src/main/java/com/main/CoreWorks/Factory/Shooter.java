@@ -36,7 +36,6 @@ public class Shooter extends Building {
 
     public Shooter(JsonValue data) {
         super(data);
-        System.out.println("generating " + this.name);
         this.magSize = data.getInt("MagSize");
         this.magazine = new Queue<>(magSize);
         this.baseDmg = data.getFloat("BaseDmg");

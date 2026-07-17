@@ -152,6 +152,10 @@ public class Recipe {
         return name;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public Table displayStats(Skin skin) {
         Table mainTable = new Table(skin);
         mainTable.add(new Label(this.name, skin)).pad(2).row();

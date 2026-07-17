@@ -2,15 +2,14 @@ package com.main.CoreWorks.Factory.BuildingTemplate;
 
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.reflect.*;
+import com.main.CoreWorks.Codex.BuildingEntry;
+import com.main.CoreWorks.Codex.Entry;
 import com.main.CoreWorks.Factory.Building;
-import org.apache.fory.shaded.org.codehaus.janino.ITypeVariableOrIClass;
-
-import java.lang.reflect.InvocationTargetException;
 
 public class BuildingTemplate {
-    Class<? extends Building> clazz;
-    JsonValue buildingData;
-    int idNum = 0;
+    protected Class<? extends Building> clazz;
+    protected JsonValue buildingData;
+    protected int idNum = 0;
 
     public BuildingTemplate(JsonValue data) {
         String name = "com.main.CoreWorks.Factory." + data.getString("Type");
@@ -36,6 +35,27 @@ public class BuildingTemplate {
             return bldg;
         } catch (Exception e) {
             System.out.println("Building Generation Error");
+            return null;
+        }
+    }
+
+    public BuildingEntry generateCodexEntry() {
+        try {
+            Class<? extends BuildingEntry> clazz;
+            String name = "com.main.CoreWorks.Codex." + buildingData.getString("Type") + "Entry";
+
+            try {
+                Class<?> raw = ClassReflection.forName(name);
+                if (!BuildingEntry.class.isAssignableFrom(raw)) {
+                    throw new IllegalArgumentException(name + " is not a codex entry type");
+                }
+                clazz = raw.asSubclass(BuildingEntry.class);
+            } catch (ReflectionException e) {
+                throw new RuntimeException(e);
+            }
+            return clazz.getConstructor(JsonValue.class).newInstance(buildingData);
+        } catch (Exception e) {
+            System.out.println("Entry Generation Error");
             return null;
         }
     }

@@ -5,10 +5,10 @@ import com.badlogic.gdx.utils.*;
 import java.util.Objects;
 
 public class Resource {
-    String id;
-    String name;
-    float dmgMult;
-    ObjectMap<String, Modifier> modifiers;
+    protected String id;
+    protected String name;
+    protected float dmgMult;
+    protected ObjectMap<String, Modifier> modifiers;
 
     // possibly more multipliers?
 

@@ -1,6 +1,7 @@
 package com.main.CoreWorks.database;
 
 import com.badlogic.gdx.utils.*;
+import com.main.CoreWorks.Factory.BuildingTemplate.BuildingTemplate;
 import com.main.CoreWorks.entities.*;
 import com.main.CoreWorks.moveset.*;
 
@@ -32,4 +33,5 @@ public class EnemyDatabase {
         return EnemyDB.toString();
     }
 
+    public static ObjectMap<String, EnemyFactory> getDB() { return EnemyDB; }
 }

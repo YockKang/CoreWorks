@@ -1,6 +1,7 @@
 package com.main.CoreWorks.database;
 
 import com.badlogic.gdx.utils.*;
+import com.main.CoreWorks.Recipe.Recipe;
 import com.main.CoreWorks.Resources.*;
 
 public class ResourceDatabase {
@@ -31,5 +32,9 @@ public class ResourceDatabase {
 
     public static String showDB(){
         return ResourceDB.toString();
+    }
+
+    public static ObjectMap<String, ResourceTemplate> getDB() {
+        return ResourceDB;
     }
 }

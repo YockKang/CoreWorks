@@ -19,4 +19,8 @@ public class EnemyFactory {
     public Enemy of(float mult) {
         return new Enemy(data, mult);
     }
+
+    public JsonValue getData() {
+        return data;
+    }
 }

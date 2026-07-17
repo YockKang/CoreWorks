@@ -46,8 +46,7 @@ public class RelicDatabase {
         return RelicDB.toString();
     }
 
-
-    protected static ObjectMap<String, Relic> getDB(){
+    public static ObjectMap<String, Relic> getDB(){
         return RelicDB;
     }
 }

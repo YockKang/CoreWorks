@@ -67,7 +67,7 @@ public class RecipeDatabase {
         return RecipeDB.toString();
     }
 
-    protected static ObjectMap<String, Recipe> getDB() {
+    public static ObjectMap<String, Recipe> getDB() {
         return RecipeDB;
     }
 }

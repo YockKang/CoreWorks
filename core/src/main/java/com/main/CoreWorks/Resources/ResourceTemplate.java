@@ -20,4 +20,8 @@ public class ResourceTemplate {
     public String getName() {
         return templateStats.getString("Name");
     }
+
+    public JsonValue getData() {
+        return templateStats;
+    }
 }
