@@ -12,6 +12,7 @@ import com.main.CoreWorks.Resources.*;
 import com.main.CoreWorks.TextParser.Sentence;
 import com.main.CoreWorks.database.*;
 import com.main.CoreWorks.screens.*;
+import com.main.CoreWorks.simulators.PopUpTutorial.PopUpManager;
 
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
@@ -29,6 +30,10 @@ public class Coreworks extends Game {
     private Array<FileHandle> recipeFiles = new Array<>();
     private Array<FileHandle> buildingFiles = new Array<>();
     private boolean devMode = false;
+
+
+    // Below handles the tutorial popups (if enabled)
+    private PopUpManager popUpManager = new PopUpManager();
 
     @Override
     public void create() {
@@ -143,5 +148,9 @@ public class Coreworks extends Game {
             buildingFiles.add(fileHandle);
         }
 
+    }
+
+    public PopUpManager getPopUpManager() {
+        return popUpManager;
     }
 }

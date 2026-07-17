@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Coreworks;
 import com.main.CoreWorks.Recipe.Recipe;
 import com.main.CoreWorks.entities.Relics.Relic;
+import com.main.CoreWorks.simulators.PopUpTutorial.PopUpManager;
 import com.main.CoreWorks.util.*;
 import com.main.CoreWorks.Factory.*;
 import com.main.CoreWorks.Factory.Tubes.Tube;
@@ -103,6 +104,9 @@ public class CombatScreen implements Screen {
         stage = new Stage(game.viewport, game.batch);
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         Gdx.input.setInputProcessor(stage);
+
+        // Sets the popup manager
+        game.getPopUpManager().setScene2D(stage, skin);
 
         game.viewport.apply();
         game.camera.update();
@@ -476,6 +480,15 @@ public class CombatScreen implements Screen {
         delta = Math.min(delta, 1 / 8f);
 
         externalInput();
+
+        // PopUp manager will spawn the next popup if needed (and exists), while pausing the game as well
+        PopUpManager popUpManager = game.getPopUpManager();
+        if (popUpManager != null && popUpManager.showNext(() -> isPaused = true, () -> isPaused = false)) {
+            ScreenUtils.clear(Color.BLACK);
+            stage.act(delta);
+            stage.draw();
+            return;
+        }
 
         // Tick Advancement code below
         if (!isPaused && !controller.isWin() && !controller.isLost()) {

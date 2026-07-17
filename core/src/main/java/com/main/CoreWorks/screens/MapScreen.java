@@ -12,6 +12,7 @@ import com.main.CoreWorks.Coreworks;
 import com.main.CoreWorks.Generators.ShopOfferGenerator;
 import com.main.CoreWorks.Rewards.ShopOffer;
 import com.main.CoreWorks.RunPersistence.*;
+import com.main.CoreWorks.simulators.PopUpTutorial.PopUpManager;
 
 public class MapScreen implements Screen {
 
@@ -61,6 +62,9 @@ public class MapScreen implements Screen {
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         shapeRenderer = new ShapeRenderer();
         texture = createSimpleTexture();
+
+        // Sets the popup manager
+        game.getPopUpManager().setScene2D(stage, skin);
 
         // Set the boundary of the map
         computeBoundary();
@@ -261,6 +265,15 @@ public class MapScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        // PopUp manager will spawn the next popup if needed (and exists), no pause necessary since it doesn't even exist
+        PopUpManager popUpManager = game.getPopUpManager();
+        if (popUpManager != null && popUpManager.showNext(() -> {}, () -> {})) {
+            ScreenUtils.clear(Color.BLACK);
+            stage.act(delta);
+            stage.draw();
+            return;
+        }
+
         // Clears the screen + update camera if needed
         ScreenUtils.clear(Color.BLACK);
 

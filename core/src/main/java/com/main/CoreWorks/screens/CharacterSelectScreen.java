@@ -16,6 +16,7 @@ import com.main.CoreWorks.TextParser.Sentence;
 import com.main.CoreWorks.database.PlayerDatabase;
 import com.main.CoreWorks.entities.Player;
 import com.main.CoreWorks.entities.Relics.Relic;
+import com.main.CoreWorks.simulators.PopUpTutorial.PopUpManager;
 
 public class CharacterSelectScreen implements Screen {
 
@@ -37,6 +38,17 @@ public class CharacterSelectScreen implements Screen {
         stage = new Stage(game.viewport, game.batch);
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         Gdx.input.setInputProcessor(stage);
+
+        // Sets the popup manager
+        game.getPopUpManager().setScene2D(stage, skin);
+
+        // Generate Screen specific popups here
+        game.getPopUpManager().requestPopup(
+            "character_select",
+            "Choosing a character",
+            "Every character has their unique attributes. \nYou can select and preview any character's unique loadout before starting the game.\nOnce chosen, the choice is final!",
+            false
+        );
 
         // Build the Scene2D UI
         buildSelectUI();
@@ -192,6 +204,15 @@ public class CharacterSelectScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        // PopUp manager will spawn the next popup if needed (and exists), no pause necessary since it doesn't even exist
+        PopUpManager popUpManager = game.getPopUpManager();
+        if (popUpManager != null && popUpManager.showNext(() -> {}, () -> {})) {
+            ScreenUtils.clear(Color.BLACK);
+            stage.act(delta);
+            stage.draw();
+            return;
+        }
+
         ScreenUtils.clear(Color.BLACK);
         stage.act(delta);
         stage.draw();

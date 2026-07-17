@@ -3,12 +3,11 @@ package com.main.CoreWorks.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Coreworks;
@@ -76,6 +75,17 @@ public class MenuScreen implements Screen {
             }
         });
         table.add(quitButton).row();
+
+        // Adds the tutorial checkbox
+        CheckBox tutorialCheckbox = new CheckBox("Enable tutorial Popups", skin);
+        tutorialCheckbox.setChecked(game.getPopUpManager().isPopupEnabled());
+        tutorialCheckbox.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.getPopUpManager().setPopupEnabled(tutorialCheckbox.isChecked());
+            }
+        });
+        table.add(tutorialCheckbox).row();
 
         // Add more buttons below or above
     }

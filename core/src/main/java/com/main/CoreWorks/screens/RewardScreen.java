@@ -16,6 +16,7 @@ import com.main.CoreWorks.Factory.Building;
 import com.main.CoreWorks.Rewards.AddUpgradeReward;
 import com.main.CoreWorks.Rewards.Reward;
 import com.main.CoreWorks.RunPersistence.RunState;
+import com.main.CoreWorks.simulators.PopUpTutorial.PopUpManager;
 
 /*
 Note: Reward Screen does NOT handle unlocking of next nodes, it should be settled before coming to this screen
@@ -58,6 +59,9 @@ public class RewardScreen implements Screen {
 
         // Uses the default libgdx skin, eventually will replace with our own
         skin = new Skin(Gdx.files.internal("uiskin.json"));
+
+        // Sets the popup manager
+        game.getPopUpManager().setScene2D(stage, skin);
 
         // Draws the UI based on which screen needs to be shown
         selectScreen();
@@ -295,6 +299,15 @@ public class RewardScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        // PopUp manager will spawn the next popup if needed (and exists), no pause necessary since it doesn't even exist
+        PopUpManager popUpManager = game.getPopUpManager();
+        if (popUpManager != null && popUpManager.showNext(() -> {}, () -> {})) {
+            ScreenUtils.clear(Color.BLACK);
+            stage.act(delta);
+            stage.draw();
+            return;
+        }
+
         ScreenUtils.clear(Color.BLACK);
         stage.act(delta);
         stage.draw();

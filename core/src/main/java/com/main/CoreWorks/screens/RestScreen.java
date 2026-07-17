@@ -19,6 +19,7 @@ import com.main.CoreWorks.Rewards.Reward;
 import com.main.CoreWorks.RunPersistence.MapNode;
 import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.entities.Player;
+import com.main.CoreWorks.simulators.PopUpTutorial.PopUpManager;
 
 public class RestScreen implements Screen {
 
@@ -56,6 +57,9 @@ public class RestScreen implements Screen {
 
         // Uses the default libgdx skin, eventually will replace with our own
         skin = new Skin(Gdx.files.internal("uiskin.json"));
+
+        // Sets the popup manager
+        game.getPopUpManager().setScene2D(stage, skin);
 
         // Builds the UI
         buildRestUI();
@@ -171,6 +175,15 @@ public class RestScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        // PopUp manager will spawn the next popup if needed (and exists), no pause necessary since it doesn't even exist
+        PopUpManager popUpManager = game.getPopUpManager();
+        if (popUpManager != null && popUpManager.showNext(() -> {}, () -> {})) {
+            ScreenUtils.clear(Color.BLACK);
+            stage.act(delta);
+            stage.draw();
+            return;
+        }
+
         ScreenUtils.clear(Color.BLACK);
         stage.act(delta);
         stage.draw();
