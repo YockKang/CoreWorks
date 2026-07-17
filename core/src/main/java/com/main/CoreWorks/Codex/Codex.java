@@ -10,6 +10,10 @@ import com.main.CoreWorks.entities.Relics.Relic;
 
 public class Codex {
     private static final Array<Entry> Resources = new Array<>();
+    private static final Array<Entry> Recipes = new Array<>();
+    private static final Array<Entry> Buildings = new Array<>();
+    private static final Array<Entry> Enemies = new Array<>();
+    private static final Array<Entry> Relics = new Array<>();
 
     public static void register() {
         // generate resource entries
@@ -107,6 +111,22 @@ public class Codex {
         for (ObjectMap.Entry<String, RecipeEntry> recipe : recipeEntries) {
             recipe.value.craftBuildings.sort((r1, r2) -> r1.name.compareTo(r2.name));
         }
+
+        Resources.addAll(resourceEntries.values().iterator().toArray());
+        Resources.sort((r1, r2) -> r1.name.compareTo(r2.name));
+
+        Recipes.addAll(recipeEntries.values().iterator().toArray());
+        Recipes.sort((r1, r2) -> r1.name.compareTo(r2.name));
+
+        Buildings.addAll(buildingEntries.values().iterator().toArray());
+        Buildings.sort((r1, r2) -> r1.name.compareTo(r2.name));
+
+        Enemies.addAll(enemyEntries.values().iterator().toArray());
+        Enemies.sort((r1, r2) -> r1.name.compareTo(r2.name));
+
+        Relics.addAll(relicEntries.values().iterator().toArray());
+        Relics.sort((r1, r2) -> r1.name.compareTo(r2.name));
+
     }
 
 
