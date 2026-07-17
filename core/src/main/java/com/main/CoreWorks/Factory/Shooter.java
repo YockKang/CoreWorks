@@ -144,7 +144,7 @@ public class Shooter extends Building {
                 typed = untyped + (int) runState.getBonuses("BonusPoisonDmg", (x, y) -> (float) (x.intValue() + y.intValue()), 0);
             }
         }
-        typed = (int) ((float) typed * (1 + runState.getBonuses("GlobalMultiplier", Float::sum, 0)) * aoeMod);
+        typed = (int) ((float) typed * (1 + runState.getBonuses("GlobalDmgMultiplier", Float::sum, 0)) * aoeMod);
         return typed;
     }
 
@@ -240,7 +240,7 @@ public class Shooter extends Building {
                             if (runState.hasBonus("ExtraAtkNormal")) {
                                 Move extraMove = new DamageMove((int) (
                                     runState.getBonuses("ExtraAtkNormal", Float::sum) *
-                                        (1 + runState.getBonuses("GlobalMultiplier", Float::sum))), 0);
+                                        (1 + runState.getBonuses("GlobalDmgMultiplier", Float::sum))), 0);
                                 extraMove.setTarget(moveTarget);
                                 extraMove.setHitAll(hitAll);
                                 result.add(extraMove);
@@ -248,7 +248,7 @@ public class Shooter extends Building {
                             if (runState.hasBonus("ExtraAtkTrue")) {
                                 Move extraMove = new TrueDamageMove((int) (
                                     runState.getBonuses("ExtraAtkTrue", Float::sum) *
-                                        (1 + runState.getBonuses("GlobalMultiplier", Float::sum))), 0);
+                                        (1 + runState.getBonuses("GlobalDmgMultiplier", Float::sum))), 0);
                                 extraMove.setTarget(moveTarget);
                                 extraMove.setHitAll(hitAll);
                                 result.add(extraMove);
@@ -256,7 +256,7 @@ public class Shooter extends Building {
                             if (runState.hasBonus("ExtraAtkPoison")) {
                                 Move extraMove = new StatusEffectMove("Poison", (int) (
                                     runState.getBonuses("ExtraAtkPoison", Float::sum) *
-                                        (1 + runState.getBonuses("GlobalMultiplier", Float::sum))),
+                                        (1 + runState.getBonuses("GlobalDmgMultiplier", Float::sum))),
                                     4, 0.5f, true, false, 0);
                                 extraMove.setTarget(moveTarget);
                                 extraMove.setHitAll(hitAll);
