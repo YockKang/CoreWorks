@@ -1,6 +1,8 @@
 package com.main.CoreWorks.Codex;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.JsonValue;
 
@@ -29,5 +31,11 @@ public abstract class Entry {
         this.description = description;
     }
 
-    // public abstract void generateInfoTable(Skin skin);
+    public void generateInfoTable(Skin skin) {
+        infoTable.add(new Label(name, skin)).row();
+        infoTable.add(new Label(description, skin)).row();
+    }
+
+
+
 }

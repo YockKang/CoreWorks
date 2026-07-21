@@ -4,6 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.viewport.*;
 import com.main.CoreWorks.Codex.Codex;
@@ -96,6 +97,7 @@ public class Coreworks extends Game {
         PlayerDatabase.register(playerCharacters);
 
         Codex.register();
+        Codex.genreateInfoTable(new Skin(Gdx.files.internal("uiskin.json")));
 
         // For now, starting the game leads to a placeholder menu screen
         this.setScreen(new MenuScreen(this)); // eventually will replace with the Main Menu screen

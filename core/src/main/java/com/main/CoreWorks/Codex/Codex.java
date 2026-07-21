@@ -1,5 +1,12 @@
 package com.main.CoreWorks.Codex;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Factory.BuildingTemplate.BuildingTemplate;
 import com.main.CoreWorks.Recipe.Recipe;
@@ -14,6 +21,15 @@ public class Codex {
     private static final Array<Entry> Buildings = new Array<>();
     private static final Array<Entry> Enemies = new Array<>();
     private static final Array<Entry> Relics = new Array<>();
+    static final Table CodexTable = new Table();
+    static final Table ContentTable = new Table();
+    private static final Table ResourcesList = new Table();
+    private static final Table RecipesList = new Table();
+    private static final Table BuildingsList = new Table();
+    private static final Table EnemiesList = new Table();
+    private static final Table RelicsList = new Table();
+    static Actor selectedItem;
+    static Actor selectedCategory;
 
     public static void register() {
         // generate resource entries
@@ -129,6 +145,283 @@ public class Codex {
 
     }
 
+    public static void genreateInfoTable(Skin skin) {
+        CodexTable.setSkin(skin);
+        CodexTable.setBackground("default-round");
+        CodexTable.add(new Label("Codex", skin)).row();
+
+
+        int itemsPerRow = 3;
+        int inThisRow = 0;
+        for (Entry resource : Resources) {
+            TextButton selectButton = new TextButton(resource.name, skin);
+            selectButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if (selectedItem != null) {
+                        selectedItem.remove();
+                    }
+                    ContentTable.add(resource.infoTable);
+                    selectedItem = resource.infoTable;
+                }
+            });
+            selectButton.addListener(new InputListener() {
+                @Override
+                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                    selectButton.addAction(Actions.color(new Color(.7f, .7f, .7f, 1), 0.15f));
+                }
+                @Override
+                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                    selectButton.addAction(Actions.color(new Color(.9f, .9f, .9f, 1), 0.15f));
+                }
+            });
+
+            ResourcesList.add(selectButton);
+            inThisRow++;
+            if (inThisRow % itemsPerRow == 0) {
+                inThisRow = 0;
+                ResourcesList.row();
+            }
+        }
+
+        inThisRow = 0;
+        for (Entry recipe : Recipes) {
+            TextButton selectButton = new TextButton(recipe.name, skin);
+            selectButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if (selectedItem != null) {
+                        selectedItem.remove();
+                    }
+                    ContentTable.add(recipe.infoTable);
+                    selectedItem = recipe.infoTable;
+                }
+            });
+            selectButton.addListener(new InputListener() {
+                @Override
+                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                    selectButton.addAction(Actions.color(new Color(.7f, .7f, .7f, 1), 0.15f));
+                }
+                @Override
+                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                    selectButton.addAction(Actions.color(new Color(.9f, .9f, .9f, 1), 0.15f));
+                }
+            });
+
+            RecipesList.add(selectButton);
+            inThisRow++;
+            if (inThisRow % itemsPerRow == 0) {
+                inThisRow = 0;
+                RecipesList.row();
+            }
+        }
+
+        inThisRow = 0;
+        for (Entry building : Buildings) {
+            TextButton selectButton = new TextButton(building.name, skin);
+            selectButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if (selectedItem != null) {
+                        selectedItem.remove();
+                    }
+                    ContentTable.add(building.infoTable);
+                    selectedItem = building.infoTable;
+                }
+            });
+            selectButton.addListener(new InputListener() {
+                @Override
+                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                    selectButton.addAction(Actions.color(new Color(.7f, .7f, .7f, 1), 0.15f));
+                }
+                @Override
+                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                    selectButton.addAction(Actions.color(new Color(.9f, .9f, .9f, 1), 0.15f));
+                }
+            });
+
+            BuildingsList.add(selectButton);
+            inThisRow++;
+            if (inThisRow % itemsPerRow == 0) {
+                inThisRow = 0;
+                BuildingsList.row();
+            }
+        }
+
+        inThisRow = 0;
+        for (Entry enemy : Enemies) {
+            TextButton selectButton = new TextButton(enemy.name, skin);
+            selectButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if (selectedItem != null) {
+                        selectedItem.remove();
+                    }
+                    ContentTable.add(enemy.infoTable);
+                    selectedItem = enemy.infoTable;
+                }
+            });
+            selectButton.addListener(new InputListener() {
+                @Override
+                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                    selectButton.addAction(Actions.color(new Color(.7f, .7f, .7f, 1), 0.15f));
+                }
+                @Override
+                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                    selectButton.addAction(Actions.color(new Color(.9f, .9f, .9f, 1), 0.15f));
+                }
+            });
+
+            EnemiesList.add(selectButton);
+            inThisRow++;
+            if (inThisRow % itemsPerRow == 0) {
+                inThisRow = 0;
+                EnemiesList.row();
+            }
+        }
+
+        inThisRow = 0;
+        for (Entry relic : Relics) {
+            TextButton selectButton = new TextButton(relic.name, skin);
+            selectButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if (selectedItem != null) {
+                        selectedItem.remove();
+                    }
+                    ContentTable.add(relic.infoTable);
+                    selectedItem = relic.infoTable;
+                }
+            });
+            selectButton.addListener(new InputListener() {
+                @Override
+                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                    selectButton.addAction(Actions.color(new Color(.7f, .7f, .7f, 1), 0.15f));
+                }
+                @Override
+                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                    selectButton.addAction(Actions.color(new Color(.9f, .9f, .9f, 1), 0.15f));
+                }
+            });
+
+            RelicsList.add(selectButton);
+            inThisRow++;
+            if (inThisRow % itemsPerRow == 0) {
+                inThisRow = 0;
+                RelicsList.row();
+            }
+        }
+
+        Table headerTable = new Table();
+
+        TextButton resourceHeader = new TextButton("Resources", skin);
+        resourceHeader.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (selectedCategory != null) {
+                    selectedCategory.remove();
+                }
+                if (selectedItem != null) {
+                    selectedItem.remove();
+                }
+                selectedItem = null;
+                selectedCategory = ResourcesList;
+                ContentTable.add(ResourcesList);
+            }
+        });
+        headerTable.add(resourceHeader);
+
+        TextButton recipeHeader = new TextButton("Recipes", skin);
+        recipeHeader.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (selectedCategory != null) {
+                    selectedCategory.remove();
+                }
+                if (selectedItem != null) {
+                    selectedItem.remove();
+                }
+                selectedItem = null;
+                selectedCategory = RecipesList;
+                ContentTable.add(RecipesList);
+            }
+        });
+        headerTable.add(recipeHeader);
+
+        TextButton buildingHeader = new TextButton("Buildings", skin);
+        buildingHeader.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (selectedCategory != null) {
+                    selectedCategory.remove();
+                }
+                if (selectedItem != null) {
+                    selectedItem.remove();
+                }
+                selectedItem = null;
+                selectedCategory = BuildingsList;
+                ContentTable.add(BuildingsList);
+            }
+        });
+        headerTable.add(buildingHeader);
+
+        TextButton enemyHeader = new TextButton("Enemies", skin);
+        enemyHeader.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (selectedCategory != null) {
+                    selectedCategory.remove();
+                }
+                if (selectedItem != null) {
+                    selectedItem.remove();
+                }
+                selectedItem = null;
+                selectedCategory = EnemiesList;
+                ContentTable.add(EnemiesList);
+            }
+        });
+        headerTable.add(enemyHeader);
+
+        TextButton relicHeader = new TextButton("Relics", skin);
+        relicHeader.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (selectedCategory != null) {
+                    selectedCategory.remove();
+                }
+                if (selectedItem != null) {
+                    selectedItem.remove();
+                }
+                selectedItem = null;
+                selectedCategory = RelicsList;
+                ContentTable.add(RelicsList);
+            }
+        });
+        headerTable.add(relicHeader);
+        CodexTable.add(headerTable);
+        CodexTable.row();
+
+        Container<Actor> contentDiv = new Container<>(ContentTable);
+
+        CodexTable.add(contentDiv);
+
+
+        for (Entry e : Resources) {
+            e.generateInfoTable(skin);
+        }
+        for (Entry e : Recipes) {
+            e.generateInfoTable(skin);
+        }
+        for (Entry e : Buildings) {
+            e.generateInfoTable(skin);
+        }
+        for (Entry e : Enemies) {
+            e.generateInfoTable(skin);
+        }
+        for (Entry e : Relics) {
+            e.generateInfoTable(skin);
+        }
+    }
 
     private static void addBuildingRecipes(JsonValue data, Array<RecipeEntry> recipesArray, ObjectMap<String, RecipeEntry> recipes) {
         if (data.isArray()) {
@@ -138,5 +431,9 @@ public class Codex {
                 recipesArray.add(recipes.get(rec.getId()));
             }
         }
+    }
+
+    public static Actor getTable() {
+        return CodexTable;
     }
 }

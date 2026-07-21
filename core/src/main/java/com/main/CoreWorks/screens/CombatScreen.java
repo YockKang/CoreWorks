@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.*;
+import com.main.CoreWorks.Codex.Codex;
 import com.main.CoreWorks.Coreworks;
 import com.main.CoreWorks.Recipe.Recipe;
 import com.main.CoreWorks.entities.Relics.Relic;
@@ -42,6 +43,8 @@ public class CombatScreen implements Screen {
     // recipe UI fields
     private boolean recipeUIOn = false;
 
+    // codex checker
+    boolean codexOnScreen = false;
 
     // Below field handles the scene2D UI
     private Stage stage;
@@ -167,6 +170,11 @@ public class CombatScreen implements Screen {
         UIElements.put("recipedisplay", new Table(skin));
         UIElements.put("recipeinfo", new Table(skin));
         ((Table) UIElements.get("recipeinfo")).add(new Label("Selected: None", skin));
+
+        // codex (the actual codex static in the codex class
+        Container<Actor> codexDiv = new Container<>(Codex.getTable());
+        UIElements.put("codexdiv", codexDiv);
+
 
         Actor factoryViewport = new Actor();
         UIElements.put("factoryviewport", factoryViewport);
@@ -738,8 +746,13 @@ public class CombatScreen implements Screen {
 
     private void externalInput() {
         // Keyboard inputs handled below
-        if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
-            System.out.println(selectedBuilding);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
+            if (!codexOnScreen) {
+                ((Stack) UIElements.get("CenterStack")).add(UIElements.get("codexdiv"));
+            } else {
+                Codex.getTable().remove();
+            }
+            codexOnScreen = !codexOnScreen;
         }
 
         // Press E to rotate building CW, Q for CCW
