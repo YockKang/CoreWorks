@@ -63,5 +63,18 @@
     "MagSize": 5,
     "BaseDmg": 1.5,
     "AttackCount" : 2
+  },
+  {
+    "id" : "Railgun",
+    "Tier" : 3,
+    "Type" : "Shooter",
+    "Name" : "Railgun",
+    "Cooldown" : 2,
+    "Shape" : ["S", 1],
+    "MagSize": 5,
+    "BaseDmg": 1.5,
+    "AoE": "All",
+    "Whitelist": ["Alloy", "PiercingBall"],
+    "Damage Type": "True"
   }
 ]

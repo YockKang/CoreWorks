@@ -14,6 +14,7 @@ public class FriendlyRepairDroneRelic extends Relic {
         super("FriendlyRepairDroneRelic",
             "Friendly Repair Drone",
             String.format("Heals %s HP every %s ticks", HEAL, COOLDOWN),
+            String.format("Heals %s HP every %s ticks in combat", HEAL, COOLDOWN),
             "Friendly Repair Drone healed for " + HEAL + " HP",
             "2");
     }

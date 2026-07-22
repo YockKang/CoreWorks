@@ -10,6 +10,7 @@ public class PhoenixCoreRelic extends Relic {
         super("PhoenixCoreRelic",
             "Phoenix's Core",
             "Prevents death and restores all HP, Uses remaining: " + USES,
+            "Prevents death and restores all HP " + USES + " time",
             "Phoenix's Core prevented your demise!",
             "3");
     }

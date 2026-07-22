@@ -9,7 +9,8 @@ public class OxidiserRelic extends Relic {
     public OxidiserRelic() {
         super("OxidiserRelic",
             "Oxidiser",
-            "Gain " + DMG + " damage permanently after each combat for normal attacks",
+            "Gain " + DMG + " permanent extra normal attack damage after each combat",
+            "Gain " + DMG + " permanent extra normal attack damage after each combat",
             "Gained " + DMG + " damage",
             "2");
     }

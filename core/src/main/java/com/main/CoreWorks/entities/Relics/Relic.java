@@ -9,13 +9,15 @@ public abstract class Relic {
     protected String id;
     protected String name;
     protected Sentence description;
+    protected Sentence codexDescription;
     protected String tier;
     protected String log;
 
-    public Relic(String id, String name, String description, String log, String tier) {
+    public Relic(String id, String name, String description, String codexDescription, String log, String tier) {
         this.id = id;
         this.name = name;
         this.description = new Sentence(description, true);
+        this.codexDescription = new Sentence(codexDescription, true);
         this.log = log;
         this.tier = tier;
     }
@@ -38,6 +40,10 @@ public abstract class Relic {
 
     public String getTier() {
         return tier;
+    }
+
+    public Sentence getCodexDescription() {
+        return codexDescription;
     }
 
     // Called when relic has on-collection effects

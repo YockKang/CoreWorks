@@ -10,6 +10,7 @@ public class ReinforcedArmorRelic extends Relic {
         super("ReinforcedArmorRelic",
             "Reinforced Armor",
             "Starts every combat with " + SHIELD + " shield",
+            "Start every combat with " + SHIELD + " shield",
             "Reinforced Armor gave " + SHIELD + " shield",
             "1");
     }

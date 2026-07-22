@@ -10,6 +10,7 @@ public class HEFillerRelic extends Relic {
         super("HEFillerRelic",
             "High-explosive filler",
             "Deal additional " + DMG + " damage on normal attacks",
+            "Deal additional " + DMG + " damage on normal attacks",
             "Added HE filler into the shooters",
             "1");
     }

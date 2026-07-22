@@ -454,8 +454,9 @@ public class CombatScreen implements Screen {
             buildingButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if (!recipeUIOn) {
-                        // dont allow building selecting with recipe UI enabled
+                    System.out.println(recipeUIOn);
+                    if (!(recipeUIOn || codexOnScreen)) {
+                        // allow building selecting when recipe UI and codex are both off-screen
                         selectedBuilding = building;
                         needRefresh = true;
                     }
@@ -898,6 +899,13 @@ public class CombatScreen implements Screen {
         // Handles potential bugs with scene2D UI and grid inputs by prioritizing scene2D UI if there is an overlap (except the reserved space for the grid itself)
         if (stage.hit(mouseTranslatedX, mouseTranslatedY, true) != null &&
             hit != UIElements.get("factoryviewport")) {
+            return;
+        }
+
+        // if codex is open lock out the rest of the UI
+        if (stage.hit(mouseTranslatedX, mouseTranslatedY, true) != null &&
+            codexOnScreen &&
+            hit != Codex.getTable()) {
             return;
         }
 

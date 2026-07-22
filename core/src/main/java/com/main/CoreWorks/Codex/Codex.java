@@ -122,6 +122,14 @@ public class Codex {
                     building.value.addCraftRecipe(rec);
                 }
             }
+
+            if (buildingData.get("Whitelist") != null) {
+                String[] whitelistArr = buildingData.get("Whitelist").asStringArray();
+                Array<String> whitelist = new Array<>(whitelistArr);
+                for (String rsc : whitelist) {
+                    building.value.addWhitelistResource(resourceEntries.get(rsc));
+                }
+            }
         }
 
         for (ObjectMap.Entry<String, RecipeEntry> recipe : recipeEntries) {
@@ -170,6 +178,7 @@ public class Codex {
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                     selectButton.addAction(Actions.color(new Color(.7f, .7f, .7f, 1), 0.15f));
                 }
+
                 @Override
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                     selectButton.addAction(Actions.color(new Color(.9f, .9f, .9f, 1), 0.15f));
@@ -202,6 +211,7 @@ public class Codex {
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                     selectButton.addAction(Actions.color(new Color(.7f, .7f, .7f, 1), 0.15f));
                 }
+
                 @Override
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                     selectButton.addAction(Actions.color(new Color(.9f, .9f, .9f, 1), 0.15f));
@@ -234,6 +244,7 @@ public class Codex {
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                     selectButton.addAction(Actions.color(new Color(.7f, .7f, .7f, 1), 0.15f));
                 }
+
                 @Override
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                     selectButton.addAction(Actions.color(new Color(.9f, .9f, .9f, 1), 0.15f));
@@ -266,6 +277,7 @@ public class Codex {
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                     selectButton.addAction(Actions.color(new Color(.7f, .7f, .7f, 1), 0.15f));
                 }
+
                 @Override
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                     selectButton.addAction(Actions.color(new Color(.9f, .9f, .9f, 1), 0.15f));
@@ -298,6 +310,7 @@ public class Codex {
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                     selectButton.addAction(Actions.color(new Color(.7f, .7f, .7f, 1), 0.15f));
                 }
+
                 @Override
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                     selectButton.addAction(Actions.color(new Color(.9f, .9f, .9f, 1), 0.15f));
@@ -425,7 +438,7 @@ public class Codex {
 
     private static void addBuildingRecipes(JsonValue data, Array<RecipeEntry> recipesArray, ObjectMap<String, RecipeEntry> recipes) {
         if (data.isArray()) {
-            data.forEach( item -> addBuildingRecipes(item, recipesArray, recipes));
+            data.forEach(item -> addBuildingRecipes(item, recipesArray, recipes));
         } else {
             for (Recipe rec : RecipeGroupDatabase.get(data.asString())) {
                 recipesArray.add(recipes.get(rec.getId()));
