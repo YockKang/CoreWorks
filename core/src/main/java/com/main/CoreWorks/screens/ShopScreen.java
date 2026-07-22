@@ -44,6 +44,13 @@ public class ShopScreen implements Screen {
         // Sets the popup manager
         game.getPopUpManager().setScene2D(stage, skin);
 
+        game.getPopUpManager().requestPopup(
+            "shop_node",
+            "Shopping",
+            "Welcome to the Dungeon shop!\nYou can use the money you accumulated to buy special upgrades and relics.\nThe shop does not entertain refunds, so be strict in your selection!",
+            false
+        );
+
         // Build the Scene2D UI
         buildShopUI();
     }

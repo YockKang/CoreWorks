@@ -63,6 +63,13 @@ public class RewardScreen implements Screen {
         // Sets the popup manager
         game.getPopUpManager().setScene2D(stage, skin);
 
+        game.getPopUpManager().requestPopup(
+            "reward_screen",
+            "Reward selection",
+            "Welcome to the reward selection screen!\nAfter winning a fight, you can pick ONE reward that will help you for the rest of the run!\nChoose wisely!",
+            false
+        );
+
         // Draws the UI based on which screen needs to be shown
         selectScreen();
     }

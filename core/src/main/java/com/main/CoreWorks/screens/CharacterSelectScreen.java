@@ -46,7 +46,7 @@ public class CharacterSelectScreen implements Screen {
         game.getPopUpManager().requestPopup(
             "character_select",
             "Choosing a character",
-            "Every character has their unique attributes. \nYou can select and preview any character's unique loadout before starting the game.\nOnce chosen, the choice is final!",
+            "Welcome to the character selection!\nEvery character has their unique attributes. \nYou can select and preview any character's unique loadout before starting the game.\nOnce chosen, the choice is final!",
             false
         );
 

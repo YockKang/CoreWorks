@@ -61,6 +61,13 @@ public class RestScreen implements Screen {
         // Sets the popup manager
         game.getPopUpManager().setScene2D(stage, skin);
 
+        game.getPopUpManager().requestPopup(
+            "rest_node",
+            "Rest Node",
+            "Welcome to the Rest Node!\nYou can choose to either rest up and heal here, or upgrade a building.\nYou cannot select both, so be smart about your choice!",
+            false
+        );
+
         // Builds the UI
         buildRestUI();
     }

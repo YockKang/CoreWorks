@@ -66,6 +66,28 @@ public class MapScreen implements Screen {
         // Sets the popup manager
         game.getPopUpManager().setScene2D(stage, skin);
 
+        // Generate Screen specific popups here
+        game.getPopUpManager().requestPopup(
+            "dungeon_map",
+            "Dungeon Map",
+            "Welcome to the Dungeon map, where you can plan and select your next nodes.\nNodes are connected to each other via a line. \nYou can only access nodes with direct connections to the node you are currently on.",
+            false
+        );
+
+        game.getPopUpManager().requestPopup(
+            "node_selection",
+            "Nodes",
+            "There are different types of unique nodes for you to explore.\nLocked nodes (which you cannot access) will be greyed out, while unlocked nodes will have a unique color.\nThe first node has already been unlocked, click on it to continue!",
+            false
+        );
+
+        game.getPopUpManager().requestPopup(
+            "end_goal",
+            "Win condition & floors",
+            "There are a total of 3 floors in a run, each with their own floor boss.\nDefeat the floor boss to progress to the next floor, and defeat the final boss to win the game!",
+            false
+        );
+
         // Set the boundary of the map
         computeBoundary();
 

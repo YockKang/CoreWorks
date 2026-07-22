@@ -101,7 +101,7 @@ public class PopUpManager {
         dialog.show(stage);
 
         // Change the popup size
-        dialog.setSize(stage.getWidth() * 0.6f, stage.getHeight() * 0.6f);
+        dialog.setSize(stage.getWidth() * 0.7f, stage.getHeight() * 0.7f);
 
         // Center the popup
         dialog.setPosition((stage.getWidth() - dialog.getWidth()) / 2f, (stage.getHeight() - dialog.getHeight()) / 2f);
