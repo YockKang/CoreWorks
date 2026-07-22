@@ -66,7 +66,21 @@ public class RewardScreen implements Screen {
         game.getPopUpManager().requestPopup(
             "reward_screen",
             "Reward selection",
-            "Welcome to the reward selection screen!\nAfter winning a fight, you can pick ONE reward that will help you for the rest of the run!\nChoose wisely!",
+            "Welcome to the reward selection screen!\nAfter winning a fight, you can pick ONE reward that will help you for the rest of the run!\nRewards scale with levels and difficult fights, so more pain = more gain!",
+            false
+        );
+
+        game.getPopUpManager().requestPopup(
+            "upgrades_explanation",
+            "Upgrades",
+            "Upgrades are generic bonuses that you can apply to any building!\nOnce applied, the building in question will gain stats as listed by the upgrade card.\nYou cannot reapply an upgrade, and it is permanently attached to that building.",
+            false
+        );
+
+        game.getPopUpManager().requestPopup(
+            "add_building_explanation",
+            "Adding a building",
+            "You can also choose to add a copy of a building into your inventory!\nHigher grade (and stronger) buildings become more common at deeper levels.",
             false
         );
 
