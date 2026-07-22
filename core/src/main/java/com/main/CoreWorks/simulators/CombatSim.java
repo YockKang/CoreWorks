@@ -1,6 +1,7 @@
 package com.main.CoreWorks.simulators;
 
 import com.badlogic.gdx.utils.*;
+import com.main.CoreWorks.Coreworks;
 import com.main.CoreWorks.Factory.*;
 import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.entities.*;
@@ -10,6 +11,7 @@ import com.main.CoreWorks.moveset.*;
 
 public class CombatSim {
     private Player player;
+    private Coreworks game;
     private Array<Enemy> enemies;
     private Queue<Move> queuedFactoryMoves = new Queue<>();
     private boolean win = false;
@@ -19,7 +21,8 @@ public class CombatSim {
     private int logsThisTick = 0;
 
 
-    public CombatSim(Player player, Array<Enemy> enemies) {
+    public CombatSim(Coreworks game, Player player, Array<Enemy> enemies) {
+        this.game = game;
         this.player = player;
         this.enemies = enemies;
     }
@@ -147,6 +150,12 @@ public class CombatSim {
                 if (oldShield != newShield) {
                     addLog(tick, String.format("%s shielded itself for %s", attacker.displayName(), move.getValue()));
                 }
+                game.getPopUpManager().requestPopup(
+                    "Shield_explanation",
+                    "Shielding",
+                    "Someone just used shields!\nShields are a temporary resource that absorbs damage in place of HP, unless the source explicitly states it ignores shields.\nShields do NOT carry over between fights.",
+                    true
+                );
             }
 
             case DamageMove damageMove -> {
@@ -186,6 +195,12 @@ public class CombatSim {
                         }
                     }
                 }
+                game.getPopUpManager().requestPopup(
+                    "SE_explanation",
+                    "Status effect",
+                    "Someone applied status effects!\nStatus effects are effects that have their own trigger conditions and timing.\nRefer to the codex for more information about status effects.",
+                    true
+                );
             }
 
             case TrueDamageMove trueDamageMove -> {
@@ -206,6 +221,12 @@ public class CombatSim {
                         }
                     }
                 }
+                game.getPopUpManager().requestPopup(
+                    "TD_explanation",
+                    "Piercing damage",
+                    "Someone dealt piercing damage!\nPiercing damage can ignore shields to deplete HP directly.\nRefer to the codex for more information about piercing damage.",
+                    true
+                );
             }
 
             case DisableBuildingMove disableBuildingMove -> {
@@ -223,6 +244,13 @@ public class CombatSim {
                 if (building != null) {
                     addLog(tick, String.format("%s disabled %s for %s ticks", attacker.displayName(), building.displayName(), move.getValue()));
                 }
+
+                game.getPopUpManager().requestPopup(
+                    "Disable_building_explanation",
+                    "Building disabled",
+                    "An enemy attempted to disable your buildings!\nNot every attempt will succeed, but a larger building is more likely to get disabled.\nDisabled buildings are highlighted in yellow, and cannot take any action or be interacted with.\nA disabled building will automatically be enabled after some ticks.",
+                    true
+                );
             }
 
             default -> {

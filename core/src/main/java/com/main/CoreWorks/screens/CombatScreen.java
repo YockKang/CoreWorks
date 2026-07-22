@@ -89,7 +89,7 @@ public class CombatScreen implements Screen {
         this.runState = runstate;
         // Initialize the controllers
         FactorySim factorySim = new FactorySim(runstate.getFactoryGrid());
-        CombatSim combatSim = new CombatSim(runstate.getPlayer(), enemies);
+        CombatSim combatSim = new CombatSim(game, runstate.getPlayer(), enemies);
         this.controller = new CombatController(factorySim, combatSim);
         // Initialize the grid based on what is present in the player's factory grid
         this.gridWidth = runstate.getPlayer().getFactoryGrid().getMaxWidth();
@@ -110,6 +110,55 @@ public class CombatScreen implements Screen {
 
         // Sets the popup manager
         game.getPopUpManager().setScene2D(stage, skin);
+
+        game.getPopUpManager().requestPopup(
+            "combat_screen",
+            "Combat",
+            "This is the combat screen where all fights will occur in.\nThe next few pop-ups will explain the UI, so pay attention!",
+            true
+        );
+
+        game.getPopUpManager().requestPopup(
+            "top_hud_explanation",
+            "Top HUD",
+            "The top of the screen displays all the relics you have.\nHover over them to see what they do!",
+            true
+        );
+
+        game.getPopUpManager().requestPopup(
+            "left_hud_explanation",
+            "Left HUD",
+            "The left of the screen displays player & game information, such as Health, Money, current game tick etc.\nIt also displays your inventory, which you can interact with for building selection.\nMore information about buildings will be given when you select a building.",
+            true
+        );
+
+        game.getPopUpManager().requestPopup(
+            "bottom_hud_explanation",
+            "Bottom HUD",
+            "The bottom of the screen displays the list of your enemies.\nEach enemy card will have additional information, such as its next move, health, cooldowns etc.\nRefer to the codex for more detailed information about each enemy.",
+            true
+        );
+
+        game.getPopUpManager().requestPopup(
+            "right_hud_explanation",
+            "Right HUD",
+            "The right of the screen displays the combat log and keyboard shortcuts.\nThe combat log records every damaging action taken, be it friend or foe.\nRefer to it to see what combat actions your factory / enemies have taken.\nMore information about the keyboard shortcuts will appear when you use those shortcuts!",
+            true
+        );
+
+        game.getPopUpManager().requestPopup(
+            "middle_hud_explanation",
+            "Middle HUD",
+            "The middle of the screen displays your factory grid.\nIt is where all your buildings will be placed, and where all your factory actions are processed.\nA building only works if placed in the grid, and is inactive in the inventory.\nYou need to consider the space taken by buildings when placing them, since the grid isn't infinite!",
+            true
+        );
+
+        game.getPopUpManager().requestPopup(
+            "tick_explanation",
+            "Combat & ticks",
+            "The combat system runs on a tick-based system.\nBuildings operate automatically, and take actions based on passed number of ticks.\nEnemies take action after certain number of ticks have passed, represented by cooldowns.",
+            true
+        );
 
         game.viewport.apply();
         game.camera.update();
