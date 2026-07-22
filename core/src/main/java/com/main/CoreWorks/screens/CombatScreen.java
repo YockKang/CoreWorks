@@ -800,7 +800,7 @@ public class CombatScreen implements Screen {
             if (!codexOnScreen) {
                 ((Stack) UIElements.get("CenterStack")).add(UIElements.get("codexdiv"));
             } else {
-                Codex.getTable().remove();
+                UIElements.get("codexdiv").remove();
             }
             codexOnScreen = !codexOnScreen;
         }
