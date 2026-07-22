@@ -10,6 +10,7 @@ public class LuckyCoinRelic extends Relic {
         super("LuckyCoinRelic",
             "Lucky Coin",
             "Gives " + MONEY + " money after every combat win",
+            "Gives " + MONEY + " money after every combat win",
             "Lucky Coin spawned " + MONEY + " coins",
             "0");
     }

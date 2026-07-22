@@ -10,6 +10,7 @@ public class MoneyRelic extends Relic {
         super("MoneyRelic",
             "Money Goblet",
             "Gives " + MONEY + " money on acquisition",
+            "Gives " + MONEY + " money on acquisition",
             "Money Goblet gave one-time grant of " + MONEY + " coins",
             "0");
     }

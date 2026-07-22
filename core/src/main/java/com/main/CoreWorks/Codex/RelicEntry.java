@@ -7,6 +7,6 @@ public class RelicEntry extends Entry{
     protected Relic relic;
 
     public RelicEntry(Relic relic) {
-        super(relic.getId(), relic.getName());
+        super(relic.getId(), relic.getName(), relic.getCodexDescription());
     }
 }

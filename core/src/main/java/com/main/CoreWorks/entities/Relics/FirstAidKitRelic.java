@@ -10,6 +10,7 @@ public class FirstAidKitRelic extends Relic {
         super("FirstAidKitRelic",
             "First Aid Kit",
             "Heals " + HEAL + " HP after every combat win",
+            "Heals " + HEAL + " HP after every combat win",
             "First Aid Kit healed for " + HEAL,
             "0");
     }

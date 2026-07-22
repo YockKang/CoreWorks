@@ -10,6 +10,7 @@ public class TestRelic extends Relic {
         super("TestRelic",
             "Test",
             "Deal additional " + DMG + " true damage on each attack",
+            "Deal additional " + DMG + " true damage on each attack",
             "Test Relic Procced",
             "1");
     }
