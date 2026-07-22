@@ -51,6 +51,20 @@ public class ShopScreen implements Screen {
             false
         );
 
+        game.getPopUpManager().requestPopup(
+            "relic_explanation",
+            "Relics",
+            "Relics are special items that have triggerable unique effects.\nHigher grade relics are stronger, but are also more expensive.\nRefer to the codex for more information about what each relic does!",
+            false
+        );
+
+        game.getPopUpManager().requestPopup(
+            "grid_expansion",
+            "Grid Expansion",
+            "You can also expand your grid size in the shop!\nHowever, they are quite expensive, so make sure you really need that space.",
+            false
+        );
+
         // Build the Scene2D UI
         buildShopUI();
     }
