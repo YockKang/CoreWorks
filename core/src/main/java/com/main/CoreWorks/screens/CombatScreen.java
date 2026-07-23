@@ -857,6 +857,12 @@ public class CombatScreen implements Screen {
         // Below draws the screen transitions
         if (controller.isWin()) {
             controller.getFactorySim().clear();
+
+            // Add the money to the player only on a win
+            float multiplier = runState.getCurrNode().getMultiplier();
+            int money = (int) (20 * multiplier);
+            runState.getPlayer().gainMoney(money);
+
             game.resetCamera();
             game.setScreen(new WinScreen(game, runState));
             return;

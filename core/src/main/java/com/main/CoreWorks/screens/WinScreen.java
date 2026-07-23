@@ -86,7 +86,7 @@ public class WinScreen implements Screen {
                     // Set runMap as next floor map and Curr node as well (Get next maps is 0 indexed but floor is 1 indexed)
                     runState.setRunMap(runState.getNextMaps().get(runState.getCurrFloor()));
                     runState.setCurrNode(runState.getNextMaps().get(runState.getCurrFloor()).getStartNode());
-                    runState.setCurrFloor(runState.getCurrFloor() + 1);
+                    runState.setCurrFloor(runState.getCurrFloor());
                     game.resetCamera();
                     game.setScreen(new MapScreen(game, runState));
                     dispose();

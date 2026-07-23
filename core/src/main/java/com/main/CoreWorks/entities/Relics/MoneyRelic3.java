@@ -4,7 +4,7 @@ import com.main.CoreWorks.RunPersistence.RunState;
 
 public class MoneyRelic3 extends Relic {
 
-    private static int MONEY = 80;
+    private static int MONEY = 200;
 
     public MoneyRelic3() {
         super("MoneyRelic3",
