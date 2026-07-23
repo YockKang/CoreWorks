@@ -60,7 +60,7 @@ public class CharacterSelectScreen implements Screen {
         characterList.add(PlayerDatabase.getPlayer("Engineer"));
         characterList.add(PlayerDatabase.getPlayer("Chemist"));
         characterList.add(PlayerDatabase.getPlayer("Commander"));
-        characterList.add(PlayerDatabase.getPlayer("Tester"));
+        // characterList.add(PlayerDatabase.getPlayer("Tester"));
 
         // Copy-paste code to add more characters
 

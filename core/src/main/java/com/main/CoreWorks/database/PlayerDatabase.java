@@ -16,6 +16,8 @@ public class PlayerDatabase {
             return null;
         } else {
             String id = data.getString("Name");
+            System.out.println(id);
+            System.out.println(data);
             PlayerDB.put(id, data);
             return getPlayer(id);
         }
