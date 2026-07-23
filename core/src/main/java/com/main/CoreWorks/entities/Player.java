@@ -12,6 +12,7 @@ import com.main.CoreWorks.entities.Relics.Relic;
 public class Player extends Character{
 
     private Array<Building> inventory;
+    private Array<String> starterBuildings;
     private Array<Relic> relics;
     private FactoryGrid factoryGrid;
     private int money;
@@ -33,9 +34,7 @@ public class Player extends Character{
         this.factoryGrid = new FactoryGrid(gridSize[0], gridSize[1]);
         if (data.get("Buildings") != null) {
             String[] buildings = data.get("Buildings").asStringArray();
-            for (String b : buildings) {
-                addBuilding(BuildingDatabase.getBuilding(b));
-            }
+            starterBuildings = new Array<>(buildings);
         }
         if (data.get("Relics") != null) {
             String[] relics = data.get("Relics").asStringArray();
@@ -96,5 +95,15 @@ public class Player extends Character{
 
     public Array<Relic> getRelics() {
         return relics;
+    }
+
+    public Array<String> getStarterBuildings() {
+        return starterBuildings;
+    }
+
+    public void generateBuildings() {
+        for (String b : starterBuildings) {
+            addBuilding(BuildingDatabase.getBuilding(b));
+        }
     }
 }

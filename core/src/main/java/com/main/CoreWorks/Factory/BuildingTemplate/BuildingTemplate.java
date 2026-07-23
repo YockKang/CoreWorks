@@ -65,4 +65,5 @@ public class BuildingTemplate {
         return "Template of: " + clazz;
     }
 
+    public String getName() { return buildingData.getString("Name"); }
 }

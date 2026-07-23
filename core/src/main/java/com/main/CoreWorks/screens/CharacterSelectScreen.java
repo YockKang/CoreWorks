@@ -128,6 +128,9 @@ public class CharacterSelectScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (selectedPlayer != null) {
+                    // generate the buildings for the player
+                    selectedPlayer.generateBuildings();
+
                     // Creates the initial runState
                     RunState runState = new RunState(selectedPlayer);
                     // Generates hardcoded RunMap for testing (Uncomment)
@@ -169,8 +172,8 @@ public class CharacterSelectScreen implements Screen {
         preview.add(label1).row();
         Table buildingTable = new Table();
         int countBuilding = 0;
-        for (Building building : selectedPlayer.getInventory()) {
-            Label buildingLabel = new Label(String.format("- %s ", building.displayName()), skin);
+        for (String building : selectedPlayer.getStarterBuildings()) {
+            Label buildingLabel = new Label(String.format("- %s ", building), skin);
             buildingLabel.setColor(Color.CYAN);
             buildingTable.add(buildingLabel).pad(3);
             // Add future tooltips for description here

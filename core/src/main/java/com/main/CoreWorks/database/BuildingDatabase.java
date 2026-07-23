@@ -16,7 +16,7 @@ public class BuildingDatabase {
             BuildingTemplate tp = new BuildingTemplate(data);
             String id = data.getString("id");
             BuildingDB.put(id, tp);
-            return tp.of();
+            return null;
         }
     }
 

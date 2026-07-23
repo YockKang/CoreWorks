@@ -72,13 +72,13 @@ public class ShopOfferGenerator {
         double t1Odds = (15 * multiplier);
 
         if (num <= t3Odds) {
-            return new ShopOffer(t3Cost, new AddBuildingReward(BuildingTierDatabase.getRandomBuilding(runState.getRandom(), 3)));
+            return new ShopOffer(t3Cost, new AddBuildingReward(BuildingTierDatabase.getRandomBuildingId(runState.getRandom(), 3)));
         } else if (num <= t3Odds + t2Odds) {
-            return new ShopOffer(t2Cost, new AddBuildingReward(BuildingTierDatabase.getRandomBuilding(runState.getRandom(), 2)));
+            return new ShopOffer(t2Cost, new AddBuildingReward(BuildingTierDatabase.getRandomBuildingId(runState.getRandom(), 2)));
         } else if (num <= t3Odds + t2Odds + t1Odds) {
-            return new ShopOffer(t1Cost, new AddBuildingReward(BuildingTierDatabase.getRandomBuilding(runState.getRandom(), 1)));
+            return new ShopOffer(t1Cost, new AddBuildingReward(BuildingTierDatabase.getRandomBuildingId(runState.getRandom(), 1)));
         } else {
-            return new ShopOffer(t0Cost, new AddBuildingReward(BuildingTierDatabase.getRandomBuilding(runState.getRandom(), 0)));
+            return new ShopOffer(t0Cost, new AddBuildingReward(BuildingTierDatabase.getRandomBuildingId(runState.getRandom(), 0)));
         }
     }
 

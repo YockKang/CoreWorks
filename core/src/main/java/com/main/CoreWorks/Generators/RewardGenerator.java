@@ -79,13 +79,13 @@ public class RewardGenerator {
         double t1Odds = (15 * multiplier);
 
         if (num <= t3Odds) {
-            return new AddBuildingReward(BuildingTierDatabase.getRandomBuilding(runState.getRandom(), 3));
+            return new AddBuildingReward(BuildingTierDatabase.getRandomBuildingId(runState.getRandom(), 3));
         } else if (num <= t3Odds + t2Odds) {
-            return new AddBuildingReward(BuildingTierDatabase.getRandomBuilding(runState.getRandom(), 2));
+            return new AddBuildingReward(BuildingTierDatabase.getRandomBuildingId(runState.getRandom(), 2));
         } else if (num <= t3Odds + t2Odds + t1Odds) {
-            return new AddBuildingReward(BuildingTierDatabase.getRandomBuilding(runState.getRandom(), 1));
+            return new AddBuildingReward(BuildingTierDatabase.getRandomBuildingId(runState.getRandom(), 1));
         } else {
-            return new AddBuildingReward(BuildingTierDatabase.getRandomBuilding(runState.getRandom(), 0));
+            return new AddBuildingReward(BuildingTierDatabase.getRandomBuildingId(runState.getRandom(), 0));
         }
     }
 

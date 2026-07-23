@@ -1,6 +1,7 @@
 package com.main.CoreWorks.entities;
 
 import com.badlogic.gdx.utils.*;
+import com.main.CoreWorks.Factory.Building;
 
 public abstract class Character {
     // Implementation of Status effects TBD

@@ -49,6 +49,34 @@ public class BuildingTierDatabase {
         }
     }
 
+    public static String getRandomBuildingId(Random random) {
+        int key = random.nextInt(BuildingTierDB.size);
+        Array<String> tier = null;
+        int i = 0;
+        for (Array<String> value : BuildingTierDB.values()) {
+            if (i++ == key) {
+                tier = value;
+                break;
+            }
+        }
+        if (tier == null) {
+            return null;
+        } else {
+            return tier.get(random.nextInt(tier.size));
+        }
+    }
+
+    public static String getRandomBuildingId(Random random, int tierIn) {
+        Array<String> tier = BuildingTierDB.get(tierIn);
+        if (tier == null) {
+            return null;
+        } else if (tier.size == 1) {
+            return tier.get(0);
+        } else {
+            return tier.get(random.nextInt(tier.size));
+        }
+    }
+
     public static Array<String> getBuildingTier(int tier) {
         return BuildingTierDB.get(tier);
     }
