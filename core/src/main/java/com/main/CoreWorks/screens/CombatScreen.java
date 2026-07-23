@@ -156,7 +156,10 @@ public class CombatScreen implements Screen {
         game.getPopUpManager().requestPopup(
             "tick_explanation",
             "Combat & ticks",
-            "The combat system runs on a tick-based system.\nBuildings operate automatically, and take actions based on passed number of ticks.\nEnemies take action after certain number of ticks have passed, represented by cooldowns.",
+            "The combat system runs on a tick-based system.\nBuildings operate automatically, and take actions based on passed number of ticks.\nEnemies take action after certain number of ticks have passed, represented by cooldowns." +
+                "\nYou win if all enemies are defeated." +
+                "\nYou lose if your health drops to 0." +
+                "\nDifferent buildings can defeat enemies in different ways. Refer to codex with C for more information!",
             true
         );
 
@@ -164,6 +167,7 @@ public class CombatScreen implements Screen {
             "Pause_explanation",
             "Pausing / Unpausing",
             "You can use SpaceBar to pause / unpause the game." +
+                "\nWhen paused, the grid will be outlined RED, otherwise it will be outlined WHITE." +
                 "\nWhen paused, you can still do everything as usual, but no ticks will progress." +
                 "\nThis means no production or actions can be taken, which can help with devising strategies without time pressure!",
             true
