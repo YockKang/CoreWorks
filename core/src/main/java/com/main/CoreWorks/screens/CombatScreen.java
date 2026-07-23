@@ -39,8 +39,28 @@ public class CombatScreen implements Screen {
 
     // tube placement fields
     private boolean tubeMode = false;
-    DirectedCoords downPoint;
-    DirectedCoords upPoint;
+    private DirectedCoords downPoint;
+    private DirectedCoords upPoint;
+    private InputProcessor tubelogger = new InputAdapter() {
+        @Override
+        public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+            if (button == Input.Buttons.LEFT) {
+                Vector2 mTCoords = translateMouseToWorld();
+                downPoint = getGridQuadrantAt(mTCoords.x, mTCoords.y);
+            }
+            return false;
+        }
+
+        @Override
+        public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+            if (button == Input.Buttons.LEFT) {
+                Vector2 mTCoords = translateMouseToWorld();
+                upPoint = getGridQuadrantAt(mTCoords.x, mTCoords.y);
+            }
+            return false;
+        }
+    };
+
 
     // recipe UI fields
     private boolean recipeUIOn = false;
@@ -50,6 +70,7 @@ public class CombatScreen implements Screen {
 
     // Below field handles the scene2D UI
     private Stage stage;
+    private final InputMultiplexer multiplexer = new InputMultiplexer();
     private Skin skin;
     private boolean needRefresh = true;
 
@@ -108,7 +129,8 @@ public class CombatScreen implements Screen {
     public void show() {
         stage = new Stage(game.viewport, game.batch);
         skin = new Skin(Gdx.files.internal("uiskin.json"));
-        Gdx.input.setInputProcessor(stage);
+        multiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(multiplexer);
 
         // Sets the popup manager
         game.getPopUpManager().setScene2D(stage, skin);
@@ -472,8 +494,8 @@ public class CombatScreen implements Screen {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     System.out.println(recipeUIOn);
-                    if (!(recipeUIOn || codexOnScreen)) {
-                        // allow building selecting when recipe UI and codex are both off-screen
+                    if (!(recipeUIOn || codexOnScreen || tubeMode)) {
+                        // allow building selecting when recipe UI and codex are both off-screen and not in tubeMode
                         selectedBuilding = building;
                         needRefresh = true;
                     }
@@ -582,7 +604,7 @@ public class CombatScreen implements Screen {
 
         // PopUp manager will spawn the next popup if needed (and exists), while pausing the game as well
         PopUpManager popUpManager = game.getPopUpManager();
-        if (popUpManager != null && popUpManager.showNext(() -> isPaused = true, () -> isPaused = false)) {
+        if (popUpManager != null && popUpManager.showNext(() -> isPaused = true, () -> isPaused = true)) {
             ScreenUtils.clear(Color.BLACK);
             stage.act(delta);
             stage.draw();
@@ -921,32 +943,16 @@ public class CombatScreen implements Screen {
             if (!recipeUIOn) {
                 tubeMode = !tubeMode;
                 if (tubeMode) {
+                    Label tubeHelper = (Label) UIElements.get("tubemode");
+                    tubeHelper.setText("T\nTo Exit");
                     // deselect building
                     selectedBuilding = null;
                     // tube mode handling here for now
-                    Gdx.input.setInputProcessor(new InputAdapter() {
-
-                        @Override
-                        public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                            if (button == Input.Buttons.LEFT) {
-                                Vector2 mTCoords = translateMouseToWorld();
-                                downPoint = getGridQuadrantAt(mTCoords.x, mTCoords.y);
-                            }
-                            return true;
-                        }
-
-                        @Override
-                        public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-                            if (button == Input.Buttons.LEFT) {
-                                Vector2 mTCoords = translateMouseToWorld();
-                                upPoint = getGridQuadrantAt(mTCoords.x, mTCoords.y);
-                            }
-                            return true;
-                        }
-
-                    });
+                    multiplexer.addProcessor(tubelogger);
                 } else {
-                    Gdx.input.setInputProcessor(stage);
+                    Label tubeHelper = (Label) UIElements.get("tubemode");
+                    tubeHelper.setText("T\nAdd Tubes");
+                    multiplexer.removeProcessor(tubelogger);
                     downPoint = null;
                     upPoint = null;
                 }
@@ -958,9 +964,9 @@ public class CombatScreen implements Screen {
                 "Tubes",
                 "Press T to enter / exit tube drawing mode." +
                     "\nTubes can be used to connect output ports to another building, as if they were directly connected." +
-                    "\nTo draw a tube, simply left click on an empty square to place a segment when in tube mode." +
+                    "\nTo draw a tube, draw the desired shape of the segment on an empty square when in tube mode." +
                     "\nRight click when in tube mode to remove a tube." +
-                    "\nTubes can only be drawn (and connected) in the 4 cardinal directions within a grid square.",
+                    "\nTubes can only be drawn one segment at a time.",
                 true
             );
         }
@@ -1075,12 +1081,12 @@ public class CombatScreen implements Screen {
                                             downCheck = true;
                                         }
                                     }
-                                    case 3 -> {
+                                    case 2 -> {
                                         if (downPoint.y < upPoint.y) {
                                             downCheck = true;
                                         }
                                     }
-                                    case 4 -> {
+                                    case 3 -> {
                                         if (downPoint.x > upPoint.x) {
                                             downCheck = true;
                                         }
@@ -1098,18 +1104,17 @@ public class CombatScreen implements Screen {
                                             upCheck = true;
                                         }
                                     }
-                                    case 3 -> {
+                                    case 2 -> {
                                         if (downPoint.y > upPoint.y) {
                                             upCheck = true;
                                         }
                                     }
-                                    case 4 -> {
+                                    case 3 -> {
                                         if (downPoint.x < upPoint.x) {
                                             upCheck = true;
                                         }
                                     }
                                 }
-
                                 if (downCheck && upCheck) {
                                     DirectedCoords downPointer = downPoint.pointingToSide();
                                     DirectedCoords upPointer = upPoint.pointingToSide();

@@ -193,17 +193,12 @@ public class Tube extends Structure {
         } else {
             network2 = network;
         }
-        System.out.println();
-        System.out.println("condensed into " + network.getId());
-        System.out.println(network.getInputs());
         for (int dir : dirs) {
             if (dir >= 0 && dir <= 3 && connections[dir]) {
                 Structure target = getNeighbour(grid, dir);
                 if (target instanceof Building bldg) {
-                    System.out.println("found output: " + bldg);
                     Coords tgt = getNeighbourCoord(dir);
                     if (!bldg.hasPortAt(tgt.x, tgt.y, (dir + 2) % 4)) {
-                        System.out.println("adding tube");
                         bldg.addTubeInput(this, dir);
                     }
                 }
@@ -460,9 +455,6 @@ public class Tube extends Structure {
                                 connPorts.put(bldg, portSet);
                             }
                         } else {
-                            System.out.println();
-                            System.out.println(i);
-                            System.out.println("hi");
                             bldg.removeTubeInput(this, i);
                         }
                     }
@@ -628,16 +620,12 @@ public class Tube extends Structure {
         }
 
         void search(int dir) {
-            System.out.println();
-            System.out.println("searching");
 
             // time to bfs the tube network
             visitQueue.addLast(new DirectedCoords(start.xCoord, start.yCoord, dir));
             while (!visitQueue.isEmpty()) {
-                System.out.println();
                 // get next
                 DirectedCoords next = visitQueue.removeFirst().pointingToSide();
-                System.out.println("visiting " + next);
                 // continue if out of bounds
                 if (next.x < 0 || next.y < 0 || next.y >= grid.size || next.x >= grid.get(next.y).size) {
                     continue;
@@ -648,12 +636,10 @@ public class Tube extends Structure {
                 } else {
                     Structure pointingTo = grid.get(next.y).get(next.x);
                     if (pointingTo instanceof Tube tube) {
-                        System.out.println("found " + tube);
 
                         boolean[] newDirs = null;
 
                         if (tube.getNetworkNum(next.dir) == 1) {
-                            System.out.println("connected to network 1");
                             newDirs = tube.getConnections1().clone();
                             if (!visitedNet.containsKey(tube)) {
                                 visitedNet.put(tube, new boolean[2]);
@@ -661,7 +647,6 @@ public class Tube extends Structure {
                             visitedNet.get(tube)[0] = true;
 
                         } else if (tube.getNetworkNum(next.dir) == 2) {
-                            System.out.println("connected to network 2");
                             newDirs = tube.getConnections2().clone();
                             if (!visitedNet.containsKey(tube)) {
                                 visitedNet.put(tube, new boolean[2]);
@@ -672,11 +657,6 @@ public class Tube extends Structure {
 
                         if (newDirs != null) {
 
-                            System.out.println("connections: "
-                                + newDirs[0] + " "
-                                + newDirs[1] + " "
-                                + newDirs[2] + " "
-                                + newDirs[3]);
 
                             if (visited.get(next.y).get(next.x) == null) {
                                 visited.get(next.y).set(next.x, new boolean[4]);
@@ -684,7 +664,6 @@ public class Tube extends Structure {
 
                             boolean[] visitCell = visited.get(next.y).get(next.x);
                             for (int i = 0; i < 4; i++) {
-                                System.out.println("resolving " + i);
                                 if (newDirs[i]) {
                                     visitCell[i] = true;
                                     if (i != next.dir) {
@@ -694,7 +673,6 @@ public class Tube extends Structure {
                             }
                         }
                     } else if (pointingTo instanceof Building building) {
-                        System.out.println("found " + building);
                         IOPort pointPort = building.getPortFor(next.x, next.y, next.dir);
                         if (pointPort != null) {
                             if (inPorts.containsKey(building)) {
@@ -723,13 +701,10 @@ public class Tube extends Structure {
         }
 
         void setNetwork(TubeNet net) {
-            System.out.println("setting network " + net);
             net.addInput(inPorts);
             for (ObjectMap.Entry<Tube, boolean[]> entry : visitedNet) {
                 Tube tube = entry.key;
-                System.out.println("setting " + tube);
                 boolean[] nets = entry.value;
-                System.out.println("connNets: " + nets[0] + " " + nets[1]);
                 net.addSegment(tube);
                 if (nets[0]) {
                     tube.setNetwork1(net);
@@ -739,10 +714,8 @@ public class Tube extends Structure {
                 }
             }
             for (Building building : outBldg) {
-                System.out.println("connected building: " + building);
                 building.updateNets();
             }
-            System.out.println();
         }
     }
 }
