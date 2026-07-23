@@ -19,7 +19,7 @@ public class RunState {
 
     // Stores the next floor maps here
     private Array<RunMap> nextMaps = new Array<>();
-    private int currFloor = 1;
+    private int currFloor = 0;
 
     // Code below stores resourceModifiers that relics can manipulate to increase / decrease damage
     // Each new damage "type" will need its own unique resourceModifiers (not very good implementation but works)
@@ -167,7 +167,7 @@ public class RunState {
     }
 
     public boolean nextFloor() {
-        return currFloor < (this.nextMaps.size + 1);
+        return currFloor < this.nextMaps.size;
     }
 
     public Array<RunMap> getNextMaps() {

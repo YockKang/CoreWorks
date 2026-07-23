@@ -66,7 +66,9 @@ public class RewardScreen implements Screen {
         game.getPopUpManager().requestPopup(
             "reward_screen",
             "Reward selection",
-            "Welcome to the reward selection screen!\nAfter winning a fight, you can pick ONE reward that will help you for the rest of the run!\nRewards scale with levels and difficult fights, so more pain = more gain!",
+            "Welcome to the reward selection screen!\nAfter winning a fight, you can pick ONE reward that will help you for the rest of the run!" +
+                "\nYou automatically get money after every fight, so it will not appear as a reward." +
+                "\nRewards (and money) scale with levels and difficult fights, so more pain = more gain!",
             false
         );
 
