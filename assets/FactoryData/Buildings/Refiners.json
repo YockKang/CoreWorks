@@ -13,18 +13,15 @@
         "rate" : 1
       }
     ],
-    "Group" : "Refiner T1",
-    "DefaultRecipe" : "SmeltAlloy"
+    "Group" : "Smelting"
   },
+
   {
-    "id" : "Cannonballer",
-    "Tier" : 1,
+    "id" : "AdvancedSmelter",
+    "Tier" : 0,
     "Type" : "Refiner",
-    "Name" : "CannonBall Maker",
-    "GridName" : "CannonBall\nMaker",
-    "Shape" : [
-      "S", 1
-    ],
+    "Name" : "Advanced Smelter",
+    "Shape" : ["R", 1, 2],
     "Ports" : [
       {
         "x" : 0,
@@ -33,48 +30,75 @@
         "rate" : 1
       }
     ],
-    "Group" : "Refiner T1",
-    "DefaultRecipe" : "IronCannonBall"
+    "Group" : "AdvSmelting"
   },
+
   {
-    "id" : "PoisonBaller",
-    "Tier" : 2,
+    "id" : "MachiningPlant",
+    "Tier" : 0,
     "Type" : "Refiner",
-    "Name" : "PoisonBall Maker",
-    "GridName" : "PoisonBall\nMaker",
-    "Shape" : [
-      "R", 1, 2
-    ],
+    "Name" : "Machining Plant",
+    "Shape" : ["R", 1, 2],
     "Ports" : [
       {
         "x" : 0,
-        "y" : 0,
-        "dir" : 3,
-        "rate" : 1
-      }
-    ],
-    "Group" : "Refiner T2",
-    "DefaultRecipe" : "PoisonCannonBall"
-  },
-  {
-    "id" : "PierceBaller",
-    "Tier" : 2,
-    "Type" : "Refiner",
-    "Name" : "PierceBall Maker",
-    "GridName" : "PierceBall\nMaker",
-    "Shape" : [
-      [true, true],
-      [false, true]
-    ],
-    "Ports" : [
-      {
-        "x" : 1,
         "y" : 0,
         "dir" : 0,
         "rate" : 1
       }
     ],
-    "Group" : "Refiner T2",
-    "DefaultRecipe" : "PiercingCannonBall"
+    "Group" : "Machining"
+  },
+
+  {
+    "id" : "AdvMachiningPlant",
+    "Tier" : 0,
+    "Type" : "Refiner",
+    "Name" : "Advanced Machining Plant",
+    "BaseSpeed" : 1.5,
+    "Shape" : ["R", 1, 2],
+    "Ports" : [
+      {
+        "x" : 0,
+        "y" : 0,
+        "dir" : 0,
+        "rate" : 1
+      }
+    ],
+    "Group" : "Machining"
+  },
+
+  {
+    "id" : "ChemPlant",
+    "Tier" : 0,
+    "Type" : "Refiner",
+    "Name" : "Chemical Plant",
+    "Shape" : ["R", 1, 2],
+    "Ports" : [
+      {
+        "x" : 0,
+        "y" : 0,
+        "dir" : 0,
+        "rate" : 1
+      }
+    ],
+    "Group" : "ChemPlant"
+  },
+
+  {
+    "id" : "AdvChemPlant",
+    "Tier" : 0,
+    "Type" : "Refiner",
+    "Name" : "Advanced Chemical Plant",
+    "Shape" : ["R", 1, 2],
+    "Ports" : [
+      {
+        "x" : 0,
+        "y" : 0,
+        "dir" : 0,
+        "rate" : 1
+      }
+    ],
+    "Group" : "ChemPlant"
   }
 ]

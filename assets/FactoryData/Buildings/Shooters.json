@@ -1,80 +1,115 @@
 [
   {
-    "id" : "Shooter0",
+    "id" : "Shooter",
     "Tier" : 0,
     "Type" : "Shooter",
-    "Name" : "ShooterRandom",
-    "Cooldown" : 4,
+    "Name" : "Shooter",
+    "Description": "The basic Shooter, many runs live and die by this",
+    "Cooldown" : 2,
     "Shape" : ["S", 1],
     "MagSize": 5,
-    "BaseDmg": 1.75,
-    "AoE": "Random"
+    "BaseDmg": 1.5
   },
+
   {
-    "id" : "Shooter00",
-    "Tier" : 0,
-    "Type" : "Shooter",
-    "Name" : "ShooterAll",
-    "Cooldown" : 4,
-    "Shape" : ["S", 2],
-    "MagSize": 5,
-    "BaseDmg": 1,
-    "AoE": "All"
-  },
-  {
-    "id" : "Shooter000",
-    "Tier" : 0,
-    "Type" : "Shooter",
-    "Name" : "ShooterPierce",
-    "Cooldown" : 4,
-    "Shape" : ["S", 2],
-    "MagSize": 5,
-    "BaseDmg": 1,
-    "AoE": [[1, 1], [2, 0.5], [3, 0.25]]
-  },
-  {
-    "id" : "Shooter0000",
-    "Tier" : 0,
-    "Type" : "Shooter",
-    "Name" : "Boomerang",
-    "Cooldown" : 4,
-    "Shape" : ["S", 1],
-    "MagSize": 5,
-    "BaseDmg": 1,
-    "AoE": [[-1,1]]
-  },
-  {
-    "id" : "Shooter1",
+    "id" : "Shooter+",
     "Tier" : 1,
     "Type" : "Shooter",
     "Name" : "Shooter+",
+    "Description": "An improved Shooter, Hit them harder!",
     "Cooldown" : 2,
-    "Shape" : ["S", 2],
+    "Shape" : ["S", 1],
     "MagSize": 5,
-    "BaseDmg": 1
+    "BaseDmg": 2
   },
+
   {
-    "id" : "Shooter2",
-    "Tier" : 3,
+    "id" : "Boomerang",
+    "Tier" : 0,
     "Type" : "Shooter",
-    "Name" : "Shooter++",
+    "Name" : "Boomerang",
+    "Description": "A shooter dreamt up by the utterly deranged, deals damage to the last enemy",
+    "Cooldown" : 2,
+    "Shape" : ["S", 1],
+    "MagSize": 5,
+    "BaseDmg": 2,
+    "AoE": [[-1,1]]
+  },
+
+  {
+    "id" : "Mortar",
+    "Tier" : 1,
+    "Type" : "Shooter",
+    "Name" : "Mortar",
+    "Description": "A basic mortar. Highly inaccurate, dealing damage to a random enemy",
     "Cooldown" : 2,
     "Shape" : ["S", 1],
     "MagSize": 5,
     "BaseDmg": 1.5,
-    "AttackCount" : 2
+    "Whitelist": ["ExplosiveShell", "Explosive", "Shell"],
+    "AoE": "Random"
   },
+
+  {
+    "id" : "Cannon",
+    "Tier" : 2,
+    "Type" : "Shooter",
+    "Name" : "Artillery Cannon",
+    "GridName" : "Artillery\nCannon",
+    "Description": "An artillery cannon, deals damage to all enemies",
+    "Cooldown" : 2,
+    "Shape" : ["S", 1],
+    "MagSize": 5,
+    "BaseDmg": 1.5,
+    "Whitelist": ["ExplosiveShell", "Explosive"],
+    "AoE": "All"
+  },
+
   {
     "id" : "Railgun",
-    "Tier" : 3,
+    "Tier" : 1,
     "Type" : "Shooter",
     "Name" : "Railgun",
+    "Description": "A basic railgun, deals 1x damage to the first enemy and 0.5x to the second enemy",
     "Cooldown" : 2,
     "Shape" : ["S", 1],
     "MagSize": 5,
     "BaseDmg": 1.5,
+    "AoE": [[1, 1], [2, 0.5]],
+    "Whitelist": ["Rail"]
+  },
+  {
+    "id" : "Railgun+",
+    "Tier" : 2,
+    "Type" : "Shooter",
+    "Name" : "Railgun+",
+    "Description": "An improved railgun, deals 1x true damage to the first enemy and 0.5x to the second enemy",
+    "Cooldown" : 2,
+    "Shape" : ["S", 1],
+    "MagSize": 5,
+    "BaseDmg": 1.5,
+    "AoE": [[1, 1], [2, 0.5]],
+    "Whitelist": ["Rail"],
+    "Damage Type": "True"
+  },
+  {
+    "id" : "MegaRailgun",
+    "Tier" : 3,
+    "Type" : "Shooter",
+    "Name" : "Leviathan Railgun",
+    "GridName" : "Leviathan\nRailgun",
+    "Description": "A beast of a railgun from who knows where, deals True Damage to all enemies",
+    "Cooldown" : 2,
+    "Shape" : [
+      [true , true , false],
+      [true , true , false],
+      [true , true , true ],
+      [true , true , false]
+    ],
+    "MagSize": 5,
+    "BaseDmg": 2,
     "AoE": "All",
-    "Whitelist": ["Alloy", "PiercingBall"],
+    "Whitelist": ["Rail"],
     "Damage Type": "True"
   }
 ]

@@ -1,37 +1,80 @@
 [
   {
-    "id" : "Engineer",
-    "Name" : "Engineer",
-    "Grid" : [6, 6],
-    "HP" : 50,
-    "Buildings" : ["Shooter0", "BigIronMiner", "Cannonballer"],
-    "Relics" : ["MoneyRelic2", "PhoenixCoreRelic"]
+    "id": "Engineer",
+    "Name": "Engineer",
+    "Grid": [
+      6,
+      6
+    ],
+    "HP": 50,
+    "Buildings": [],
+    "Relics": [
+      "MoneyRelic2",
+      "PhoenixCoreRelic"
+    ]
   },
-
   {
-    "id" : "Chemist",
-    "Name" : "Chemist",
-    "Grid" : [5, 5],
-    "HP" : 35,
-    "Buildings" : ["Shooter0", "CopperMiner", "IronMiner", "Cannonballer", "PoisonBaller"],
-    "Relics" : ["MoneyRelic2","MoneyRelic"]
+    "id": "Chemist",
+    "Name": "Chemist",
+    "Grid": [
+      5,
+      5
+    ],
+    "HP": 35,
+    "Buildings": [],
+    "Relics": [
+      "MoneyRelic2",
+      "MoneyRelic"
+    ]
   },
-
   {
-    "id" : "Commander",
-    "Name" : "Commander",
-    "Grid" : [7, 7],
-    "HP" : 60,
-    "Buildings" : ["Shooter1", "IronMiner", "Cannonballer"],
-    "Relics" : ["MoneyRelic"]
+    "id": "Commander",
+    "Name": "Commander",
+    "Grid": [
+      7,
+      7
+    ],
+    "HP": 60,
+    "Buildings": [],
+    "Relics": [
+      "MoneyRelic"
+    ]
   },
-
   {
-    "id" : "Tester",
-    "Name" : "Tester",
-    "Grid" : [8, 8],
-    "HP" : 1000,
-    "Buildings" : ["IronMiner", "CopperMiner", "Smelter", "Railgun"],
-    "Relics" : ["MoneyRelic", "TestRelic"]
+    "id": "Tester",
+    "Name": "Tester",
+    "Grid": [
+      8,
+      8
+    ],
+    "HP": 1000,
+    "Buildings": [
+      "Miner",
+      "BigMiner",
+      "OpenPitMine",
+      "OpenPitMine",
+      "AdvancedSmelter",
+      "AdvancedSmelter",
+      "AdvancedSmelter",
+      "AdvMachiningPlant",
+      "AdvMachiningPlant",
+      "AdvMachiningPlant",
+      "AdvMachiningPlant",
+      "AdvChemPlant",
+      "AdvChemPlant",
+      "AdvChemPlant",
+      "AdvChemPlant",
+      "Shooter",
+      "Boomerang",
+      "Mortar",
+      "Cannon",
+      "Railgun",
+      "Railgun+",
+      "MegaRailgun"
+    ],
+    "Relics": [
+      "MoneyRelic",
+      "TestRelic"
+    ]
   }
 ]

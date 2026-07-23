@@ -1,23 +1,63 @@
 [
+
   {
     "id" : "IronOre",
     "Name" : "Iron Ore",
     "DmgMult" : 0.5
   },
+
   {
-    "id" : "CannonBall",
-    "Name" : "Cannonball",
-    "DmgMult" : 3.5
+    "id" : "Iron",
+    "Name" : "Iron Ingot",
+    "DmgMult" : 1
   },
+
   {
-    "id" : "CopperOre",
-    "Name" : "Copper Ore",
+    "id" : "Coal",
+    "Name" : "Coal",
     "DmgMult" : 0.5
   },
+
   {
-    "id" : "PoisonBall",
-    "Name" : "Poison Cannonball",
-    "DmgMult" : 2,
+    "id" : "Mercury",
+    "Name" : "Mercury",
+    "DmgMult" : 0.5
+  },
+
+  {
+    "id" : "Ammonia",
+    "Name" : "Ammonia",
+    "DmgMult" : 0.25
+  },
+
+  {
+    "id" : "Steel",
+    "Name" : "Steel",
+    "DmgMult" : 1.5
+  },
+
+  {
+    "id" : "Explosive",
+    "Name" : "Explosive",
+    "DmgMult" : 1.5
+  },
+
+  {
+    "id" : "Shell",
+    "Name" : "Shell",
+    "DmgMult" : 1.5
+  },
+
+  {
+    "id" : "ExplosiveShell",
+    "Name" : "Explosive Shell",
+    "DmgMult" : 1.5
+  },
+
+  {
+    "id" : "PoisonShell",
+    "Name" : "Poison Shell",
+    "DmgMult" : 1.5,
     "Modifiers" : [
       {
         "type" : "DamageType",
@@ -25,20 +65,10 @@
       }
     ]
   },
+
   {
-    "id" : "Alloy",
-    "Name" : "Alloy",
-    "DmgMult" : 1
-  },
-  {
-    "id" : "PiercingBall",
-    "Name" : "Piercing Cannonball",
-    "DmgMult" : 3,
-    "Modifiers" : [
-      {
-        "type" : "DamageType",
-        "str" : "True"
-      }
-    ]
+    "id" : "Rail",
+    "Name" : "Rail",
+    "DmgMult" : 1.5
   }
 ]

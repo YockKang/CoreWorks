@@ -175,7 +175,7 @@ public class CharacterSelectScreen implements Screen {
             buildingTable.add(buildingLabel).pad(3);
             // Add future tooltips for description here
             countBuilding++;
-            if (countBuilding % 3 == 0) {
+            if (countBuilding % 5 == 0) {
                 buildingTable.row();
             }
         }

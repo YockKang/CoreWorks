@@ -16,12 +16,12 @@
     ]
   },
   {
-    "id": "MineCopper",
-    "Name": "Mine Copper",
+    "id": "MineCoal",
+    "Name": "Mine Coal",
     "InputId": [],
     "InputMult": [],
     "OutputId": [
-      "CopperOre"
+      "Coal"
     ],
     "OutputMult": [
       1
@@ -32,87 +32,228 @@
     ]
   },
   {
-    "id": "SmeltAlloy",
-    "Name": "Smelt Alloy",
-    "InputId": [
-      "IronOre",
-      "CopperOre"
-    ],
-    "InputMult": [
-      1,
-      1
-    ],
-    "OutputId": [
-      "Alloy"
-    ],
-    "OutputMult": [
-      1
-    ],
-    "duration": 4,
-    "Groups": [
-      "Refiner T1"
-    ]
-  },
-  {
-    "id": "IronCannonBall",
-    "Name": "Make Cannonball",
+    "id": "SmeltIron",
+    "Name": "Smelt Iron",
     "InputId": [
       "IronOre"
     ],
     "InputMult": [
-      2
+      1
     ],
     "OutputId": [
-      "CannonBall"
+      "Iron"
     ],
     "OutputMult": [
       1
     ],
     "duration": 4,
     "Groups": [
-      "Refiner T1"
+      "Smelting", "AdvSmelting"
     ]
   },
   {
-    "id": "PoisonCannonBall",
-    "Name": "Make Poison Cannonball",
+    "id": "SmeltSteel",
+    "Name": "Smelt Steel",
     "InputId": [
-      "CannonBall",
-      "CopperOre"
+      "Iron", "Coal"
+    ],
+    "InputMult":  [
+      2,
+      1
+    ],
+    "OutputId": [
+      "Steel"
+    ],
+    "OutputMult": [
+      2
+    ],
+    "duration": 4,
+    "Groups": [
+      "Smelting", "AdvSmelting"
+    ]
+  },
+  {
+    "id": "AdvSmeltSteel",
+    "Name": "Advanced Steel Smelting",
+    "InputId": [
+      "IronOre", "Coal"
+    ],
+    "InputMult": [
+      2,
+      1
+    ],
+    "OutputId": [
+      "Steel"
+    ],
+    "OutputMult": [
+      3
+    ],
+    "duration": 4,
+    "Groups": [
+      "AdvSmelting"
+    ]
+  },
+  {
+    "id": "MercurySmelting",
+    "Name": "Refine Mercury",
+    "InputId": [
+      "IronOre", "Coal"
     ],
     "InputMult": [
       1,
       1
     ],
     "OutputId": [
-      "PoisonBall"
+      "Mercury"
+    ],
+    "OutputMult": [
+      1
+    ],
+    "duration": 4,
+    "Groups": [
+      "AdvSmelting"
+    ]
+  },
+  {
+    "id": "MachineShell",
+    "Name": "Make Shell",
+    "InputId": [
+      "Iron"
+    ],
+    "InputMult": [
+      1
+    ],
+    "OutputId": [
+      "Shell"
     ],
     "OutputMult": [
       1
     ],
     "duration": 2,
     "Groups": [
-      "Refiner T2"
+      "Machining"
     ]
   },
   {
-    "id": "PiercingCannonBall",
-    "Name": "Make Piercing Cannonball",
+    "id": "MachineRail",
+    "Name": "Make Rail",
     "InputId": [
-      "Alloy"
+      "Steel"
     ],
     "InputMult": [
-      2
+      1
     ],
     "OutputId": [
-      "PiercingBall"
+      "Rail"
+    ],
+    "OutputMult": [
+      1
+    ],
+    "duration": 2,
+    "Groups": [
+      "Machining"
+    ]
+  },
+
+  {
+    "id": "MachineExpShell",
+    "Name": "Make Explosive Shell",
+    "InputId": [
+      "Iron", "Explosive"
+    ],
+    "InputMult": [
+      1,
+      1
+    ],
+    "OutputId": [
+      "ExplosiveShell"
+    ],
+    "OutputMult": [
+      1
+    ],
+    "duration": 2,
+    "Groups": [
+      "Machining"
+    ]
+  },
+
+  {
+    "id": "MachinePoisonShell",
+    "Name": "Make Poison Shell",
+    "InputId": [
+      "Iron", "Mercury"
+    ],
+    "InputMult": [
+      1, 1
+    ],
+    "OutputId": [
+      "PoisonShell"
+    ],
+    "OutputMult": [
+      1
+    ],
+    "duration": 2,
+    "Groups": [
+      "Machining"
+    ]
+  },
+
+  {
+    "id": "SynthesizeAmmonia",
+    "Name": "Synthesize Ammonia",
+    "InputId": [
+    ],
+    "InputMult": [
+    ],
+    "OutputId": [
+      "Ammonia"
     ],
     "OutputMult": [
       1
     ],
     "duration": 8,
     "Groups": [
-      "Refiner T2"
+      "ChemPlant"
+    ]
+  },
+  {
+    "id": "CatalystAmmonia",
+    "Name": "Catalyzed Ammonia",
+    "InputId": [
+      "Iron"
+    ],
+    "InputMult": [
+      3
+    ],
+    "OutputId": [
+      "Ammonia", "Iron"
+    ],
+    "OutputMult": [
+      1, 2
+    ],
+    "duration": 2,
+    "Groups": [
+      "ChemPlant"
+    ]
+  },
+  {
+    "id": "MakeExplosive",
+    "Name": "Explosive Synthesis",
+    "InputId": [
+      "Ammonia", "Coal"
+    ],
+    "InputMult": [
+      2, 1
+    ],
+    "OutputId": [
+      "Explosive"
+    ],
+    "OutputMult": [
+      2
+    ],
+    "duration": 4,
+    "Groups": [
+      "ChemPlant"
     ]
   }
 ]

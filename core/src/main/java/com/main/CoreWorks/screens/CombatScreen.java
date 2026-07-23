@@ -2,6 +2,7 @@ package com.main.CoreWorks.screens;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.scenes.scene2d.*;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Codex.Codex;
+import com.main.CoreWorks.Codex.RefinerEntry;
 import com.main.CoreWorks.Coreworks;
 import com.main.CoreWorks.Recipe.Recipe;
 import com.main.CoreWorks.entities.Relics.Relic;
@@ -294,7 +296,9 @@ public class CombatScreen implements Screen {
         // inventory
         Table inventoryTable = (Table) UIElements.get("inventorytable");
         inventoryTable.add(UIElements.get("inventoryheader")).pad(10).row();
-        inventoryTable.add(UIElements.get("inventorybody")).growY().row();
+        ScrollPane inventoryScroller = new ScrollPane(UIElements.get("inventorybody"));
+        inventoryScroller.setScrollingDisabled(true, false);
+        inventoryTable.add(inventoryScroller).growY().row();
         updateInventoryUI();
 
         // combat log (empty, to be filled when actions happen)
@@ -766,8 +770,15 @@ public class CombatScreen implements Screen {
             float nameY = gridEndY - coords.y * tileSize - 20;
             game.font.getData().setScale(0.75f);
             game.font.draw(game.batch, building.gridName(), nameX, nameY);
-            if (building.getRecipe() != null) {
-                game.font.draw(game.batch, building.getRecipe().getName(), nameX, nameY - 30);
+            if (building instanceof Miner ||
+                building instanceof Refiner) {
+                if (building.getRecipe() != null) {
+                    game.font.draw(game.batch, building.getRecipe().getName(), nameX, nameY - 30);
+                } else {
+                    BitmapFont tempfont = new BitmapFont();
+                    tempfont.setColor(Color.RED);
+                    tempfont.draw(game.batch, "Recipe not set!", nameX, nameY - 30);
+                }
             }
         }
 
@@ -940,6 +951,91 @@ public class CombatScreen implements Screen {
         } else {
             if (upPoint != null) {
                 if (downPoint != null) {
+                    if (Math.abs(upPoint.x - downPoint.x) + Math.abs(upPoint.y - downPoint.y) <= 2) {
+                        // check movement is within 2 squares
+                        switch (Math.abs(upPoint.x - downPoint.x) + Math.abs(upPoint.y - downPoint.y)) {
+                            case 0 -> {
+                                if (upPoint.dir != downPoint.dir) {
+                                    controller.getFactorySim().getGrid().addTube(upPoint.x, upPoint.y, downPoint.dir, upPoint.dir);
+                                }
+                            }
+                            case 1 -> {
+                                if (downPoint.pointingTo().x == upPoint.x &&
+                                    downPoint.pointingTo().y == upPoint.y) {
+                                    if (downPoint.pointingToSide().dir != upPoint.dir) {
+                                        controller.getFactorySim().getGrid().addTube(upPoint.x, upPoint.y, downPoint.pointingToSide().dir, upPoint.dir);
+                                    }
+                                } else if (downPoint.x == upPoint.pointingTo().x &&
+                                    downPoint.y == upPoint.pointingTo().y) {
+                                    if (upPoint.pointingToSide().dir != downPoint.dir) {
+                                        controller.getFactorySim().getGrid().addTube(downPoint.x, downPoint.y, downPoint.dir, upPoint.pointingToSide().dir);
+                                    }
+                                }
+
+                            }
+                            case 2 -> {
+                                boolean downCheck = false;
+                                boolean upCheck = false;
+                                switch (downPoint.dir & 3) {
+                                    case 0 -> {
+                                        if (downPoint.y > upPoint.y) {
+                                            downCheck = true;
+                                        }
+                                    }
+                                    case 1 -> {
+                                        if (downPoint.x < upPoint.x) {
+                                            downCheck = true;
+                                        }
+                                    }
+                                    case 3 -> {
+                                        if (downPoint.y < upPoint.y) {
+                                            downCheck = true;
+                                        }
+                                    }
+                                    case 4 -> {
+                                        if (downPoint.x > upPoint.x) {
+                                            downCheck = true;
+                                        }
+                                    }
+                                }
+
+                                switch (upPoint.dir & 3) {
+                                    case 0 -> {
+                                        if (downPoint.y < upPoint.y) {
+                                            upCheck = true;
+                                        }
+                                    }
+                                    case 1 -> {
+                                        if (downPoint.x > upPoint.x) {
+                                            upCheck = true;
+                                        }
+                                    }
+                                    case 3 -> {
+                                        if (downPoint.y > upPoint.y) {
+                                            upCheck = true;
+                                        }
+                                    }
+                                    case 4 -> {
+                                        if (downPoint.x < upPoint.x) {
+                                            upCheck = true;
+                                        }
+                                    }
+                                }
+
+                                if (downCheck && upCheck) {
+                                    DirectedCoords downPointer = downPoint.pointingToSide();
+                                    DirectedCoords upPointer = upPoint.pointingToSide();
+                                    if (downPointer.x == upPointer.x &&
+                                        downPointer.y == upPointer.y) {
+                                        controller.getFactorySim().getGrid().addTube(upPointer.x, upPointer.y, downPointer.dir, upPointer.dir);
+                                    }
+
+                                }
+
+                            }
+                        }
+                    }
+
                     if (upPoint.x == downPoint.x &&
                         upPoint.y == downPoint.y &&
                         upPoint.dir != downPoint.dir) {

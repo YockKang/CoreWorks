@@ -420,18 +420,23 @@ public class Codex {
 
 
         for (Entry e : Resources) {
+            System.out.println(e.name);
             e.generateInfoTable(skin);
         }
         for (Entry e : Recipes) {
+            System.out.println(e.name);
             e.generateInfoTable(skin);
         }
         for (Entry e : Buildings) {
+            System.out.println(e.name);
             e.generateInfoTable(skin);
         }
         for (Entry e : Enemies) {
+            System.out.println(e.name);
             e.generateInfoTable(skin);
         }
         for (Entry e : Relics) {
+            System.out.println(e.name);
             e.generateInfoTable(skin);
         }
     }
