@@ -114,7 +114,7 @@ public class CombatScreen implements Screen {
         game.getPopUpManager().requestPopup(
             "combat_screen",
             "Combat",
-            "This is the combat screen where all fights will occur in.\nThe next few pop-ups will explain the UI, so pay attention!",
+            "This is the combat screen where all fights will occur in.\nThe next few pop-ups will explain the UI, so PAY CAREFUL ATTENTION!",
             true
         );
 
@@ -128,7 +128,7 @@ public class CombatScreen implements Screen {
         game.getPopUpManager().requestPopup(
             "left_hud_explanation",
             "Left HUD",
-            "The left of the screen displays player & game information, such as Health, Money, current game tick etc.\nIt also displays your inventory, which you can interact with for building selection.\nMore information about buildings will be given when you select a building.",
+            "The left of the screen displays player & game information, such as Health, Money, current game tick etc.\nIt also displays your inventory, which you can interact with for building selection.\nMore information about buildings will be given when you select a building via left click.",
             true
         );
 
@@ -157,6 +157,15 @@ public class CombatScreen implements Screen {
             "tick_explanation",
             "Combat & ticks",
             "The combat system runs on a tick-based system.\nBuildings operate automatically, and take actions based on passed number of ticks.\nEnemies take action after certain number of ticks have passed, represented by cooldowns.",
+            true
+        );
+
+        game.getPopUpManager().requestPopup(
+            "Pause_explanation",
+            "Pausing / Unpausing",
+            "You can use SpaceBar to pause / unpause the game." +
+                "\nWhen paused, you can still do everything as usual, but no ticks will progress." +
+                "\nThis means no production or actions can be taken, which can help with devising strategies without time pressure!",
             true
         );
 
@@ -460,6 +469,30 @@ public class CombatScreen implements Screen {
                         selectedBuilding = building;
                         needRefresh = true;
                     }
+                    game.getPopUpManager().requestPopup(
+                        "building_selection_explanation",
+                        "Building selection & placement",
+                        "You can select buildings from inventory & place them onto the grid with left click.\nYou can deselect selected buildings & remove buildings from the grid with right click.",
+                        true
+                    );
+                    game.getPopUpManager().requestPopup(
+                        "building_factory_explanation",
+                        "Building operations & factory",
+                        "When buildings are placed on the grid, they will operate automatically every tick.\nBuildings can have output ports, represented by small arrows on the building when placed on the grid.\nThese output ports are directions where buildings will output their resources, if any." +
+                            "\nBuildings that can take in inputs can do so from any direction not occupied by an output port.",
+                        true
+                    );
+                    game.getPopUpManager().requestPopup(
+                        "building_types_explanation",
+                        "Building types",
+                        "There are different types of buildings, each with their own unique roles." +
+                            "\nMiners produce raw resources for your factory, and can only output but do not take inputs." +
+                            "\nRefiners refine raw resources into better products, and can both output and take inputs." +
+                            "\nDefenders take in products to produce healing / shielding directly, and do not have outputs." +
+                            "\nShooters take in products to take actions against enemies, and do not have outputs." +
+                            "\nTo know exact details about buildings, refer to the codex by pressing button C.",
+                        true
+                    );
                 }
             });
             buildingsInInv.add(buildingButton);
@@ -631,6 +664,14 @@ public class CombatScreen implements Screen {
         }
 
         shapeRenderer.end();
+
+        game.getPopUpManager().requestPopup(
+            "placement_preview_explanation",
+            "Placement Preview",
+            "When a building is selected and you hover over the grid, you can see a preview of its position.\nGreen means placement is valid, Red means placement invalid.\nYou can only place buildings when the placement is valid." +
+                "\nThe preview does NOT show direction of output ports (if any).",
+            true
+        );
     }
 
     public void drawIOPorts() {
@@ -803,6 +844,13 @@ public class CombatScreen implements Screen {
                 UIElements.get("codexdiv").remove();
             }
             codexOnScreen = !codexOnScreen;
+
+            game.getPopUpManager().requestPopup(
+                "Codex_explanation",
+                "Codex entries",
+                "The codex contains detailed information about basically everything, like recipes (and what buildings use them).\nRefer to it for anything you are unsure of!",
+                true
+            );
         }
 
         // Press E to rotate building CW, Q for CCW
@@ -813,6 +861,14 @@ public class CombatScreen implements Screen {
             int nextRotation = (selectedBuilding.getRotation() + 1) % 4;
             selectedBuilding.setRotation(nextRotation);
             needRefresh = true;
+
+            game.getPopUpManager().requestPopup(
+                "rotation_explanation",
+                "Rotating Buildings",
+                "You can rotate buildings using E (for clockwise rotation) or Q (for anti-clockwise rotation)." +
+                    "\nThis can be useful to orient output ports in certain directions.",
+                true
+            );
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
@@ -822,6 +878,14 @@ public class CombatScreen implements Screen {
             int nextRotation = (selectedBuilding.getRotation() - 1) % 4;
             selectedBuilding.setRotation(nextRotation);
             needRefresh = true;
+
+            game.getPopUpManager().requestPopup(
+                "rotation_explanation",
+                "Rotating Buildings",
+                "You can rotate buildings using E (for clockwise rotation) or Q (for anti-clockwise rotation)." +
+                    "\nThis can be useful to orient output ports in certain directions.",
+                true
+            );
         }
 
         // Pause will be tied to Spacebar
@@ -873,6 +937,17 @@ public class CombatScreen implements Screen {
                 }
                 needRefresh = true;
             }
+
+            game.getPopUpManager().requestPopup(
+                "tube_explanation",
+                "Tubes",
+                "Press T to enter / exit tube drawing mode." +
+                    "\nTubes can be used to connect output ports to another building, as if they were directly connected." +
+                    "\nTo draw a tube, simply left click on an empty square to place a segment when in tube mode." +
+                    "\nRight click when in tube mode to remove a tube." +
+                    "\nTubes can only be drawn (and connected) in the 4 cardinal directions within a grid square.",
+                true
+            );
         }
 
         // Recipe selection is R (for now)
@@ -886,6 +961,15 @@ public class CombatScreen implements Screen {
                     clearRecipeUI();
                 }
             }
+
+            game.getPopUpManager().requestPopup(
+                "Recipe_explanation",
+                "Recipe selection",
+                "Press R after selecting an appropriate building to open recipe selection" +
+                    "\nRefer to the codex to see which buildings offer recipe selection capabilities." +
+                    "\nYou can choose which recipe you would like the building to operate with, which determines its inputs / outputs.",
+                true
+            );
         }
 
         // Mouse inputs handled below
