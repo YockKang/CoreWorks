@@ -454,4 +454,8 @@ public class Codex {
     public static Actor getTable() {
         return CodexTable;
     }
+
+    public static Container<Actor> getTableInDiv() {
+        return new Container<>(CodexTable);
+    }
 }

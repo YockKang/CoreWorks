@@ -230,6 +230,7 @@ public class CombatScreen implements Screen {
         UIElements.put("infotableR", new Table(skin));
         UIElements.put("title", new Label("Coreworks", skin));
         UIElements.put("tickcount", new Label("Tick:\n" + tickCount, skin));
+        UIElements.put("codexhelp", new Label("C\n Open Codex", skin));
         UIElements.put("playerdata", new Label(runState.getPlayer().toString(), skin));
         UIElements.put("buildingselect", new Label("Selected:\nNone ", skin));
         UIElements.put("rotationhelp", new Label("Q/E\nRotate Buildings", skin));
@@ -334,9 +335,10 @@ public class CombatScreen implements Screen {
         // top-left info
         Table infotableL = (Table) (UIElements.get("infotableL"));
         infotableL.add(UIElements.get("title")).pad(5);
-        infotableL.add(UIElements.get("tickcount")).pad(5).row();
+        infotableL.add(UIElements.get("tickcount")).pad(5);
+        infotableL.add(UIElements.get("codexhelp")).pad(5).row();
         infotableL.add(UIElements.get("playerdata")).pad(5);
-        infotableL.add(UIElements.get("buildingselect")).pad(5).growX();
+        infotableL.add(UIElements.get("buildingselect")).pad(5).colspan(2).growX();
 
         // top-right info
         Table infotableR = (Table) (UIElements.get("infotableR"));
