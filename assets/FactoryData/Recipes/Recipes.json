@@ -73,6 +73,26 @@
     ]
   },
   {
+    "id": "AdvSmeltIron",
+    "Name": "Advanced Iron Smelting",
+    "InputId": [
+      "IronOre"
+    ],
+    "InputMult": [
+      2
+    ],
+    "OutputId": [
+      "Iron"
+    ],
+    "OutputMult": [
+      3
+    ],
+    "duration": 4,
+    "Groups": [
+      "AdvSmelting"
+    ]
+  },
+  {
     "id": "AdvSmeltSteel",
     "Name": "Advanced Steel Smelting",
     "InputId": [
@@ -87,6 +107,27 @@
     ],
     "OutputMult": [
       3
+    ],
+    "duration": 4,
+    "Groups": [
+      "AdvSmelting"
+    ]
+  },
+  {
+    "id": "MercurySmelting",
+    "Name": "Improved Mercury Refinement",
+    "InputId": [
+      "IronOre", "Coal"
+    ],
+    "InputMult": [
+      1,
+      2
+    ],
+    "OutputId": [
+      "Mercury"
+    ],
+    "OutputMult": [
+      2
     ],
     "duration": 4,
     "Groups": [
@@ -111,7 +152,7 @@
     ],
     "duration": 4,
     "Groups": [
-      "AdvSmelting"
+      "Smelting"
     ]
   },
   {
@@ -181,6 +222,27 @@
     "id": "MachinePoisonShell",
     "Name": "Make Poison Shell",
     "InputId": [
+      "IronOre", "Mercury"
+    ],
+    "InputMult": [
+      1, 1
+    ],
+    "OutputId": [
+      "BasicPoisonShell"
+    ],
+    "OutputMult": [
+      1
+    ],
+    "duration": 2,
+    "Groups": [
+      "ChemPlant"
+    ]
+  },
+
+  {
+    "id": "MachinePoisonShell",
+    "Name": "Make Basic Poison Shell",
+    "InputId": [
       "Iron", "Mercury"
     ],
     "InputMult": [
@@ -194,7 +256,7 @@
     ],
     "duration": 2,
     "Groups": [
-      "Machining"
+      "ChemPlant"
     ]
   },
 

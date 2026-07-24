@@ -13,6 +13,7 @@ public class Player extends Character{
 
     private Array<Building> inventory;
     private Array<String> starterBuildings;
+    private Array<String> starterBuildingIds;
     private Array<Relic> relics;
     private FactoryGrid factoryGrid;
     private int money;
@@ -34,7 +35,12 @@ public class Player extends Character{
         this.factoryGrid = new FactoryGrid(gridSize[0], gridSize[1]);
         if (data.get("Buildings") != null) {
             String[] buildings = data.get("Buildings").asStringArray();
-            starterBuildings = new Array<>(buildings);
+            starterBuildingIds = new Array<>(buildings);
+            starterBuildings = new Array<>();
+            for (String id : buildings) {
+                starterBuildings.add(BuildingDatabase.getBuildingConstructor(id).getName());
+            }
+
         }
         if (data.get("Relics") != null) {
             String[] relics = data.get("Relics").asStringArray();
@@ -102,7 +108,7 @@ public class Player extends Character{
     }
 
     public void generateBuildings() {
-        for (String b : starterBuildings) {
+        for (String b : starterBuildingIds) {
             addBuilding(BuildingDatabase.getBuilding(b));
         }
     }

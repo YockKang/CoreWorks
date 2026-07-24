@@ -18,8 +18,7 @@
         "rate": 1
       }
     ],
-    "Group": "Miner",
-    "DefaultRecipe": "MineIron"
+    "Group": "Miner"
   },
   {
     "id": "BigMiner",
@@ -36,7 +35,7 @@
         true
       ]
     ],
-    "MineMult": 1,
+    "MineMult": 2,
     "Ports": [
       {
         "x": 0,
@@ -51,8 +50,7 @@
         "rate": 1
       }
     ],
-    "Group": "Miner",
-    "DefaultRecipe": "MineIron"
+    "Group": "Miner"
   },
   {
     "id": "OpenPitMine",

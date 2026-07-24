@@ -57,6 +57,18 @@
   {
     "id" : "PoisonShell",
     "Name" : "Poison Shell",
+    "DmgMult" : 3,
+    "Modifiers" : [
+      {
+        "type" : "DamageType",
+        "str" : "Poison"
+      }
+    ]
+  },
+
+  {
+    "id" : "BasicPoisonShell",
+    "Name" : "Basic Poison Shell",
     "DmgMult" : 1.5,
     "Modifiers" : [
       {

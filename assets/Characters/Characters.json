@@ -7,7 +7,7 @@
       6
     ],
     "HP": 50,
-    "Buildings": [],
+    "Buildings": ["Miner", "ChemPlant", "ChemPlant",  "MachiningPlant", "Mortar"],
     "Relics": [
     ]
   },
@@ -19,7 +19,7 @@
       5
     ],
     "HP": 35,
-    "Buildings": [],
+    "Buildings": ["Miner", "BigMiner", "Smelter", "ChemPlant", "Shooter"],
     "Relics": [
     ]
   },
@@ -31,7 +31,7 @@
       7
     ],
     "HP": 60,
-    "Buildings": ["MegaRailgun", "Shooter", "AdvChemPlant", "OpenPitMine"],
+    "Buildings": ["Miner", "Smelter", "MachiningPlant", "Shooter"],
     "Relics": [
     ]
   }

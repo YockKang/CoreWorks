@@ -21,12 +21,21 @@
     "Tier" : 0,
     "Type" : "Refiner",
     "Name" : "Advanced Smelter",
-    "Shape" : ["R", 1, 2],
+    "Shape" : [
+      [true , true, false],
+      [true , true, true]
+    ],
     "Ports" : [
       {
         "x" : 0,
         "y" : 0,
-        "dir" : 0,
+        "dir" : 3,
+        "rate" : 1
+      },
+      {
+        "x" : 1,
+        "y" : 0,
+        "dir" : 1,
         "rate" : 1
       }
     ],
@@ -38,12 +47,15 @@
     "Tier" : 0,
     "Type" : "Refiner",
     "Name" : "Machining Plant",
-    "Shape" : ["R", 1, 2],
+    "Shape" : [
+      [true, false],
+      [true , true]
+    ],
     "Ports" : [
       {
         "x" : 0,
-        "y" : 0,
-        "dir" : 0,
+        "y" : 1,
+        "dir" : 2,
         "rate" : 1
       }
     ],
@@ -55,12 +67,20 @@
     "Tier" : 0,
     "Type" : "Refiner",
     "Name" : "Advanced Machining Plant",
-    "BaseSpeed" : 1.5,
-    "Shape" : ["R", 1, 2],
+    "BaseSpeed" : 2,
+    "Shape" : [
+      [true, false, true],
+      [true , true, true]],
     "Ports" : [
       {
         "x" : 0,
         "y" : 0,
+        "dir" : 0,
+        "rate" : 1
+      },
+      {
+        "x" : 0,
+        "y" : 2,
         "dir" : 0,
         "rate" : 1
       }
@@ -73,10 +93,10 @@
     "Tier" : 0,
     "Type" : "Refiner",
     "Name" : "Chemical Plant",
-    "Shape" : ["R", 1, 2],
+    "Shape" : ["R", 1, 3],
     "Ports" : [
       {
-        "x" : 0,
+        "x" : 1,
         "y" : 0,
         "dir" : 0,
         "rate" : 1
@@ -90,12 +110,21 @@
     "Tier" : 0,
     "Type" : "Refiner",
     "Name" : "Advanced Chemical Plant",
-    "Shape" : ["R", 1, 2],
+    "BaseSpeed" : 2,
+    "Shape" : [
+      [true, false, false, false],
+      [true , true, true, true]],
     "Ports" : [
+      {
+        "x" : 2,
+        "y" : 2,
+        "dir" : 0,
+        "rate" : 1
+      },
       {
         "x" : 0,
         "y" : 0,
-        "dir" : 0,
+        "dir" : 1,
         "rate" : 1
       }
     ],

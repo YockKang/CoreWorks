@@ -18,7 +18,10 @@
     "Name" : "Shooter+",
     "Description": "An improved Shooter,\nHit them harder!",
     "Cooldown" : 2,
-    "Shape" : ["S", 1],
+    "Shape" : [
+      [false, true , false],
+      [true , true , true ],
+      [false, true , false]],
     "MagSize": 5,
     "BaseDmg": 2
   },
@@ -28,9 +31,9 @@
     "Tier" : 0,
     "Type" : "Shooter",
     "Name" : "Boomerang",
-    "Description": "A shooter dreamt up by the utterly deranged,\ndeals damage to the last enemy",
+    "Description": "A cannon dreamt up by some madman,\ndeals damage to the last enemy",
     "Cooldown" : 2,
-    "Shape" : ["S", 1],
+    "Shape" : ["R", 1, 2],
     "MagSize": 5,
     "BaseDmg": 2,
     "AoE": [[-1,1]]
@@ -38,7 +41,7 @@
 
   {
     "id" : "Mortar",
-    "Tier" : 1,
+    "Tier" : 0,
     "Type" : "Shooter",
     "Name" : "Mortar",
     "Description": "A basic mortar. Highly inaccurate,\ndealing damage to a random enemy",
@@ -58,7 +61,11 @@
     "GridName" : "Artillery\nCannon",
     "Description": "An artillery cannon,\ndeals damage to all enemies",
     "Cooldown" : 2,
-    "Shape" : ["S", 1],
+    "Shape" : [
+      [true , true , false],
+      [true , true , false],
+      [true , true , true ]
+    ],
     "MagSize": 5,
     "BaseDmg": 1.5,
     "Whitelist": ["ExplosiveShell", "Explosive"],
@@ -72,7 +79,7 @@
     "Name" : "Railgun",
     "Description": "A basic railgun, deals 1x damage\nto the first enemy and 0.5x to the second enemy",
     "Cooldown" : 2,
-    "Shape" : ["S", 1],
+    "Shape" : ["R", 4, 1],
     "MagSize": 5,
     "BaseDmg": 1.5,
     "AoE": [[1, 1], [2, 0.5]],
@@ -88,7 +95,11 @@
     "Shape" : ["S", 1],
     "MagSize": 5,
     "BaseDmg": 1.5,
-    "AoE": [[1, 1], [2, 0.5]],
+    "AoE": [
+      [true , false],
+      [true , false],
+      [true , true ],
+      [true , true]],
     "Whitelist": ["Rail"],
     "Damage Type": "True"
   },

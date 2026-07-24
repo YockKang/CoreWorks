@@ -217,7 +217,7 @@ public class CombatScreen implements Screen {
         UIElements.put("title", new Label("Coreworks", skin));
         UIElements.put("tickcount", new Label("Tick:\n" + tickCount, skin));
         UIElements.put("playerdata", new Label(runState.getPlayer().toString(), skin));
-        UIElements.put("buildingselect", new Label("Selected: None ", skin));
+        UIElements.put("buildingselect", new Label("Selected:\nNone ", skin));
         UIElements.put("rotationhelp", new Label("Q/E\nRotate Buildings", skin));
         ((Label) UIElements.get("rotationhelp")).setAlignment(Align.center);
         UIElements.put("recipeselecthelp", new Label("R\nChange Selected\nBuilding Recipe", skin));
@@ -585,9 +585,9 @@ public class CombatScreen implements Screen {
         ((Label) UIElements.get("tickcount")).setText("Tick:\n" + tickCount);
         ((Label) UIElements.get("playerdata")).setText(runState.getPlayer().toString());
         if (selectedBuilding != null) {
-            ((Label) UIElements.get("buildingselect")).setText("Selected: " + selectedBuilding.displayName());
+            ((Label) UIElements.get("buildingselect")).setText("Selected:\n" + selectedBuilding.displayName());
         } else {
-            ((Label) UIElements.get("buildingselect")).setText("Selected: None");
+            ((Label) UIElements.get("buildingselect")).setText("Selected:\nNone");
         }
         updateInventoryUI();
         updateCombatLog();
