@@ -69,6 +69,13 @@ public class ShopScreen implements Screen {
             false
         );
 
+        game.getPopUpManager().requestPopup(
+            "shop_codex_explanation",
+            "Codex in the shop",
+            "If there are any relics / buildings that you are unsure of, press C to access the codex!",
+            false
+        );
+
         // Build the Scene2D UI
         buildShopUI();
     }
