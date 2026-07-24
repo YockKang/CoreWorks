@@ -23,7 +23,9 @@ public class RewardGenerator {
         if (relicReward != null) {
             rewards.add(relicReward);
         }
-        rewards.add(randomExpansionReward(runState));
+        if (runState.getRandom().nextInt(100) < (int) (5 * runState.getCurrNode().getMultiplier())) {
+            rewards.add(randomExpansionReward(runState));
+        }
 
         // Return statement below
         return rewards;
