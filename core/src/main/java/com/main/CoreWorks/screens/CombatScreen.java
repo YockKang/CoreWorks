@@ -120,7 +120,7 @@ public class CombatScreen implements Screen {
         this.gridHeight = runstate.getPlayer().getFactoryGrid().getMaxHeight();
         this.tileSize = Math.min(gridSize / gridWidth, gridSize / gridHeight);
         this.gridStartX = gridMidX - tileSize * gridWidth / 2;
-        this.gridEndX = gridMidX - tileSize * gridWidth / 2;
+        this.gridEndX = gridMidX + tileSize * gridWidth / 2;
         this.gridEndY = gridMidY + tileSize * gridHeight / 2;
         this.gridStartY = gridMidY - tileSize * gridHeight / 2;
 
@@ -313,8 +313,11 @@ public class CombatScreen implements Screen {
         rightBar.setBackground("default-round");
          */
 
+        float gridBlockStartY = gridMidY - (float) gridSize / 2;
+        float gridBlockEndY = gridMidY + (float) gridSize / 2;
+
         // assembling middle
-        middle.add(topBar).growX().height(Coreworks.VIEWPORT_HEIGHT - gridEndY).row();
+        middle.add(topBar).growX().height(Coreworks.VIEWPORT_HEIGHT - gridBlockEndY).row();
         middle.add(factoryViewport).size(gridSize);
 
         // assembling upperBar
@@ -325,7 +328,7 @@ public class CombatScreen implements Screen {
         // assembling maintable
         maintable.add(upperBar);
         maintable.row();
-        maintable.add(bottomBar).growX().height(gridStartY);
+        maintable.add(bottomBar).growX().height(gridBlockStartY);
 
         // making UI elements
         // top-left info
@@ -358,7 +361,9 @@ public class CombatScreen implements Screen {
         // Enemy Cards (empty, to be filled on start)
         Table enemyTable = (Table) UIElements.get("enemytable");
         enemyTable.add(UIElements.get("enemyheader")).row();
-        enemyTable.add(UIElements.get("enemybody")).pad(10).growY().row();
+        ScrollPane enemyScroller = new ScrollPane(UIElements.get("enemybody"));
+        inventoryScroller.setScrollingDisabled(false, true);
+        enemyTable.add(enemyScroller).pad(10).growY().row();
         updateEnemies();
 
         // relics
@@ -454,10 +459,8 @@ public class CombatScreen implements Screen {
         // The below builds the enemy display
         Table enemyTable = (Table) UIElements.get("enemybody");
         enemyTable.clear();
-        enemyTable.defaults().width(185);
+        enemyTable.defaults().width(150);
         Array<Enemy> enemies = controller.getCombatSim().getEnemies();
-        int enemyCount = 0;
-        int maxEnemyPerRow = 15;
         for (Enemy enemy : enemies) {
             // Draw the enemy in a table (disguised as a card) to look neater
             Table enemyCard = new Table(skin);
@@ -465,10 +468,6 @@ public class CombatScreen implements Screen {
             enemyCard.defaults().pad(2);
             enemyCard.add(new Label(enemy.toString(), skin75pct));
             enemyTable.add(enemyCard).pad(2);
-            enemyCount++;
-            if (enemyCount % maxEnemyPerRow == 0) {
-                enemyTable.row();
-            }
         }
     }
 
@@ -482,11 +481,10 @@ public class CombatScreen implements Screen {
             logTable.add(newlog).right().row();
             combatLog.addLast(newlog);
         }
-        while (combatLog.size > 20) {
+        while (combatLog.size > 15) {
             Label oldlog = combatLog.removeFirst();
             oldlog.remove();
         }
-        logTable.invalidateHierarchy();
         controller.getCombatSim().assertLogUpdated();
     }
 
@@ -1237,7 +1235,7 @@ public class CombatScreen implements Screen {
             }
         }
         hoveredGridCoords = getGridAt(mouseTranslatedX, mouseTranslatedY);
-        if (hoveredGridCoords != null) {
+        if (hoveredGridCoords != null && !recipeUIOn && !codexOnScreen) {
             selectedBuilding = controller.getFactorySim().getGrid().getBuildingAt(hoveredGridCoords.x, hoveredGridCoords.y);
             needRefresh = true;
         }
