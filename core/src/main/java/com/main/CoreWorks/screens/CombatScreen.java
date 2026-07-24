@@ -71,6 +71,8 @@ public class CombatScreen implements Screen {
     private Stage stage;
     private final InputMultiplexer multiplexer = new InputMultiplexer();
     private Skin skin;
+    private Skin skin75pct;
+    private Skin skin50pct;
     private boolean needRefresh = true;
 
 
@@ -128,6 +130,18 @@ public class CombatScreen implements Screen {
     public void show() {
         stage = new Stage(game.viewport, game.batch);
         skin = new Skin(Gdx.files.internal("uiskin.json"));
+        skin75pct = new Skin(Gdx.files.internal("uiskin.json"));
+
+        BitmapFont font75 = skin75pct.getFont("default-font");
+        font75.getData().setScale(0.75f);
+        font75.setUseIntegerPositions(false);
+
+        skin50pct = new Skin(Gdx.files.internal("uiskin.json"));
+
+        BitmapFont font50 = skin75pct.getFont("default-font");
+        font50.getData().setScale(0.75f);
+        font50.setUseIntegerPositions(false);
+
         multiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(multiplexer);
 
@@ -449,7 +463,7 @@ public class CombatScreen implements Screen {
             Table enemyCard = new Table(skin);
             enemyCard.setBackground("default-round");
             enemyCard.defaults().pad(2);
-            enemyCard.add(new Label(enemy.toString(), skin));
+            enemyCard.add(new Label(enemy.toString(), skin75pct));
             enemyTable.add(enemyCard).pad(2);
             enemyCount++;
             if (enemyCount % maxEnemyPerRow == 0) {
@@ -464,14 +478,15 @@ public class CombatScreen implements Screen {
         int newlines = controller.getCombatSim().getLogsThisTick();
         int start = Math.max(0, log.size - newlines);
         for (int i = start; i < log.size; i++) {
-            Label newlog = new Label(log.get(i), skin);
+            Label newlog = new Label(log.get(i), skin75pct);
             logTable.add(newlog).right().row();
             combatLog.addLast(newlog);
         }
-        while (combatLog.size > 10) {
+        while (combatLog.size > 20) {
             Label oldlog = combatLog.removeFirst();
             oldlog.remove();
         }
+        logTable.invalidateHierarchy();
         controller.getCombatSim().assertLogUpdated();
     }
 
@@ -485,7 +500,8 @@ public class CombatScreen implements Screen {
         int buildingCount = 0;
 
         for (Building building : inventory) {
-            TextButton buildingButton = new TextButton(building.gridName(), skin);
+            TextButton buildingButton = new TextButton(building.gridName(), skin75pct);
+
             if (building == selectedBuilding) {
                 buildingButton.setColor(Color.GREEN);
             }
