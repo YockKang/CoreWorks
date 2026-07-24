@@ -31,7 +31,7 @@
       7
     ],
     "HP": 60,
-    "Buildings": [],
+    "Buildings": ["MegaRailgun", "Shooter", "AdvChemPlant", "OpenPitMine"],
     "Relics": [
     ]
   }

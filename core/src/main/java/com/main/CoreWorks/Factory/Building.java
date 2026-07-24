@@ -11,6 +11,7 @@ import com.main.CoreWorks.database.*;
 import com.main.CoreWorks.moveset.*;
 
 import java.util.*;
+import java.util.logging.Level;
 
 public abstract class Building extends Structure implements Updatable, Comparable<Building> {
 
@@ -45,6 +46,7 @@ public abstract class Building extends Structure implements Updatable, Comparabl
     protected ObjectMap<String, Modifier> resourceModifiers = new ObjectMap<>();
 
     protected boolean[][] shape;
+    protected Array<DirectedCoords> border = new Array<>();
     /*
     SHAPE GUIDE
     stores the shape that is "up"
@@ -96,24 +98,52 @@ public abstract class Building extends Structure implements Updatable, Comparabl
             for (int y = 0; y < rows; y++) {
                 this.shape[y] = shapeData.get(y).asBooleanArray();
             }
+            for (int y = 0; y < rows; y++) {
+                for (int x = 0; x < shape[y].length; x++) {
+                    for (int dir = 0; dir < 4; dir++) {
+                        if (shape[y][x]) {
+                            DirectedCoords test = new DirectedCoords(x, y, dir);
+                            Coords next = test.pointingTo();
+                            if (next.x < 0 || next.y < 0 || next.x >= shape[y].length || next.y >= shape.length ||
+                                (!shape[next.y][next.x])) {
+                                border.add(test);
+                            }
+                        }
+                    }
+                }
+            }
         } else {
             String stdShape = shapeData.get(0).asString();
             switch (stdShape) {
-                case "R":
+                case "R" -> {
                     int rows = shapeData.get(1).asInt();
                     int cols = shapeData.get(2).asInt();
                     this.shape = new boolean[rows][cols];
                     for (int y = 0; y < rows; y++) {
                         Arrays.fill(this.shape[y], true);
                     }
-                    break;
-                case "S":
+                    for (int i = 0; i < rows; i++) {
+                        border.add(new DirectedCoords(0, i, 3));
+                        border.add(new DirectedCoords(cols - 1, i, 1));
+                    }
+                    for (int i = 0; i < cols; i++) {
+                        border.add(new DirectedCoords(i, 0, 0));
+                        border.add(new DirectedCoords(i, rows - 1, 2));
+                    }
+                }
+                case "S" -> {
                     int side = shapeData.get(1).asInt();
                     this.shape = new boolean[side][side];
                     for (int y = 0; y < side; y++) {
                         Arrays.fill(this.shape[y], true);
                     }
-                    break;
+                    for (int i = 0; i < side; i++) {
+                        border.add(new DirectedCoords(0, i, 0));
+                        border.add(new DirectedCoords(i, side - 1, 1));
+                        border.add(new DirectedCoords(side - 1, i, 2));
+                        border.add(new DirectedCoords(i, 0, 3));
+                    }
+                }
             }
         }
 
@@ -450,7 +480,8 @@ public abstract class Building extends Structure implements Updatable, Comparabl
         System.out.println(connectedTubes.get(tube));
         if (connectedTubes.containsKey(tube)) {
             connectedTubes.get(tube).remove(dir);
-        };
+        }
+        ;
         System.out.println(connectedTubes.get(tube));
         System.out.println(connectedTubes.get(tube).size);
         if (connectedTubes.get(tube).size == 0) {
@@ -551,6 +582,9 @@ public abstract class Building extends Structure implements Updatable, Comparabl
         return inputBuildings;
     }
 
+    public Array<DirectedCoords> getBorder() {
+        return border;
+    }
 
     public int getPriority() {
         return priority;

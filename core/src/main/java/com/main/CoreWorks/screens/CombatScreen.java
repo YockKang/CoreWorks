@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Codex.Codex;
-import com.main.CoreWorks.Codex.RefinerEntry;
 import com.main.CoreWorks.Coreworks;
 import com.main.CoreWorks.Recipe.Recipe;
 import com.main.CoreWorks.entities.Relics.Relic;
@@ -801,6 +800,53 @@ public class CombatScreen implements Screen {
                             }
                             i++;
                         }
+                    }
+                }
+            }
+        }
+
+        // draw building outlines
+        for (Building building : controller.getFactorySim().getGrid().getBuildings()) {
+            Array<DirectedCoords> border = building.getBorder();
+            Color drawColor = null;
+            if (building == selectedBuilding) {
+                drawColor = Color.WHITE;
+            } else {
+                drawColor = Color.GRAY;
+            }
+            for (DirectedCoords coords : border) {
+                DirectedCoords trueLocation = building.getGlobalCoord(coords.x, coords.y).addDirection((coords.dir + building.getRotation()) % 4);
+                int botLeftX = gridStartX + trueLocation.x * tileSize;
+                int botLeftY = gridEndY - (trueLocation.y + 1) * tileSize; // offset by one since libGDX stores its object origins in the bottom left
+                shapeRenderer.setColor(drawColor);
+                switch (trueLocation.dir) {
+                    case 0 -> {
+                        shapeRenderer.rect(
+                            botLeftX,
+                            botLeftY + tileSize - (float) tileSize / 20,
+                            tileSize,
+                            (float) tileSize / 20);
+                    }
+                    case 1 -> {
+                        shapeRenderer.rect(
+                            botLeftX + tileSize - (float) tileSize / 20,
+                            botLeftY,
+                            (float) tileSize / 20,
+                            tileSize);
+                    }
+                    case 2 -> {
+                        shapeRenderer.rect(
+                            botLeftX,
+                            botLeftY,
+                            tileSize,
+                            (float) tileSize / 20);
+                    }
+                    case 3 -> {
+                        shapeRenderer.rect(
+                            botLeftX,
+                            botLeftY,
+                            (float) tileSize / 20,
+                            tileSize);
                     }
                 }
             }
