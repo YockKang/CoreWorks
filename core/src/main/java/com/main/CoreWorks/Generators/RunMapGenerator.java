@@ -163,7 +163,7 @@ public class RunMapGenerator {
         int startCol = totalCols / 2;
         float startX = generateXCoords(startCol, totalCols, leftBound, rightBound);
         float startY = generateYCoords(0, totalRows, topBound, bottomBound);
-        MapNode startNode = new CombatNode(CombatGenerator.createCombat(1, 0.9f, random), 0, startCol, 1, 1.9f, startX, startY);
+        MapNode startNode = new CombatNode(CombatGenerator.createCombat(1, 1.9f, random), 0, startCol, 1, 1.9f, startX, startY);
         startRowNode.add(startNode);
         allNodes.add(startRowNode);
 
@@ -205,7 +205,7 @@ public class RunMapGenerator {
         int bossCol = totalCols / 2;
         float bossX = generateXCoords(bossCol, totalCols, leftBound, rightBound);
         float bossY = generateYCoords(totalRows - 1, totalRows, topBound, bottomBound);
-        bossRowNode.add(new BossNode(CombatGenerator.createCombat("Boss1", 1f, random), totalRows - 1, bossCol, 1, 2f, bossX, bossY));
+        bossRowNode.add(new BossNode(CombatGenerator.createCombat("Boss1", 2f, random), totalRows - 1, bossCol, 1, 2f, bossX, bossY));
         allNodes.add(bossRowNode);
 
         // Connect the rows
@@ -251,7 +251,7 @@ public class RunMapGenerator {
         int startCol = totalCols / 2;
         float startX = generateXCoords(startCol, totalCols, leftBound, rightBound);
         float startY = generateYCoords(0, totalRows, topBound, bottomBound);
-        MapNode startNode = new CombatNode(CombatGenerator.createCombat(1, 0.9f, random), 0, startCol, 1, 3.1f, startX, startY);
+        MapNode startNode = new CombatNode(CombatGenerator.createCombat(1, 3.1f, random), 0, startCol, 1, 3.1f, startX, startY);
         startRowNode.add(startNode);
         allNodes.add(startRowNode);
 
@@ -293,7 +293,7 @@ public class RunMapGenerator {
         int bossCol = totalCols / 2;
         float bossX = generateXCoords(bossCol, totalCols, leftBound, rightBound);
         float bossY = generateYCoords(totalRows - 1, totalRows, topBound, bottomBound);
-        bossRowNode.add(new BossNode(CombatGenerator.createCombat("Boss1", 1f, random), totalRows - 1, bossCol, 1, 3f, bossX, bossY));
+        bossRowNode.add(new BossNode(CombatGenerator.createCombat("Boss1", 3.5f, random), totalRows - 1, bossCol, 1, 3.5f, bossX, bossY));
         allNodes.add(bossRowNode);
 
         // Connect the rows
