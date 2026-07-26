@@ -62,6 +62,16 @@ public class ShopScreen extends GameScreen {
             "You can also expand your grid size in the shop!\nHowever, they are quite expensive, so make sure you have sme money saved up.",
             false
         );
+
+        game.getPopUpManager().requestPopup(
+            "shop_codex_explanation",
+            "Codex in the shop",
+            "If there are any relics / buildings that you are unsure of, press C to access the codex!",
+            false
+        );
+
+        // Build the Scene2D UI
+        buildShopUI();
     }
 
     private void buildShopUI() {
