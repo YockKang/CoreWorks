@@ -4,8 +4,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.*;
+import com.main.CoreWorks.Factory.Building;
+import com.main.CoreWorks.Factory.Miner;
 import com.main.CoreWorks.Resources.Resource;
 import com.main.CoreWorks.database.*;
+import com.main.CoreWorks.util.MathExtras;
 
 import java.util.Arrays;
 
@@ -156,10 +159,9 @@ public class Recipe {
         return id;
     }
 
-    public Table displayStats(Skin skin) {
+    public Table displayStats(Building building, Skin skin) {
         Table mainTable = new Table(skin);
         mainTable.add(new Label(this.name, skin)).pad(2).row();
-
 
         if (input.size > 0) {
             Table inputTable = new Table(skin);
@@ -167,20 +169,23 @@ public class Recipe {
                 StringBuilder inputStr = new StringBuilder(" ");
                 inputStr.append(ResourceDatabase.getName(input.get(i)) ).append(" x");
                 try {
-                    inputStr.append(inputMult.get(i).toString());
+                    if (building instanceof Miner miner) {
+                        inputStr.append(String.valueOf (inputMult.get(i) * miner.getMineMultiplier()) );
+                    } else {
+                        inputStr.append(String.valueOf (inputMult.get(i).toString()) );
+                    }
                 } catch (Exception e) {
                     inputStr.append("0");
                 }
                 Label label = new Label(inputStr, skin);
                 Table labelBox = new Table(skin);
-                labelBox.setBackground("default-round");
                 labelBox.add(label);
                 inputTable.add(labelBox).pad(2);
             }
             mainTable.add(inputTable).pad(2).row();
         }
 
-        mainTable.add(new Label(duration + " ticks", skin)).pad(2).row();
+        mainTable.add(new Label(String.valueOf(MathExtras.roundDP((float) duration / building.getSpeed(), 2)) + " ticks", skin)).pad(2).row();
 
         if (output.size > 0) {
             Table outputTable = new Table(skin);
@@ -188,13 +193,16 @@ public class Recipe {
                 StringBuilder outputStr = new StringBuilder(" ");
                 outputStr.append(ResourceDatabase.getName(output.get(i)) ).append(" x");
                 try {
-                    outputStr.append(outputMult.get(i).toString());
+                    if (building instanceof Miner miner) {
+                        outputStr.append( String.valueOf(outputMult.get(i) * miner.getMineMultiplier()) );
+                    } else {
+                        outputStr.append( String.valueOf(outputMult.get(i).toString()) );
+                    }
                 } catch (Exception e) {
                     outputStr.append("0");
                 }
                 Label label = new Label(outputStr, skin);
                 Table labelBox = new Table(skin);
-                labelBox.setBackground("default-round");
                 labelBox.add(label);
                 outputTable.add(labelBox).pad(2);
             }

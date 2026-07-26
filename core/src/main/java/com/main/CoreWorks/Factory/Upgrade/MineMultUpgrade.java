@@ -27,10 +27,10 @@ public class MineMultUpgrade extends UpgradeAspect{
     @Override
     public String changes(Building b) {
         StringBuilder str = new StringBuilder().append("Mine Multiplier: ");
-        if (b instanceof Miner) {
-            str.append( ((Miner) b).getMineMultiplier() )
+        if (b instanceof Miner miner) {
+            str.append( miner.getMineMultiplier() )
                 .append(" -> ")
-                .append( (int) (((Miner) b).getMineMultiplier() + value) );
+                .append( (int) (miner.getMineMultiplier() + value) );
         } else {
             str.append("Not Applicable");
         }

@@ -3,6 +3,7 @@ package com.main.CoreWorks.Factory.Upgrade;
 import com.badlogic.gdx.utils.Array;
 import com.main.CoreWorks.Factory.Building;
 import com.main.CoreWorks.Factory.Shooter;
+import com.main.CoreWorks.util.MathExtras;
 
 public class BaseDamageUpgrade extends UpgradeAspect{
     public BaseDamageUpgrade(float value) {
@@ -28,10 +29,10 @@ public class BaseDamageUpgrade extends UpgradeAspect{
     @Override
     public String changes(Building b) {
         StringBuilder str = new StringBuilder().append("Base Damage: ");
-        if (b instanceof Shooter) {
-            str.append( ((Shooter) b).getBaseDmg() )
+        if (b instanceof Shooter shooter) {
+            str.append( shooter.getBaseDmg() )
                 .append(" -> ")
-                .append( ((Shooter) b).getBaseDmg() + value );
+                .append( MathExtras.roundDP(shooter.getBaseDmg() + value, 2) );
         } else {
             str.append("Not Applicable");
         }

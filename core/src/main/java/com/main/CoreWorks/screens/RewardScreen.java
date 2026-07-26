@@ -2,6 +2,7 @@ package com.main.CoreWorks.screens;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -21,15 +22,11 @@ import com.main.CoreWorks.simulators.PopUpTutorial.PopUpManager;
 /*
 Note: Reward Screen does NOT handle unlocking of next nodes, it should be settled before coming to this screen
  */
-public class RewardScreen implements Screen {
+public class RewardScreen extends GameScreen {
 
-    private final Coreworks game;
     private RunState runState;
     private Array<Reward> rewards;
-
-    // Rendering Reward screen using Scene2D default graphics
-    private Stage stage;
-    private Skin skin;
+    private Group mainWindow;
 
     // Handles the different selection screens without creating a new screen each time and wasting resources
     // Add any additional "screens" that rely on Reward class (like different types of confirm screen) as an enum here
@@ -47,14 +44,16 @@ public class RewardScreen implements Screen {
     private Array<Building> selectableBuildings;
 
     public RewardScreen(Coreworks game, RunState runState, Array<Reward> rewards) {
-        this.game = game;
+        super(game);
         this.runState = runState;
         this.rewards = rewards;
+        mainWindow = new Group();
+        centerStack.add(mainWindow);
     }
 
     @Override
     public void show() {
-        stage = new Stage(game.viewport, game.batch);
+
         Gdx.input.setInputProcessor(stage);
 
         // Uses the default libgdx skin, eventually will replace with our own
@@ -101,7 +100,8 @@ public class RewardScreen implements Screen {
     }
 
     private void buildRewardSelectionUI() {
-        stage.clear();
+
+        mainWindow.clear();
 
         // The below code builds the table that will serve as the base table for all subsequent UI building in the Stage
         Table table = new Table();
@@ -109,7 +109,7 @@ public class RewardScreen implements Screen {
 
         // Top align the table + add label in the current row
         table.top().pad(30);
-        stage.addActor(table);
+        mainWindow.addActor(table);
         table.add(new Label("Choose a reward", skin)).padBottom(30);
 
         // Next row
@@ -176,7 +176,7 @@ public class RewardScreen implements Screen {
     }
 
     private void buildBuildingSelectionUI() {
-        stage.clear();
+        mainWindow.clear();
 
         // The below code builds the table that will serve as the base table for all subsequent UI building in the Stage
         Table table = new Table();
@@ -184,7 +184,7 @@ public class RewardScreen implements Screen {
 
         // Top align the table + add label in the current row
         table.top().pad(30);
-        stage.addActor(table);
+        mainWindow.addActor(table);
 
         table.add(new Label("Choose a building to upgrade", skin)).pad(20).row();
 
@@ -261,7 +261,7 @@ public class RewardScreen implements Screen {
     }
 
     private void buildUpgradeConfirmationUI() {
-        stage.clear();
+        mainWindow.clear();
 
         // Handles weird nullPointer exceptions (should not trigger under normal circumstances)
         if (selectedBuilding == null || (!(selectedReward instanceof AddUpgradeReward upgradeReward))) {
@@ -278,7 +278,7 @@ public class RewardScreen implements Screen {
 
         // Top align the table + add label in the current row
         table.top().pad(30);
-        stage.addActor(table);
+        mainWindow.addActor(table);
 
         table.add(new Label("Confirm upgrade?", skin)).pad(20).row();
         table.add(new Label("Target: " + selectedBuilding.displayName(), skin)).pad(20).row();
@@ -330,6 +330,8 @@ public class RewardScreen implements Screen {
             stage.draw();
             return;
         }
+
+        codexCheck();
 
         ScreenUtils.clear(Color.BLACK);
         stage.act(delta);

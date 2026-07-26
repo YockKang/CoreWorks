@@ -21,7 +21,8 @@ public class Codex {
     private static final Array<Entry> Buildings = new Array<>();
     private static final Array<Entry> Enemies = new Array<>();
     private static final Array<Entry> Relics = new Array<>();
-    static final Table CodexTable = new Table();
+    protected static final Table CodexTable = new Table();
+    protected static final Container<Actor> TableInDiv = new Container<>(CodexTable);
     static final Table ContentTable = new Table();
     private static final Table ResourcesList = new Table();
     private static final Table RecipesList = new Table();
@@ -30,6 +31,7 @@ public class Codex {
     private static final Table RelicsList = new Table();
     static Actor selectedItem;
     static Actor selectedCategory;
+    public static boolean isOnScreen = false;
 
     public static void register() {
         // generate resource entries
@@ -153,9 +155,30 @@ public class Codex {
 
     }
 
-    public static void genreateInfoTable(Skin skin) {
+    public static void generateInfoTable(Skin skin) {
         CodexTable.setSkin(skin);
         CodexTable.setBackground("default-round");
+        TextButton exitButton = new TextButton("X", skin);
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                isOnScreen = false;
+                TableInDiv.remove();
+            }
+        });
+        exitButton.setColor(new Color(.75f, 0, 0, 1));
+        exitButton.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                exitButton.addAction(Actions.color(new Color(1, 0, 0, 1), 0.15f));
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                exitButton.addAction(Actions.color(new Color(.75f, 0, 0, 1), 0.15f));
+            }
+        });
+        CodexTable.add(exitButton).top().right().row();
         CodexTable.add(new Label("Codex", skin)).row();
 
 
@@ -456,6 +479,6 @@ public class Codex {
     }
 
     public static Container<Actor> getTableInDiv() {
-        return new Container<>(CodexTable);
+        return TableInDiv;
     }
 }

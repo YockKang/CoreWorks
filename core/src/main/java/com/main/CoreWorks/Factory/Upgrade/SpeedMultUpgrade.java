@@ -2,6 +2,7 @@ package com.main.CoreWorks.Factory.Upgrade;
 
 import com.badlogic.gdx.utils.Array;
 import com.main.CoreWorks.Factory.Building;
+import com.main.CoreWorks.util.MathExtras;
 
 public class SpeedMultUpgrade  extends UpgradeAspect {
     public SpeedMultUpgrade(float value) {
@@ -24,7 +25,7 @@ public class SpeedMultUpgrade  extends UpgradeAspect {
             .append("Speed Multiplier: ")
             .append( b.getSpeedMult() )
             .append(" -> ")
-            .append( b.getSpeedMult() + value )
+            .append( MathExtras.roundDP(b.getSpeedMult() + value, 2 ) )
             .toString();
     }
 }

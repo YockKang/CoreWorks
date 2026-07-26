@@ -39,9 +39,9 @@ public class ResourceEntry extends Entry{
                     }
                 }
             }
-            if (damageType == null) {
-                damageType = "Normal";
-            }
+        }
+        if (damageType == null) {
+            damageType = "Normal";
         }
     }
 
@@ -56,6 +56,7 @@ public class ResourceEntry extends Entry{
     @Override
     public void generateInfoTable(Skin skin) {
         super.generateInfoTable(skin);
+        infoTable.add(new Label("Damage Type: " + damageType, skin)).row();
         infoTable.add(new Label("Damage Multiplier: " + dmgMult, skin)).row();
 
         int itemsPerRow = 3;

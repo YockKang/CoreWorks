@@ -9,34 +9,34 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Coreworks;
 import com.main.CoreWorks.Factory.Building;
+import com.main.CoreWorks.Factory.BuildingTemplate.BuildingTemplate;
 import com.main.CoreWorks.Generators.RunMapGenerator;
 import com.main.CoreWorks.RunPersistence.RunMap;
 import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.TextParser.Sentence;
+import com.main.CoreWorks.database.BuildingDatabase;
 import com.main.CoreWorks.database.PlayerDatabase;
 import com.main.CoreWorks.entities.Player;
 import com.main.CoreWorks.entities.Relics.Relic;
 import com.main.CoreWorks.simulators.PopUpTutorial.PopUpManager;
 
-public class CharacterSelectScreen implements Screen {
+public class CharacterSelectScreen extends GameScreen {
 
-    private final Coreworks game;
     private Array<Player> characterList;
-    private Stage stage;
-    private Skin skin;
-
     private Player selectedPlayer;
     private Table selectedCard;
 
     public CharacterSelectScreen(Coreworks game) {
-        this.game = game;
+        super(game);
         this.characterList = createCharacterList();
+
+        for (ObjectMap.Entry<String, BuildingTemplate> entry : BuildingDatabase.getDB()) {
+            entry.value.resetCounter();
+        }
     }
 
     @Override
     public void show() {
-        stage = new Stage(game.viewport, game.batch);
-        skin = new Skin(Gdx.files.internal("uiskin.json"));
         Gdx.input.setInputProcessor(stage);
 
         // Sets the popup manager
@@ -69,12 +69,11 @@ public class CharacterSelectScreen implements Screen {
 
     // Helper function that builds the main selection UI
     private void buildSelectUI() {
-        stage.clear();
 
         Table table = new Table();
         table.setFillParent(true);
         table.top().pad(20);
-        stage.addActor(table);
+        centerStack.addActor(table);
 
         table.add(new Label("Choose Your Character", skin)).padBottom(20).row();
 
@@ -215,6 +214,8 @@ public class CharacterSelectScreen implements Screen {
             stage.draw();
             return;
         }
+
+        codexCheck();
 
         ScreenUtils.clear(Color.BLACK);
         stage.act(delta);

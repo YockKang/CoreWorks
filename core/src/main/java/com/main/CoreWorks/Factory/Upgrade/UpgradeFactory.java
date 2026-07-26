@@ -7,6 +7,8 @@ import com.main.CoreWorks.util.Pair;
 
 import java.util.Random;
 
+import static com.main.CoreWorks.util.MathExtras.roundDP;
+
 public class UpgradeFactory {
 
     public static Upgrade randomUpgrade(Random random, float strength) {
@@ -29,10 +31,6 @@ public class UpgradeFactory {
 
         return randomTypedUpgrade(random, strength, buildingName);
 
-    }
-
-    private static float roundDP(float input, int n) {
-        return (float) (Math.round((double) input * Math.pow(10, n)) / Math.pow(10, n));
     }
 
     public static Upgrade randomTypedUpgrade(Random random, float strength, String type) {

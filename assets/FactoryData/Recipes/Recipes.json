@@ -228,7 +228,7 @@
       1, 1
     ],
     "OutputId": [
-      "BasicPoisonShell"
+      "PoisonShell"
     ],
     "OutputMult": [
       1
@@ -240,7 +240,7 @@
   },
 
   {
-    "id": "MachinePoisonShell",
+    "id": "MachineBasicPoisonShell",
     "Name": "Make Basic Poison Shell",
     "InputId": [
       "IronOre", "Mercury"
@@ -249,7 +249,7 @@
       1, 1
     ],
     "OutputId": [
-      "PoisonShell"
+      "BasicPoisonShell"
     ],
     "OutputMult": [
       1
@@ -293,7 +293,7 @@
     "OutputMult": [
       1, 2
     ],
-    "duration": 2,
+    "duration": 4,
     "Groups": [
       "ChemPlant"
     ]

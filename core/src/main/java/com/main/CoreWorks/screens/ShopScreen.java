@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Codex.Codex;
 import com.main.CoreWorks.Coreworks;
+import com.main.CoreWorks.Factory.Upgrade.Upgrade;
 import com.main.CoreWorks.Generators.RewardGenerator;
 import com.main.CoreWorks.Rewards.Reward;
 import com.main.CoreWorks.Rewards.ShopOffer;
@@ -19,30 +20,23 @@ import com.main.CoreWorks.RunPersistence.MapNode;
 import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.simulators.PopUpTutorial.PopUpManager;
 
-public class ShopScreen implements Screen {
+public class ShopScreen extends GameScreen {
 
-    private final Coreworks game;
     private RunState runState;
     private Array<ShopOffer> offers;
-    private Stage stage;
-    private Stack centerStack;
-    private Container<Actor> codexDiv = Codex.getTableInDiv();
-    private Skin skin;
-    private boolean codexOnScreen = false;
 
     public ShopScreen(Coreworks game, RunState runState, Array<ShopOffer> offers) {
-        this.game = game;
+        super(game);
         this.runState = runState;
         this.offers = offers;
-        centerStack = new Stack();
     }
 
     @Override
     public void show() {
-        stage = new Stage(game.viewport, game.batch);
-        stage.addActor(centerStack);
 
-        skin = new Skin(Gdx.files.internal("uiskin.json"));
+        buildShopUI();
+        centerStack.addActor(UIElements.get("maintable"));
+
         Gdx.input.setInputProcessor(stage);
 
         // Sets the popup manager
@@ -65,32 +59,27 @@ public class ShopScreen implements Screen {
         game.getPopUpManager().requestPopup(
             "grid_expansion",
             "Grid Expansion",
-            "You can also expand your grid size in the shop!\nHowever, they are quite expensive, so make sure you really need that space.",
+            "You can also expand your grid size in the shop!\nHowever, they are quite expensive, so make sure you have sme money saved up.",
             false
         );
-
-        // Build the Scene2D UI
-        buildShopUI();
     }
 
     private void buildShopUI() {
-        stage.clear();
-        centerStack.clear();
 
         Table table = new Table();
+        UIElements.put("maintable", table);
         table.setFillParent(true);
-        stage.addActor(centerStack);
-        centerStack.addActor(table);
+        table.center().pad(20);
 
         table.add(new Label("Welcome to the Curiosity Shop!", skin)).padTop(10).top().center().row();
-        table.add(new Label(runState.getPlayer().toString(), skin)).pad(10).center().row();
+        Label playerData = new Label(runState.getPlayer().toString(), skin);
+        table.add(playerData).pad(10).center().row();
 
         // Creates the shop table + cards
         Table shopTable = new Table();
         int count = 0;
         for (ShopOffer offer : offers) {
             Table shopCard = new Table();
-            shopCard.defaults().pad(4);
 
             shopCard.add(new Label(offer.getReward().getName(), skin)).pad(5).row();
             shopCard.add(new Label(offer.getReward().getDescription(), skin)).pad(5).row();
@@ -98,13 +87,8 @@ public class ShopScreen implements Screen {
 
             TextButton buyButton = new TextButton("Buy", skin);
             // Disable the button if too broke
-            if (offer.isPurchased()) {
-                // Permanently disable the button
-                buyButton.setDisabled(true);
-                buyButton.setText("SOLD!");
-                // Set the background to translucent gray
-                shopCard.setBackground(skin.newDrawable("default-round", new Color(0.4f, 0.4f, 0.4f, 0.5f)));
-            } else if (runState.getPlayer().getMoney() < offer.getCost()) {
+            if (runState.getPlayer().getMoney() < offer.getCost()) {
+                buyButton.setText("Cannot Afford");
                 buyButton.setDisabled(true);
                 shopCard.setBackground(skin.newDrawable("default-round", new Color(1f, 0f, 0f, 0.6f)));
             } else {
@@ -117,7 +101,10 @@ public class ShopScreen implements Screen {
                     // Apply the offer
                     offer.apply(runState);
                     // refresh the UI
-                    buildShopUI();
+                    buyButton.setDisabled(true);
+                    buyButton.setText("SOLD!");
+                    playerData.setText(runState.getPlayer().toString());
+                    shopCard.setBackground(skin.newDrawable("default-round", new Color(0.4f, 0.4f, 0.4f, 0.5f)));
                 }
             });
             shopCard.add(buyButton).row();
@@ -158,14 +145,7 @@ public class ShopScreen implements Screen {
             return;
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
-            if (!codexOnScreen) {
-                centerStack.add(codexDiv);
-            } else {
-                codexDiv.remove();
-            }
-            codexOnScreen = !codexOnScreen;
-        }
+        codexCheck();
 
         ScreenUtils.clear(Color.BLACK);
         stage.act(delta);

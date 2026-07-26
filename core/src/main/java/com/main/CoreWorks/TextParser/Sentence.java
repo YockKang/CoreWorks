@@ -129,7 +129,7 @@ public class Sentence {
                 formattedText.add(new Array<>());
             }
         }
-        Table table = new Table();
+        Table table = new Table(skin);
         for (Array<Text> line : formattedText) {
             Table row = new Table();
             for (Text txt : line) {

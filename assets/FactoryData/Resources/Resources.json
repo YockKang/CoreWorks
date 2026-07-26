@@ -33,31 +33,31 @@
   {
     "id" : "Steel",
     "Name" : "Steel",
-    "DmgMult" : 1.5
+    "DmgMult" : 2
   },
 
   {
     "id" : "Explosive",
     "Name" : "Explosive",
-    "DmgMult" : 1.5
+    "DmgMult" : 3.5
   },
 
   {
     "id" : "Shell",
     "Name" : "Shell",
-    "DmgMult" : 1.5
+    "DmgMult" : 3
   },
 
   {
     "id" : "ExplosiveShell",
     "Name" : "Explosive Shell",
-    "DmgMult" : 1.5
+    "DmgMult" : 4
   },
 
   {
     "id" : "PoisonShell",
     "Name" : "Poison Shell",
-    "DmgMult" : 3,
+    "DmgMult" : 3.5,
     "Modifiers" : [
       {
         "type" : "DamageType",
@@ -69,7 +69,7 @@
   {
     "id" : "BasicPoisonShell",
     "Name" : "Basic Poison Shell",
-    "DmgMult" : 1.5,
+    "DmgMult" : 2,
     "Modifiers" : [
       {
         "type" : "DamageType",
@@ -81,6 +81,6 @@
   {
     "id" : "Rail",
     "Name" : "Rail",
-    "DmgMult" : 1.5
+    "DmgMult" : 4
   }
 ]

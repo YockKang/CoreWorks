@@ -35,6 +35,7 @@ public abstract class Building extends Structure implements Updatable, Comparabl
     protected float speedBase = 1f;
     protected float speedMultiplier = 1f;
     protected float speedFlat = 0f;
+    protected Coords displaySquare;
 
     protected ObjectMap<Building, ObjectSet<IOPort>> inputBuildings = new ObjectMap<>();
     protected ObjectMap<Tube, ObjectSet<Integer>> connectedTubes = new ObjectMap<>();
@@ -147,6 +148,11 @@ public abstract class Building extends Structure implements Updatable, Comparabl
             }
         }
 
+        if (data.get("DisplayOverride") != null) {
+            displaySquare = new Coords(data.get("DisplayOverride").asIntArray());
+        } else {
+            displaySquare = Coords.origin();
+        }
 
         if (data.get("Cooldown") != null) {
             cooldownTimer = data.getInt("Cooldown");
@@ -216,6 +222,10 @@ public abstract class Building extends Structure implements Updatable, Comparabl
 
     public Coords getGlobalCoord(int x, int y) {
         return tryGlobalCoord(x, y, xCoord, yCoord);
+    }
+
+    public Coords getGlobalCoord(Coords localCoords) {
+        return tryGlobalCoord(localCoords.x, localCoords.y, xCoord, yCoord);
     }
 
     public Coords tryGlobalCoord(int x, int y, int tryPosX, int tryPosY) {
@@ -832,5 +842,9 @@ public abstract class Building extends Structure implements Updatable, Comparabl
 
     public Recipe getRecipe() {
         return recipe;
+    }
+
+    public Coords getDisplaySquare() {
+        return displaySquare;
     }
 }

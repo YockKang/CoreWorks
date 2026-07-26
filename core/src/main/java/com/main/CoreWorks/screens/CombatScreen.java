@@ -22,11 +22,10 @@ import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.entities.*;
 import com.main.CoreWorks.simulators.*;
 
-public class CombatScreen implements Screen {
+public class CombatScreen extends GameScreen {
 
-    Coreworks game;
-    RunState runState;
-    CombatController controller;
+    private RunState runState;
+    private CombatController controller;
     private float accumulator = 0f;
     private static final float TIME_STEP = 1 / 4f; // 4 Ticks per second
     private int tickCount = 0;
@@ -64,13 +63,8 @@ public class CombatScreen implements Screen {
     // recipe UI fields
     private boolean recipeUIOn = false;
 
-    // codex checker
-    boolean codexOnScreen = false;
-
     // Below field handles the scene2D UI
-    private Stage stage;
     private final InputMultiplexer multiplexer = new InputMultiplexer();
-    private Skin skin;
     private Skin skin75pct;
     private Skin skin50pct;
     private boolean needRefresh = true;
@@ -103,13 +97,11 @@ public class CombatScreen implements Screen {
 
     private Building selectedBuilding;
 
-    private ObjectMap<String, Actor> UIElements = new ObjectMap<>();
     private Queue<Label> combatLog = new Queue<>();
     private Recipe selectedRecipe;
 
     public CombatScreen(Coreworks game, RunState runstate, Array<Enemy> enemies) {
-
-        this.game = game;
+        super(game);
         this.runState = runstate;
         // Initialize the controllers
         FactorySim factorySim = new FactorySim(runstate.getFactoryGrid());
@@ -123,13 +115,10 @@ public class CombatScreen implements Screen {
         this.gridEndX = gridMidX + tileSize * gridWidth / 2;
         this.gridEndY = gridMidY + tileSize * gridHeight / 2;
         this.gridStartY = gridMidY - tileSize * gridHeight / 2;
-
     }
 
     @Override
     public void show() {
-        stage = new Stage(game.viewport, game.batch);
-        skin = new Skin(Gdx.files.internal("uiskin.json"));
         skin75pct = new Skin(Gdx.files.internal("uiskin.json"));
 
         BitmapFont font75 = skin75pct.getFont("default-font");
@@ -219,18 +208,16 @@ public class CombatScreen implements Screen {
     }
 
     public void buildCombatUI() {
-        stage.clear();
-
         // assign all fixed UI elements
         UIElements.put("MasterTable", new Table(skin));
-        UIElements.put("CenterStack", new Stack());
+        UIElements.put("CenterStack", centerStack);
 
         // Info Sheets
         UIElements.put("infotableL", new Table(skin));
         UIElements.put("infotableR", new Table(skin));
         UIElements.put("title", new Label("Coreworks", skin));
         UIElements.put("tickcount", new Label("Tick:\n" + tickCount, skin));
-        UIElements.put("codexhelp", new Label("C\n Open Codex", skin));
+        UIElements.put("codexhelp", new Label("C\n Toggle Codex", skin));
         UIElements.put("playerdata", new Label(runState.getPlayer().toString(), skin));
         UIElements.put("buildingselect", new Label("Selected:\nNone ", skin));
         UIElements.put("rotationhelp", new Label("Q/E\nRotate Buildings", skin));
@@ -271,18 +258,11 @@ public class CombatScreen implements Screen {
         UIElements.put("recipeinfo", new Table(skin));
         ((Table) UIElements.get("recipeinfo")).add(new Label("Selected: None", skin));
 
-        // codex (the actual codex static in the codex class
-        Container<Actor> codexDiv = new Container<>(Codex.getTable());
-        UIElements.put("codexdiv", codexDiv);
-
 
         Actor factoryViewport = new Actor();
         UIElements.put("factoryviewport", factoryViewport);
 
-        Stack centerStack = (Stack) UIElements.get("CenterStack");
         Table maintable = (Table) UIElements.get("MasterTable");
-        centerStack.setFillParent(true);
-        stage.addActor(centerStack);
         centerStack.add(maintable);
 
         // subsections of the screen
@@ -508,7 +488,6 @@ public class CombatScreen implements Screen {
             buildingButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    System.out.println(recipeUIOn);
                     if (!(recipeUIOn || codexOnScreen || tubeMode)) {
                         // allow building selecting when recipe UI and codex are both off-screen and not in tubeMode
                         selectedBuilding = building;
@@ -584,7 +563,7 @@ public class CombatScreen implements Screen {
         if (selectedRecipe == null) {
             ((Table) UIElements.get("recipeinfo")).add(new Label("Selected: None", skin));
         } else {
-            ((Table) UIElements.get("recipeinfo")).add(selectedRecipe.displayStats(skin));
+            ((Table) UIElements.get("recipeinfo")).add(selectedRecipe.displayStats(selectedBuilding, skin));
         }
     }
 
@@ -894,7 +873,7 @@ public class CombatScreen implements Screen {
         game.batch.begin();
 
         for (Building building : controller.getFactorySim().getGrid().getBuildings()) {
-            Coords coords = building.getGlobalCoord(0, 0);
+            Coords coords = building.getGlobalCoord(building.getDisplaySquare());
             float nameX = gridStartX + coords.x * tileSize + 10;
             float nameY = gridEndY - coords.y * tileSize - 20;
             game.font.getData().setScale(0.75f);
@@ -942,9 +921,14 @@ public class CombatScreen implements Screen {
 
     private void externalInput() {
         // Keyboard inputs handled below
+
+        codexOnScreen = Codex.isOnScreen;
+        codexCheck();
+
+        /*
         if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
             if (!codexOnScreen) {
-                ((Stack) UIElements.get("CenterStack")).add(UIElements.get("codexdiv"));
+                centerStack.add(UIElements.get("codexdiv"));
             } else {
                 UIElements.get("codexdiv").remove();
             }
@@ -957,6 +941,7 @@ public class CombatScreen implements Screen {
                 true
             );
         }
+         */
 
         // Press E to rotate building CW, Q for CCW
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
@@ -981,6 +966,10 @@ public class CombatScreen implements Screen {
                 return;
             }
             int nextRotation = (selectedBuilding.getRotation() - 1) % 4;
+            while (nextRotation < 0) {
+                nextRotation += 4;
+            }
+            System.out.println(nextRotation);
             selectedBuilding.setRotation(nextRotation);
             needRefresh = true;
 
@@ -1044,7 +1033,7 @@ public class CombatScreen implements Screen {
             if (selectedBuilding != null && selectedBuilding.isOnGrid() && selectedBuilding.getValidRecipes() != null) {
                 recipeUIOn = !recipeUIOn;
                 if (recipeUIOn) {
-                    ((Stack) UIElements.get("CenterStack")).add(UIElements.get("recipediv"));
+                    centerStack.add(UIElements.get("recipediv"));
                     rebuildRecipeUI();
                 } else {
                     clearRecipeUI();

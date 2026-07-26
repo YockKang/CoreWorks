@@ -5,12 +5,13 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.JsonValue;
+import com.main.CoreWorks.TextParser.Sentence;
+import com.main.CoreWorks.TextParser.Text;
+
+import java.util.Objects;
 
 public class ShooterEntry extends BuildingEntry {
 
@@ -31,8 +32,8 @@ public class ShooterEntry extends BuildingEntry {
             int inThisRow = 0;
             Table validAmmoTable = new Table();
             for (ResourceEntry resource : whitelistResources) {
-                TextButton recipeButton = new TextButton(resource.name, skin);
-                recipeButton.addListener(new ClickListener() {
+                TextButton resourceButton = new TextButton(resource.name, skin);
+                resourceButton.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         infoTable.remove();
@@ -40,17 +41,40 @@ public class ShooterEntry extends BuildingEntry {
                         Codex.selectedItem = resource.infoTable;
                     }
                 });
-                recipeButton.addListener(new InputListener() {
+                resourceButton.addListener(new InputListener() {
                     @Override
                     public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                        recipeButton.addAction(Actions.color(new Color(.7f, .7f, .7f, 1), 0.15f));
+                        resourceButton.addAction(Actions.color(new Color(.7f, .7f, .7f, 1), 0.15f));
                     }
+
                     @Override
                     public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                        recipeButton.addAction(Actions.color(new Color(.9f, .9f, .9f, 1), 0.15f));
+                        resourceButton.addAction(Actions.color(new Color(.9f, .9f, .9f, 1), 0.15f));
                     }
                 });
-                validAmmoTable.add(recipeButton);
+                String damageType;
+                if (data.get("Damage Type") != null) {
+                    damageType = data.getString("Damage Type");
+                } else {
+                    damageType = resource.damageType;
+                }
+                Sentence tooltipText = new Sentence("Expected Damage: " +
+                    (int) (data.getFloat("BaseDmg") * resource.dmgMult) + " ");
+                if (Objects.equals(damageType, "Poison")) {
+                    System.out.println(new Text(damageType, Color.GREEN));
+                    tooltipText.appendText(new Text(damageType, Color.GREEN));
+                } else if (Objects.equals(damageType, "True")) {
+                    tooltipText.appendText(new Text(damageType, new Color(0, 1, 1, 1)));
+                } else {
+                    tooltipText.appendText(new Text(damageType, Color.WHITE));
+                }
+                System.out.println(tooltipText.text);
+                Table expectedDamage = tooltipText.toTable(skin);
+                expectedDamage.setBackground("default-round");
+                Tooltip<Table> descToolTip = new Tooltip<>(expectedDamage);
+                descToolTip.setInstant(true);
+                resourceButton.addListener(descToolTip);
+                validAmmoTable.add(resourceButton);
                 inThisRow++;
                 if (inThisRow % itemsPerRow == 0) {
                     inThisRow = 0;

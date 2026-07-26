@@ -8,7 +8,8 @@
     "Cooldown" : 2,
     "Shape" : ["S", 1],
     "MagSize": 5,
-    "BaseDmg": 1.5
+    "BaseDmg": 1.5,
+    "Whitelist": ["BasicPoisonShell", "PoisonShell", "ExplosiveShell", "Explosive", "Shell", "Rail"]
   },
 
   {
@@ -22,8 +23,10 @@
       [false, true , false],
       [true , true , true ],
       [false, true , false]],
+    "DisplayOverride": [1, 1],
     "MagSize": 5,
-    "BaseDmg": 2
+    "BaseDmg": 2,
+    "Whitelist": ["BasicPoisonShell", "PoisonShell", "ExplosiveShell", "Explosive", "Shell", "Rail"]
   },
 
   {
@@ -36,7 +39,8 @@
     "Shape" : ["R", 1, 2],
     "MagSize": 5,
     "BaseDmg": 2,
-    "AoE": [[-1,1]]
+    "AoE": [[-1,1]],
+    "Whitelist": ["BasicPoisonShell", "PoisonShell", "ExplosiveShell", "Explosive", "Shell", "Rail"]
   },
 
   {
@@ -48,8 +52,8 @@
     "Cooldown" : 2,
     "Shape" : ["S", 1],
     "MagSize": 5,
-    "BaseDmg": 1.5,
-    "Whitelist": ["ExplosiveShell", "Explosive", "Shell"],
+    "BaseDmg": 2,
+    "Whitelist": ["ExplosiveShell", "Explosive", "Shell","BasicPoisonShell"],
     "AoE": "Random"
   },
 
@@ -67,7 +71,7 @@
       [true , true , true ]
     ],
     "MagSize": 5,
-    "BaseDmg": 1.5,
+    "BaseDmg": 3,
     "Whitelist": ["ExplosiveShell", "Explosive"],
     "AoE": "All"
   },
@@ -83,7 +87,7 @@
     "MagSize": 5,
     "BaseDmg": 1.5,
     "AoE": [[1, 1], [2, 0.5]],
-    "Whitelist": ["Rail"]
+    "Whitelist": ["Shell", "BasicPoisonShell", "PoisonShell", "Rail"]
   },
   {
     "id" : "Railgun+",
@@ -92,14 +96,15 @@
     "Name" : "Railgun+",
     "Description": "An improved railgun, deals 1x true damage\nto the first enemy and 0.5x to the second enemy",
     "Cooldown" : 2,
-    "Shape" : ["S", 1],
-    "MagSize": 5,
-    "BaseDmg": 1.5,
-    "AoE": [
+    "Shape" : [
       [true , false],
       [true , false],
       [true , true ],
-      [true , true]],
+      [true , true]
+    ],
+    "MagSize": 5,
+    "BaseDmg": 1.75,
+    "AoE": [[1, 1], [2, 0.5]],
     "Whitelist": ["Rail"],
     "Damage Type": "True"
   },
@@ -118,7 +123,7 @@
       [true , true , false]
     ],
     "MagSize": 5,
-    "BaseDmg": 2,
+    "BaseDmg": 2.5,
     "AoE": "All",
     "Whitelist": ["Rail"],
     "Damage Type": "True"

@@ -33,8 +33,10 @@ public class Text {
             }
             if (rgba.length > 3) {
                 color1 = new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
-            } else {
+            } else if (rgba.length == 3) {
                 color1 = new Color(rgba[0], rgba[1], rgba[2], 1);
+            } else {
+                color1 = Color.WHITE;
             }
         } else if (colorData.isString()) {
             color1 = Colors.get(colorData.asString().toUpperCase());

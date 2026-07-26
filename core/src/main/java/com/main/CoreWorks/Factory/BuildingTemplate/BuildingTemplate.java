@@ -66,4 +66,8 @@ public class BuildingTemplate {
     }
 
     public String getName() { return buildingData.getString("Name"); }
+
+    public void resetCounter() {
+        idNum = 0;
+    }
 }

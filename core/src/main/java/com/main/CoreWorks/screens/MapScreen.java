@@ -234,13 +234,6 @@ public class MapScreen implements Screen {
 
         // Add all the different types of nodes and what to do in them below
 
-        // Handles combatNode
-        if (node instanceof CombatNode combatNode) {
-            runState.setCurrNode(node);
-            game.resetCamera();
-            game.setScreen(new CombatScreen(game, runState, combatNode.getEnemies()));
-            return;
-        }
 
         // Handles RestNode
         if (node instanceof RestNode restNode) {
@@ -263,6 +256,14 @@ public class MapScreen implements Screen {
             runState.setCurrNode(node);
             game.resetCamera();
             game.setScreen(new CombatScreen(game, runState, eliteNode.getEnemies()));
+            return;
+        }
+
+        // Handles CombatNode
+        if (node instanceof CombatNode combatNode) {
+            runState.setCurrNode(node);
+            game.resetCamera();
+            game.setScreen(new CombatScreen(game, runState, combatNode.getEnemies()));
             return;
         }
 
