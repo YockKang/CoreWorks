@@ -31,9 +31,7 @@ public class RefinerEntry extends BuildingEntry{
             recipeButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    infoTable.remove();
-                    Codex.ContentTable.add(recipe.infoTable);
-                    Codex.selectedItem = recipe.infoTable;
+                    Codex.setSelectedItem(recipe);
                 }
             });
             recipeButton.addListener(new InputListener() {

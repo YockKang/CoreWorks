@@ -22,7 +22,7 @@
   },
   {
     "id": "BigMiner",
-    "Tier": 0,
+    "Tier": 1,
     "Type": "Miner",
     "Name": "Big Miner",
     "Shape": [

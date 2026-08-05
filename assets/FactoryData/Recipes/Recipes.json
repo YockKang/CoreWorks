@@ -198,7 +198,7 @@
 
   {
     "id": "MachineExpShell",
-    "Name": "Make Explosive Shell",
+    "Name": "Explosive Shell",
     "InputId": [
       "Iron", "Explosive"
     ],
@@ -220,7 +220,7 @@
 
   {
     "id": "MachinePoisonShell",
-    "Name": "Make Poison Shell",
+    "Name": "Improved Poison Shell",
     "InputId": [
       "IronOre", "Mercury"
     ],
@@ -241,7 +241,7 @@
 
   {
     "id": "MachineBasicPoisonShell",
-    "Name": "Make Basic Poison Shell",
+    "Name": "Basic Poison Shell",
     "InputId": [
       "IronOre", "Mercury"
     ],

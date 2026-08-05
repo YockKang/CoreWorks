@@ -27,9 +27,7 @@ public class MinerEntry extends BuildingEntry{
             recipeButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    infoTable.remove();
-                    Codex.CodexTable.add(recipe.infoTable);
-                    Codex.selectedItem = recipe.infoTable;
+                    Codex.setSelectedItem(recipe);
                 }
             });
             recipeButton.addListener(new InputListener() {

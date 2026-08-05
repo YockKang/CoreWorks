@@ -23,6 +23,8 @@ public class Codex {
     private static final Array<Entry> Relics = new Array<>();
     protected static final Table CodexTable = new Table();
     protected static final Container<Actor> TableInDiv = new Container<>(CodexTable);
+    protected static final Container<Actor> selectedCategoryDiv = new Container<>();
+    protected static final Container<Actor> selectedItemDiv = new Container<>();
     static final Table ContentTable = new Table();
     private static final Table ResourcesList = new Table();
     private static final Table RecipesList = new Table();
@@ -145,7 +147,51 @@ public class Codex {
         Recipes.sort((r1, r2) -> r1.name.compareTo(r2.name));
 
         Buildings.addAll(buildingEntries.values().iterator().toArray());
-        Buildings.sort((r1, r2) -> r1.name.compareTo(r2.name));
+        Buildings.sort((r1, r2) -> {
+            int r1prio = Integer.MAX_VALUE;
+            int r2prio = Integer.MAX_VALUE;
+            switch (r1) {
+                case MinerEntry minerEntry -> {
+                    r1prio = 0;
+                }
+                case RefinerEntry refinerEntry -> {
+                    r1prio = 1;
+                }
+                case ShooterEntry shooterEntry -> {
+                    r1prio = 2;
+                }
+                case DefenderEntry defenderEntry -> {
+                    r1prio = 3;
+                }
+                default -> {}
+            }
+            switch (r2) {
+                case MinerEntry minerEntry -> {
+                    r2prio = 0;
+                }
+                case RefinerEntry refinerEntry -> {
+                    r2prio = 1;
+                }
+                case ShooterEntry shooterEntry -> {
+                    r2prio = 2;
+                }
+                case DefenderEntry defenderEntry -> {
+                    r2prio = 3;
+                }
+                default -> {}
+            }
+            if (r1prio != r2prio) {
+                return r1prio - r2prio;
+            } else {
+                int r1tier = ((BuildingEntry) r1).data.getInt("Tier");
+                int r2tier = ((BuildingEntry) r2).data.getInt("Tier");
+                if (r1tier != r2tier) {
+                    return r1tier - r2tier;
+                } else {
+                    return r1.name.compareTo(r2.name);
+                }
+            }
+        });
 
         Enemies.addAll(enemyEntries.values().iterator().toArray());
         Enemies.sort((r1, r2) -> r1.name.compareTo(r2.name));
@@ -182,6 +228,18 @@ public class Codex {
         CodexTable.add(new Label("Codex", skin)).row();
 
 
+        selectedCategoryDiv.minHeight(200);
+        selectedCategoryDiv.minWidth(400);
+        selectedItemDiv.minWidth(400);
+        ContentTable.add(selectedCategoryDiv);
+        ContentTable.add(selectedItemDiv);
+
+        ResourcesList.defaults().pad(5);
+        BuildingsList.defaults().pad(5);
+        RecipesList.defaults().pad(5);
+        EnemiesList.defaults().pad(5);
+        RelicsList.defaults().pad(5);
+
         int itemsPerRow = 3;
         int inThisRow = 0;
         for (Entry resource : Resources) {
@@ -189,11 +247,7 @@ public class Codex {
             selectButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if (selectedItem != null) {
-                        selectedItem.remove();
-                    }
-                    ContentTable.add(resource.infoTable);
-                    selectedItem = resource.infoTable;
+                    setSelectedItem(resource);
                 }
             });
             selectButton.addListener(new InputListener() {
@@ -222,11 +276,7 @@ public class Codex {
             selectButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if (selectedItem != null) {
-                        selectedItem.remove();
-                    }
-                    ContentTable.add(recipe.infoTable);
-                    selectedItem = recipe.infoTable;
+                    setSelectedItem(recipe);
                 }
             });
             selectButton.addListener(new InputListener() {
@@ -250,16 +300,17 @@ public class Codex {
         }
 
         inThisRow = 0;
-        for (Entry building : Buildings) {
+        for (int i = 0; i < Buildings.size; i++) {
+            Entry building = Buildings.get(i);
+            Entry nextEntry = null;
+            if (i < Buildings.size - 2) {
+                nextEntry = Buildings.get(i+1);
+            }
             TextButton selectButton = new TextButton(building.name, skin);
             selectButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if (selectedItem != null) {
-                        selectedItem.remove();
-                    }
-                    ContentTable.add(building.infoTable);
-                    selectedItem = building.infoTable;
+                    setSelectedItem(building);
                 }
             });
             selectButton.addListener(new InputListener() {
@@ -276,7 +327,7 @@ public class Codex {
 
             BuildingsList.add(selectButton);
             inThisRow++;
-            if (inThisRow % itemsPerRow == 0) {
+            if (inThisRow % itemsPerRow == 0 || (i < Buildings.size - 2 && building.getClass() != nextEntry.getClass())) {
                 inThisRow = 0;
                 BuildingsList.row();
             }
@@ -288,11 +339,7 @@ public class Codex {
             selectButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if (selectedItem != null) {
-                        selectedItem.remove();
-                    }
-                    ContentTable.add(enemy.infoTable);
-                    selectedItem = enemy.infoTable;
+                    setSelectedItem(enemy);
                 }
             });
             selectButton.addListener(new InputListener() {
@@ -321,11 +368,7 @@ public class Codex {
             selectButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if (selectedItem != null) {
-                        selectedItem.remove();
-                    }
-                    ContentTable.add(relic.infoTable);
-                    selectedItem = relic.infoTable;
+                    setSelectedItem(relic);
                 }
             });
             selectButton.addListener(new InputListener() {
@@ -349,20 +392,13 @@ public class Codex {
         }
 
         Table headerTable = new Table();
+        headerTable.defaults().pad(5);
 
         TextButton resourceHeader = new TextButton("Resources", skin);
         resourceHeader.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (selectedCategory != null) {
-                    selectedCategory.remove();
-                }
-                if (selectedItem != null) {
-                    selectedItem.remove();
-                }
-                selectedItem = null;
-                selectedCategory = ResourcesList;
-                ContentTable.add(ResourcesList);
+                setSelectedCategory(ResourcesList);
             }
         });
         headerTable.add(resourceHeader);
@@ -371,15 +407,7 @@ public class Codex {
         recipeHeader.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (selectedCategory != null) {
-                    selectedCategory.remove();
-                }
-                if (selectedItem != null) {
-                    selectedItem.remove();
-                }
-                selectedItem = null;
-                selectedCategory = RecipesList;
-                ContentTable.add(RecipesList);
+                setSelectedCategory(RecipesList);
             }
         });
         headerTable.add(recipeHeader);
@@ -388,15 +416,7 @@ public class Codex {
         buildingHeader.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (selectedCategory != null) {
-                    selectedCategory.remove();
-                }
-                if (selectedItem != null) {
-                    selectedItem.remove();
-                }
-                selectedItem = null;
-                selectedCategory = BuildingsList;
-                ContentTable.add(BuildingsList);
+                setSelectedCategory(BuildingsList);
             }
         });
         headerTable.add(buildingHeader);
@@ -405,15 +425,7 @@ public class Codex {
         enemyHeader.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (selectedCategory != null) {
-                    selectedCategory.remove();
-                }
-                if (selectedItem != null) {
-                    selectedItem.remove();
-                }
-                selectedItem = null;
-                selectedCategory = EnemiesList;
-                ContentTable.add(EnemiesList);
+                setSelectedCategory(EnemiesList);
             }
         });
         headerTable.add(enemyHeader);
@@ -422,20 +434,13 @@ public class Codex {
         relicHeader.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (selectedCategory != null) {
-                    selectedCategory.remove();
-                }
-                if (selectedItem != null) {
-                    selectedItem.remove();
-                }
-                selectedItem = null;
-                selectedCategory = RelicsList;
-                ContentTable.add(RelicsList);
+               setSelectedCategory(RelicsList);
             }
         });
         headerTable.add(relicHeader);
         CodexTable.add(headerTable);
         CodexTable.row();
+
 
         Container<Actor> contentDiv = new Container<>(ContentTable);
 
@@ -480,5 +485,17 @@ public class Codex {
 
     public static Container<Actor> getTableInDiv() {
         return TableInDiv;
+    }
+
+    protected static void setSelectedCategory(Table category) {
+        selectedItem = null;
+        selectedItemDiv.setActor(null);
+        selectedCategory = category;
+        selectedCategoryDiv.setActor(category);
+    }
+
+    protected static void setSelectedItem(Entry e) {
+        selectedItemDiv.setActor(e.infoTable);
+        selectedItem = e.infoTable;
     }
 }

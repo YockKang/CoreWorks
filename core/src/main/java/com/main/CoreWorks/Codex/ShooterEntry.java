@@ -36,9 +36,7 @@ public class ShooterEntry extends BuildingEntry {
                 resourceButton.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        infoTable.remove();
-                        Codex.ContentTable.add(resource.infoTable);
-                        Codex.selectedItem = resource.infoTable;
+                        Codex.setSelectedItem(resource);
                     }
                 });
                 resourceButton.addListener(new InputListener() {
