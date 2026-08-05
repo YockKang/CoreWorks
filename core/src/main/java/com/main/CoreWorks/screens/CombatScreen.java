@@ -263,6 +263,7 @@ public class CombatScreen extends GameScreen {
         UIElements.put("factoryviewport", factoryViewport);
 
         Table maintable = (Table) UIElements.get("MasterTable");
+        centerStack.clearChildren();
         centerStack.add(maintable);
 
         // subsections of the screen
@@ -959,6 +960,11 @@ public class CombatScreen extends GameScreen {
                     "\nThis can be useful to orient output ports in certain directions.",
                 true
             );
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            game.setScreen(new PauseMenuScreen(game, runState, this));
+            return;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {

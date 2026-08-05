@@ -1,6 +1,7 @@
 package com.main.CoreWorks.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -299,6 +300,12 @@ public class RestScreen extends GameScreen {
             ScreenUtils.clear(Color.BLACK);
             stage.act(delta);
             stage.draw();
+            return;
+        }
+
+        // Handles the pause menu
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            game.setScreen(new PauseMenuScreen(game, runState, this));
             return;
         }
 

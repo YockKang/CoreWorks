@@ -155,6 +155,12 @@ public class ShopScreen extends GameScreen {
             return;
         }
 
+        // Handles the pause menu
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            game.setScreen(new PauseMenuScreen(game, runState, this));
+            return;
+        }
+
         codexCheck();
 
         ScreenUtils.clear(Color.BLACK);

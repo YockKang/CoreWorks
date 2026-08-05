@@ -297,6 +297,9 @@ public class MapScreen implements Screen {
             return;
         }
 
+        // Handles any external key press
+        externalInput();
+
         // Clears the screen + update camera if needed
         ScreenUtils.clear(Color.BLACK);
 
@@ -310,6 +313,13 @@ public class MapScreen implements Screen {
 
         stage.act(delta);
         stage.draw();
+    }
+
+    private void externalInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            game.setScreen(new PauseMenuScreen(game, runState, this));
+            return;
+        }
     }
 
     private void drawConnection() {
