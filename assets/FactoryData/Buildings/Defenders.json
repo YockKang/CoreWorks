@@ -8,7 +8,8 @@
     "Shape" : [[true]],
     "MagSize": 5,
     "BaseDef": 3.5,
-    "Action" : "Heal"
+    "Action" : "Heal",
+    "Whitelist": ["IronOre", "Iron", "Coal", "Ammonia", "Steel", "Rail"]
   },
   {
     "id" : "Shielder1",
@@ -19,7 +20,8 @@
     "Shape" : [[true]],
     "MagSize": 5,
     "BaseDef": 3,
-    "Action" : "Shield"
+    "Action" : "Shield",
+    "Whitelist": ["IronOre", "Iron", "Coal", "Ammonia", "Steel"]
   },
   {
     "id" : "Shielder2",
@@ -31,7 +33,8 @@
     "Shape" : ["R", 1 , 2],
     "MagSize": 5,
     "BaseDef": 3,
-    "Action" : "ShieldOT"
+    "Action" : "ShieldOT",
+    "Whitelist": ["IronOre", "Iron", "Coal", "Ammonia", "Steel"]
   },
   {
     "id" : "Shielder3",
@@ -42,7 +45,8 @@
     "Cooldown" : 1,
     "Shape" : [[true]],
     "MagSize": 5,
-    "BaseDef": 5.5,
-    "Action" : "ShieldOT"
+    "BaseDef": 5,
+    "Action" : "ShieldOT",
+    "Whitelist": ["IronOre", "Iron", "Coal", "Ammonia", "Steel"]
   }
 ]

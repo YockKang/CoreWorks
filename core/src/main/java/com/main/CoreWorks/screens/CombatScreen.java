@@ -26,14 +26,23 @@ public class CombatScreen extends GameScreen {
 
     private RunState runState;
     private CombatController controller;
-    private float accumulator = 0f;
-    private static final float TIME_STEP = 1 / 4f; // 4 Ticks per second
+    private double accumulator = 0;
+    private static final double TIME_STEP = (double) 1 / 4; // 4 Ticks per second
+    private static final int[] speeds = new int[] {1, 2, 3, 4, 10, -1};
+    private static final double[] trueSpeeds = new double[speeds.length];
+    private static int speedPointer = 0;
     private int tickCount = 0;
     private Vector2 mouse2DCoords = new Vector2();
     private ShapeRenderer shapeRenderer;
     private Coords hoveredGridCoords = null;
     private boolean hoveredCanPlace = false;
     private boolean isPaused = true;
+
+    // performace tools
+    private final Queue<Double> lastNTicks = new Queue<>();
+    private double lastNTicksSum = 0;
+    private final int nTicks = 40;
+    private boolean resetTPSCount;
 
     // tube placement fields
     private boolean tubeMode = false;
@@ -115,6 +124,16 @@ public class CombatScreen extends GameScreen {
         this.gridEndX = gridMidX + tileSize * gridWidth / 2;
         this.gridEndY = gridMidY + tileSize * gridHeight / 2;
         this.gridStartY = gridMidY - tileSize * gridHeight / 2;
+    }
+
+    public static void calculateSpeeds() {
+        for (int i = 0; i < speeds.length; i++) {
+            if (speeds[i] > 0) {
+                trueSpeeds[i] = TIME_STEP / speeds[i];
+            } else {
+                trueSpeeds[i] = 0;
+            }
+        }
     }
 
     @Override
@@ -219,7 +238,7 @@ public class CombatScreen extends GameScreen {
         UIElements.put("tickcount", new Label("Tick:\n" + tickCount, skin));
         UIElements.put("codexhelp", new Label("C\n Toggle Codex", skin));
         UIElements.put("playerdata", new Label(runState.getPlayer().toString(), skin));
-        UIElements.put("buildingselect", new Label("Selected:\nNone ", skin));
+        UIElements.put("speedSelect", new Table(skin));
         UIElements.put("rotationhelp", new Label("Q/E\nRotate Buildings", skin));
         ((Label) UIElements.get("rotationhelp")).setAlignment(Align.center);
         UIElements.put("recipeselecthelp", new Label("R\nChange Selected\nBuilding Recipe", skin));
@@ -319,7 +338,39 @@ public class CombatScreen extends GameScreen {
         infotableL.add(UIElements.get("tickcount")).pad(5);
         infotableL.add(UIElements.get("codexhelp")).pad(5).row();
         infotableL.add(UIElements.get("playerdata")).pad(5);
-        infotableL.add(UIElements.get("buildingselect")).pad(5).colspan(2).growX();
+        infotableL.add(UIElements.get("speedSelect")).pad(5).colspan(2).growX();
+        Table speedSelect = (Table) UIElements.get("speedSelect");
+        speedSelect.defaults().pad(2);
+        TextButton slowDownButton = new TextButton("<<", skin);
+        slowDownButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                slowDownTime();
+            }
+        });
+        TextButton fastForwardButton = new TextButton(">>", skin);
+        fastForwardButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                speedUpTime();
+            }
+        });
+
+        Label currentSpeed = new Label("1x", skin);
+
+        UIElements.put("currentspeed", currentSpeed);
+        UIElements.put("actualTPS", new Label("0", skin));
+        UIElements.put("projectedTPS", new Label("(4)", skin));
+
+        speedSelect.add(slowDownButton);
+        speedSelect.add(currentSpeed);
+        speedSelect.add(fastForwardButton);
+        speedSelect.row();
+        speedSelect.add(UIElements.get("actualTPS"));
+        speedSelect.add();
+        speedSelect.add(UIElements.get("projectedTPS"));
+        updateSpeedDisplay();
+
 
         // top-right info
         Table infotableR = (Table) (UIElements.get("infotableR"));
@@ -436,6 +487,36 @@ public class CombatScreen extends GameScreen {
         bottomBar.add(enemyTable).pad(5);
 
         needRefresh = false;
+    }
+
+    private void speedUpTime() {
+        if (speedPointer < speeds.length - 1) {
+            speedPointer++;
+            updateSpeedDisplay();
+        }
+    }
+
+
+    private void slowDownTime() {
+        if (speedPointer > 0) {
+            speedPointer--;
+            updateSpeedDisplay();
+        }
+    }
+
+    private void updateSpeedDisplay() {
+        Label currSpeed = ((Label) UIElements.get("currentspeed"));
+        Label projTPS = ((Label) UIElements.get("projectedTPS"));
+        int speedMult = speeds[speedPointer];
+        double speed = trueSpeeds[speedPointer];
+        if (speedMult < 0) {
+            currSpeed.setText("Max");
+            projTPS.setText("(Max)");
+        } else {
+            currSpeed.setText(speedMult + "x");
+            projTPS.setText("(" + MathExtras.roundDP(1 / speed, 1) + ")");
+        }
+        resetTPSCount = true;
     }
 
     private void updateEnemies() {
@@ -576,24 +657,28 @@ public class CombatScreen extends GameScreen {
         ((Table) UIElements.get("recipeinfo")).add(new Label("Selected: None", skin));
     }
 
+    private void updateTPS() {
+        if (lastNTicks.size > 0) {
+            double avg = lastNTicksSum / lastNTicks.size;
+            ((Label) UIElements.get("actualTPS")).setText(String.valueOf(MathExtras.roundDP(1/avg, 1)));
+        } else {
+            ((Label) UIElements.get("actualTPS")).setText(0);
+        }
+    }
 
     private void updateUI() {
         ((Label) UIElements.get("tickcount")).setText("Tick:\n" + tickCount);
         ((Label) UIElements.get("playerdata")).setText(runState.getPlayer().toString());
-        if (selectedBuilding != null) {
-            ((Label) UIElements.get("buildingselect")).setText("Selected:\n" + selectedBuilding.displayName());
-        } else {
-            ((Label) UIElements.get("buildingselect")).setText("Selected:\nNone");
-        }
         updateInventoryUI();
         updateCombatLog();
+        updateTPS();
         needRefresh = false;
     }
 
+
     @Override
     public void render(float delta) {
-        // Anti-"Lag spike spiral of death" code
-        delta = Math.min(delta, 1 / 8f);
+        double minInterval = trueSpeeds[speedPointer];
 
         externalInput();
 
@@ -608,16 +693,29 @@ public class CombatScreen extends GameScreen {
 
         // Tick Advancement code below
         if (!isPaused && !controller.isWin() && !controller.isLost()) {
-            accumulator += delta;
-            while (accumulator >= TIME_STEP) {
+            if (delta >= minInterval || accumulator >= minInterval * 2) {
                 System.out.println();
                 System.out.println("Tick " + tickCount);
                 controller.advanceTick(runState, tickCount);
                 tickCount += 1;
-                accumulator -= TIME_STEP;
+                accumulator = 0;
+                recordTick(delta);
                 updateEnemies();
                 needRefresh = true;
+            } else {
+                accumulator += delta;
+                if (accumulator >= minInterval) {
+                    System.out.println();
+                    System.out.println("Tick " + tickCount);
+                    controller.advanceTick(runState, tickCount);
+                    tickCount += 1;
+                    recordTick(minInterval);
+                    accumulator -= minInterval;
+                    updateEnemies();
+                    needRefresh = true;
+                }
             }
+
         }
 
         // Clears the screen + update camera if needed
@@ -643,6 +741,20 @@ public class CombatScreen extends GameScreen {
 
         // Handles win/loss screen transitions
         checkWinLoss();
+
+        if (resetTPSCount) {
+            lastNTicks.clear();
+            resetTPSCount = false;
+            lastNTicksSum = 0;
+        }
+    }
+
+    private void recordTick(double time) {
+        lastNTicks.addLast(time);
+        lastNTicksSum += time;
+        if (lastNTicks.size > nTicks) {
+            lastNTicksSum -= lastNTicks.removeFirst();
+        }
     }
 
     /*
@@ -926,23 +1038,14 @@ public class CombatScreen extends GameScreen {
         codexOnScreen = Codex.isOnScreen;
         codexCheck();
 
-        /*
-        if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
-            if (!codexOnScreen) {
-                centerStack.add(UIElements.get("codexdiv"));
-            } else {
-                UIElements.get("codexdiv").remove();
-            }
-            codexOnScreen = !codexOnScreen;
-
-            game.getPopUpManager().requestPopup(
-                "Codex_explanation",
-                "Codex entries",
-                "The codex contains detailed information about basically everything, like recipes (and what buildings use them).\nRefer to it for anything you are unsure of!",
-                true
-            );
+        // comma & period for speed incrementing
+        if (Gdx.input.isKeyJustPressed(Input.Keys.COMMA)) {
+            slowDownTime();
         }
-         */
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.PERIOD)) {
+            speedUpTime();
+        }
 
         // Press E to rotate building CW, Q for CCW
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {

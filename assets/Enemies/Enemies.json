@@ -3,7 +3,7 @@
     "id": "MissileDrone",
     "Name": "Missile Drone",
     "HP": 15,
-    "GracePeriod": 3,
+    "GracePeriod": 10,
     "Moveset": [
       {
         "Type": "Damage",
@@ -17,7 +17,7 @@
     "Name": "Shield Drone",
     "HP": 10,
     "Shield": 5,
-    "GracePeriod": 3,
+    "GracePeriod": 10,
     "Moveset": [
       {
         "Type": "Shield",
@@ -35,7 +35,7 @@
     "id": "AnnoyingDrone",
     "Name": "Annoying Drone",
     "HP": 12,
-    "GracePeriod": 3,
+    "GracePeriod": 10,
     "Moveset": [
       {
         "Type": "Damage",
@@ -53,7 +53,7 @@
     "id": "DisableDrone",
     "Name": "Disabling Drone",
     "HP": 12,
-    "GracePeriod": 3,
+    "GracePeriod": 10,
     "Moveset": [
       {
         "Type": "Disable",
@@ -66,7 +66,7 @@
     "id": "SwarmDrone",
     "Name": "Mini Drone",
     "HP": 6,
-    "GracePeriod": 5,
+    "GracePeriod": 12,
     "Moveset": [
       {
         "Type": "Attack",
@@ -79,15 +79,15 @@
     "id": "PoisonDrone",
     "Name": "Poison Drone",
     "HP": 10,
-    "GracePeriod": 7,
+    "GracePeriod": 15,
     "Moveset": [
       {
         "Type": "StatusEffect",
         "Value": 1,
-        "Charge": 7,
+        "Charge": 12,
         "Effect": {
           "Type": "Poison",
-          "Value": 3,
+          "Value": 2,
           "Duration": 4,
           "OnSelf": false,
           "Immediate": false,
@@ -100,7 +100,7 @@
     "id": "FirstBoss",
     "Name": "Deadly Drone",
     "HP": 130,
-    "GracePeriod": 5,
+    "GracePeriod": 20,
     "Moveset": [
       {
         "Type": "Disable",
