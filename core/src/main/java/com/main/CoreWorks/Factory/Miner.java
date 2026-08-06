@@ -55,8 +55,10 @@ public class Miner extends Building {
             if (mineSuccess) {
                 mine();
                 currCooldown -= cooldownTimer;
+                status = Status.WORKING;
             } else {
                 currCooldown = cooldownTimer;
+                status = Status.FULL_OUTPUT;
                 break;
             }
         }

@@ -60,6 +60,9 @@ public class Refiner extends Building{
             if (tryStartCraft()) {
                 isCrafting = true;
                 startCraft();
+                status = Status.WORKING;
+            } else {
+                status = Status.NO_INPUT;
             }
         } else {
             currCooldown += getSpeed();
@@ -71,11 +74,14 @@ public class Refiner extends Building{
                     if (!tryStartCraft()) {
                         isCrafting = false;
                         currCooldown = 0;
+                        status = Status.NO_INPUT;
                     } else {
                         startCraft();
+                        status = Status.WORKING;
                     }
                 } else {
                     currCooldown = cooldownTimer - getSpeed();
+                    status = Status.FULL_OUTPUT;
                 }
             }
         }

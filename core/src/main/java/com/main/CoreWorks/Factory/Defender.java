@@ -55,8 +55,10 @@ public class Defender extends Building{
             if (magazine.notEmpty()) {
                 currCooldown -= cooldownTimer;
                 moves.addAll(defend());
+                status = Status.WORKING;
             } else {
                 currCooldown = cooldownTimer - getSpeed();
+                status = Status.NO_INPUT;
                 break;
             }
         }

@@ -109,8 +109,10 @@ public class Shooter extends Building {
             if (magazine.notEmpty()) {
                 currCooldown -= cooldownTimer;
                 moves.addAll(shoot(runState));
+                status = Status.WORKING;
             } else {
                 currCooldown = cooldownTimer - getSpeed();
+                status = Status.NO_INPUT;
                 break;
             }
         }

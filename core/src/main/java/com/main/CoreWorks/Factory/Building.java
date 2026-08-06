@@ -1,5 +1,6 @@
 package com.main.CoreWorks.Factory;
 
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.util.*;
@@ -11,9 +12,16 @@ import com.main.CoreWorks.database.*;
 import com.main.CoreWorks.moveset.*;
 
 import java.util.*;
-import java.util.logging.Level;
 
 public abstract class Building extends Structure implements Updatable, Comparable<Building> {
+
+
+    public enum Status {
+        WORKING,
+        DISABLED,
+        NO_INPUT,
+        FULL_OUTPUT
+    }
 
 
     // confirmed fields
@@ -36,6 +44,7 @@ public abstract class Building extends Structure implements Updatable, Comparabl
     protected float speedMultiplier = 1f;
     protected float speedFlat = 0f;
     protected Coords displaySquare;
+    protected Status status;
 
     protected ObjectMap<Building, ObjectSet<IOPort>> inputBuildings = new ObjectMap<>();
     protected ObjectMap<Tube, ObjectSet<Integer>> connectedTubes = new ObjectMap<>();
@@ -76,6 +85,7 @@ public abstract class Building extends Structure implements Updatable, Comparabl
 
     public Building(JsonValue data) {
         super();
+        this.status = Status.WORKING;
         this.name = data.getString("Name");
         this.idNum = data.getInt("idNum");
         this.name = name + " #" + idNum;
@@ -648,6 +658,7 @@ public abstract class Building extends Structure implements Updatable, Comparabl
         if (isEnabled) {
             return updateEnabled(runState);
         } else {
+            status = Status.DISABLED;
             disabledDur--;
             if (disabledDur <= 0) {
                 isEnabled = true;
@@ -846,5 +857,16 @@ public abstract class Building extends Structure implements Updatable, Comparabl
 
     public Coords getDisplaySquare() {
         return displaySquare;
+    }
+
+    public Table tooltipDisplay(Skin skin) {
+        Table displayTable = new Table(skin);
+        displayTable.add(new Label(name, skin)).row();
+        displayTable.add(new Label("Speed: " + MathExtras.roundDP(getSpeed(), 2), skin)).row();
+        return displayTable;
+    }
+
+    public Status getStatus() {
+        return status;
     }
 }

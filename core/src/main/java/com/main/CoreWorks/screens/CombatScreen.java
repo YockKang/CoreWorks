@@ -296,7 +296,7 @@ public class CombatScreen extends GameScreen {
                     }
 
                     if (hoveredBuilding != null && !recipeUIOn && !codexOnScreen) {
-                        buildingCard.show(new Label(hoveredBuilding.toString(), skin), event.getStageX(), event.getStageY());
+                        buildingCard.show(hoveredBuilding.tooltipDisplay(skin), event.getStageX(), event.getStageY());
                     } else {
                         buildingCard.hide();
                     }
@@ -952,7 +952,7 @@ public class CombatScreen extends GameScreen {
             }
         }
 
-        // draw building outlines
+        // draw border
         for (Building building : controller.getFactorySim().getGrid().getBuildings()) {
             Array<DirectedCoords> border = building.getBorder();
             Color drawColor = null;
@@ -997,8 +997,27 @@ public class CombatScreen extends GameScreen {
                     }
                 }
             }
-        }
 
+            // draw bottleneck UI
+
+            Coords nameCoords = building.getGlobalCoord(building.getDisplaySquare());
+            switch (building.getStatus()) {
+                case Building.Status.WORKING -> {
+                    shapeRenderer.setColor(Color.GREEN);
+                }
+                case Building.Status.DISABLED -> {
+                    shapeRenderer.setColor(Color.RED);
+                }
+                case Building.Status.FULL_OUTPUT -> {
+                    shapeRenderer.setColor(Color.YELLOW);
+                }
+                case Building.Status.NO_INPUT -> {
+                    shapeRenderer.setColor(Color.ORANGE);
+                }
+            }
+
+            shapeRenderer.circle(gridStartX + nameCoords.x * tileSize + (float) tileSize / 20 + 5, gridEndY - nameCoords.y * tileSize - ((float) tileSize / 20 + 5), 5);
+        }
         shapeRenderer.end();
 
         // Draws the outline of unoccupied grids
@@ -1018,16 +1037,21 @@ public class CombatScreen extends GameScreen {
             }
         }
 
+
+
         shapeRenderer.end();
     }
 
     public void drawBuildings() {
         game.batch.begin();
 
+
         for (Building building : controller.getFactorySim().getGrid().getBuildings()) {
-            Coords coords = building.getGlobalCoord(building.getDisplaySquare());
-            float nameX = gridStartX + coords.x * tileSize + 10;
-            float nameY = gridEndY - coords.y * tileSize - 20;
+
+
+            Coords nameCoords = building.getGlobalCoord(building.getDisplaySquare());
+            float nameX = gridStartX + nameCoords.x * tileSize + 10;
+            float nameY = gridEndY - nameCoords.y * tileSize - 20;
             game.font.getData().setScale(0.75f);
             game.font.draw(game.batch, building.gridName(), nameX, nameY);
             if (building instanceof Miner ||
@@ -1040,8 +1064,9 @@ public class CombatScreen extends GameScreen {
                     tempfont.draw(game.batch, "Recipe not set!", nameX, nameY - 30);
                 }
             }
-        }
 
+
+        }
         game.font.getData().setScale(1f);
         game.batch.end();
     }
