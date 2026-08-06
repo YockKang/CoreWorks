@@ -28,7 +28,7 @@ public class CombatScreen extends GameScreen {
     private CombatController controller;
     private double accumulator = 0;
     private static final double TIME_STEP = (double) 1 / 4; // 4 Ticks per second
-    private static final int[] speeds = new int[] {1, 2, 3, 4, 10, -1};
+    private static final int[] speeds = new int[]{1, 2, 3, 4, 10, -1};
     private static final double[] trueSpeeds = new double[speeds.length];
     private static int speedPointer = 0;
     private int tickCount = 0;
@@ -279,6 +279,38 @@ public class CombatScreen extends GameScreen {
 
 
         Actor factoryViewport = new Actor();
+
+        BuildingToolTip buildingCard = new BuildingToolTip();
+        stage.addActor(buildingCard);
+        UIElements.put("buildingtooltip", buildingCard);
+
+        // generate tooltip cards for buildings
+        factoryViewport.addListener(
+            new InputListener() {
+                @Override
+                public boolean mouseMoved(InputEvent event, float x, float y) {
+                    hoveredGridCoords = getGridAt(translateMouseToWorld().x, translateMouseToWorld().y);
+                    Building hoveredBuilding = null;
+                    if (hoveredGridCoords != null) {
+                        hoveredBuilding = controller.getFactorySim().getGrid().getBuildingAt(hoveredGridCoords.x, hoveredGridCoords.y);
+                    }
+
+                    if (hoveredBuilding != null && !recipeUIOn && !codexOnScreen) {
+                        buildingCard.show(new Label(hoveredBuilding.toString(), skin), event.getStageX(), event.getStageY());
+                    } else {
+                        buildingCard.hide();
+                    }
+
+                    return false;
+                }
+
+                @Override
+                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                    buildingCard.hide();
+                }
+            }
+        );
+
         UIElements.put("factoryviewport", factoryViewport);
 
         Table maintable = (Table) UIElements.get("MasterTable");
@@ -660,7 +692,7 @@ public class CombatScreen extends GameScreen {
     private void updateTPS() {
         if (lastNTicks.size > 0) {
             double avg = lastNTicksSum / lastNTicks.size;
-            ((Label) UIElements.get("actualTPS")).setText(String.valueOf(MathExtras.roundDP(1/avg, 1)));
+            ((Label) UIElements.get("actualTPS")).setText(String.valueOf(MathExtras.roundDP(1 / avg, 1)));
         } else {
             ((Label) UIElements.get("actualTPS")).setText(0);
         }
@@ -1308,6 +1340,9 @@ public class CombatScreen extends GameScreen {
                 controller.getFactorySim().getGrid().removeTube(hoveredGridCoords.x, hoveredGridCoords.y);
             }
         }
+        if (codexOnScreen || recipeUIOn) {
+            ((BuildingToolTip) UIElements.get("buildingtooltip")).hide();
+        }
     }
 
 
@@ -1479,5 +1514,27 @@ public class CombatScreen extends GameScreen {
         shapeRenderer.dispose();
         stage.dispose();
         skin.dispose();
+    }
+
+    private static class BuildingToolTip extends Container<Actor> {
+
+        public BuildingToolTip() {
+            super();
+            pack();
+            setVisible(false);
+            setTouchable(Touchable.disabled);
+        }
+
+        public void show(Actor content, float stageX, float stageY) {
+            setActor(content);
+            pack();
+            setPosition(stageX + 16, stageY - getHeight() - 16);
+            setVisible(true);
+            toFront();
+        }
+
+        public void hide() {
+            setVisible(false);
+        }
     }
 }
