@@ -113,6 +113,7 @@ public class ShopScreen extends GameScreen {
                     // refresh the UI
                     buyButton.setDisabled(true);
                     buyButton.setText("SOLD!");
+                    game.getSoundManager().playShopPurchase();
                     playerData.setText(runState.getPlayer().toString());
                     shopCard.setBackground(skin.newDrawable("default-round", new Color(0.4f, 0.4f, 0.4f, 0.5f)));
                 }
@@ -132,6 +133,7 @@ public class ShopScreen extends GameScreen {
         leaveButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                game.getSoundManager().playButtonClick();
                 runState.getCurrNode().setCompleted(true);
                 for (MapNode next : runState.getCurrNode().getNextNodes()) {
                     next.setUnlocked(true);

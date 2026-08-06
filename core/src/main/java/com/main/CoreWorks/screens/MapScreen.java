@@ -234,6 +234,8 @@ public class MapScreen implements Screen {
 
         // Add all the different types of nodes and what to do in them below
 
+        // Play button click sound
+        game.getSoundManager().playButtonClick();
 
         // Handles RestNode
         if (node instanceof RestNode restNode) {

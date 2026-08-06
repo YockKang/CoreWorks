@@ -1,6 +1,7 @@
 package com.main.CoreWorks;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -13,6 +14,7 @@ import com.main.CoreWorks.Resources.*;
 import com.main.CoreWorks.database.*;
 import com.main.CoreWorks.screens.*;
 import com.main.CoreWorks.simulators.PopUpTutorial.PopUpManager;
+import com.main.CoreWorks.util.SoundManager;
 
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
@@ -31,9 +33,10 @@ public class Coreworks extends Game {
     private Array<FileHandle> buildingFiles = new Array<>();
     private boolean devMode = false;
 
-
     // Below handles the tutorial popups (if enabled)
     private PopUpManager popUpManager = new PopUpManager();
+
+    private SoundManager soundManager;
 
     @Override
     public void create() {
@@ -98,6 +101,9 @@ public class Coreworks extends Game {
         Codex.register();
         Codex.generateInfoTable(new Skin(Gdx.files.internal("uiskin.json")));
 
+        // Below handles the sound manager (enable / disable sounds not implemented yet)
+        soundManager = new SoundManager();
+
         // For now, starting the game leads to a placeholder menu screen
         this.setScreen(new MenuScreen(this)); // eventually will replace with the Main Menu screen
         CombatScreen.calculateSpeeds();
@@ -108,6 +114,11 @@ public class Coreworks extends Game {
         camera.zoom = 1f;
         camera.position.set(VIEWPORT_WIDTH /2f, VIEWPORT_HEIGHT /2f, 0);
         camera.update();
+    }
+
+    // Method to get sound manager
+    public SoundManager getSoundManager() {
+        return soundManager;
     }
 
     @Override
@@ -124,6 +135,8 @@ public class Coreworks extends Game {
         }
         batch.dispose();
         font.dispose();
+        soundManager.dispose();
+        super.dispose();
     }
 
     @Override

@@ -58,6 +58,8 @@ public class MenuScreen implements Screen {
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // Play button click sound
+                game.getSoundManager().playButtonClick();
                 // Moves to character screen
                 game.resetCamera();
                 game.setScreen(new CharacterSelectScreen(game));
@@ -71,6 +73,8 @@ public class MenuScreen implements Screen {
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // Play button click sound
+                game.getSoundManager().playButtonClick();
                 Gdx.app.exit();
             }
         });
@@ -82,6 +86,8 @@ public class MenuScreen implements Screen {
         tutorialCheckbox.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                // Play button click sound
+                game.getSoundManager().playButtonClick();
                 game.getPopUpManager().setPopupEnabled(tutorialCheckbox.isChecked());
             }
         });

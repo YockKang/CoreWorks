@@ -58,6 +58,8 @@ public class PauseMenuScreen implements Screen {
         continueButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
+                // Play button click sound
+                game.getSoundManager().playButtonClick();
                 game.setScreen(lastScreen);
             }
         });
@@ -66,6 +68,8 @@ public class PauseMenuScreen implements Screen {
         quitRunButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
+                // Play button click sound
+                game.getSoundManager().playButtonClick();
                 game.resetCamera();
                 game.setScreen(new MenuScreen(game));
             }
@@ -75,6 +79,8 @@ public class PauseMenuScreen implements Screen {
         quitGameButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
+                // Play button click sound
+                game.getSoundManager().playButtonClick();
                 Gdx.app.exit();
             }
         });

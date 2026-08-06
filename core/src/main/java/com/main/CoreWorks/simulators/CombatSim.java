@@ -139,6 +139,7 @@ public class CombatSim {
                 move.execute(attacker);
                 int newHP = attacker.displayCurrentHp();
                 if (oldHP != newHP) {
+                    game.getSoundManager().playHeal();
                     addLog(tick, String.format("%s healed itself for %s", attacker.displayName(), move.getValue()));
                 }
             }
@@ -148,6 +149,7 @@ public class CombatSim {
                 move.execute(attacker);
                 int newShield = attacker.displayShield();
                 if (oldShield != newShield) {
+                    game.getSoundManager().playShield();
                     addLog(tick, String.format("%s shielded itself for %s", attacker.displayName(), move.getValue()));
                 }
                 game.getPopUpManager().requestPopup(
@@ -165,6 +167,7 @@ public class CombatSim {
                     move.execute(target);
                     int newHP = target.displayCurrentHp();
                     if (oldHP != newHP) {
+                        game.getSoundManager().playDamage();
                         addLog(tick, String.format("%s dealt %s damage to %s", attacker.displayName(), move.getValue(), target.displayName()));
                     }
                 } else {
@@ -174,6 +177,7 @@ public class CombatSim {
                         move.execute(enemy);
                         int newHP = enemy.displayCurrentHp();
                         if (oldHP != newHP) {
+                            game.getSoundManager().playDamage();
                             addLog(tick, String.format("%s dealt %s damage to %s", attacker.displayName(), move.getValue(), enemy.displayName()));
                         }
                     }
@@ -209,6 +213,7 @@ public class CombatSim {
                     move.execute(target);
                     int newHP = target.displayCurrentHp();
                     if (oldHP != newHP) {
+                        game.getSoundManager().playDamage();
                         addLog(tick, String.format("%s dealt %s piercing damage to %s", attacker.displayName(), move.getValue(), target.displayName()));
                     }
                 } else {
@@ -217,6 +222,7 @@ public class CombatSim {
                         move.execute(enemy);
                         int newHP = enemy.displayCurrentHp();
                         if (oldHP != newHP) {
+                            game.getSoundManager().playDamage();
                             addLog(tick, String.format("%s dealt %s piercing damage to %s", attacker.displayName(), move.getValue(), enemy.displayName()));
                         }
                     }
@@ -242,6 +248,7 @@ public class CombatSim {
                 move.execute(building);
 
                 if (building != null) {
+                    game.getSoundManager().playBuildingDisable();
                     addLog(tick, String.format("%s disabled %s for %s ticks", attacker.displayName(), building.displayName(), move.getValue()));
                 }
 
@@ -272,12 +279,14 @@ public class CombatSim {
                     case "Poison" -> {
                         Move mv = new TrueDamageMove(value, 0);
                         mv.execute(character);
+                        game.getSoundManager().playDamage();
                         addLog(tick, String.format("%s received %s Poison damage", character.displayName(), value));
                     }
 
                     case "Fortitude" -> {
                         Move mv = new ShieldMove(value, 0);
                         mv.execute(character);
+                        game.getSoundManager().playShield();
                         addLog(tick, String.format("%s gained %s shield", character.displayName(), value));
                     }
 
@@ -300,6 +309,7 @@ public class CombatSim {
         // Reverse order to patch potential bugs with 2 dead enemies side by side
         for (int i = enemies.size - 1; i >= 0; i--) {
             if (enemies.get(i).isDead()) {
+                game.getSoundManager().playEnemyDown();
                 enemies.removeIndex(i);
             }
         }

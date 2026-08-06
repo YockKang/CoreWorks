@@ -466,6 +466,8 @@ public class CombatScreen extends GameScreen {
         cancelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // Play button click sound
+                game.getSoundManager().playButtonClick();
                 clearRecipeUI();
             }
         });
@@ -486,6 +488,8 @@ public class CombatScreen extends GameScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (selectedRecipe != null) {
+                    // Play button click sound
+                    game.getSoundManager().playButtonClick();
                     selectedBuilding.setRecipe(selectedRecipe);
                     clearRecipeUI();
                     needRefresh = true;
@@ -602,6 +606,9 @@ public class CombatScreen extends GameScreen {
             buildingButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+                    // Play button click sound
+                    game.getSoundManager().playButtonClick();
+
                     if (!(recipeUIOn || codexOnScreen || tubeMode)) {
                         // allow building selecting when recipe UI and codex are both off-screen and not in tubeMode
                         selectedBuilding = building;
@@ -1053,6 +1060,7 @@ public class CombatScreen extends GameScreen {
             game.setScreen(new WinScreen(game, runState));
             return;
         } else if (controller.isLost()) {
+            game.getSoundManager().playDefeat();
             controller.getFactorySim().clear();
             game.resetCamera();
             game.setScreen(new LoseScreen(game));
@@ -1363,6 +1371,7 @@ public class CombatScreen extends GameScreen {
         if (hoveredGridCoords != null && selectedBuilding != null && !selectedBuilding.isOnGrid()) {
             boolean successfulPlacement = controller.getFactorySim().getGrid().placeBuilding(selectedBuilding, hoveredGridCoords.x, hoveredGridCoords.y, selectedBuilding.getRotation());
             if (successfulPlacement) {
+                game.getSoundManager().playBuildingPlace();
                 controller.getCombatSim().getPlayer().removeBuilding(selectedBuilding);
                 needRefresh = true;
                 selectedBuilding = null;
@@ -1393,6 +1402,7 @@ public class CombatScreen extends GameScreen {
             } else {
                 Building building = controller.getFactorySim().getGrid().removeBuilding(coords.x, coords.y);
                 if (building != null) {
+                    game.getSoundManager().playBuildingRemove();
                     controller.getCombatSim().getPlayer().addBuilding(building);
                 }
             }

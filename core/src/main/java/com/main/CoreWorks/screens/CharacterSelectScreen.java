@@ -100,6 +100,9 @@ public class CharacterSelectScreen extends GameScreen {
             selectButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+                    // Play button click sound
+                    game.getSoundManager().playButtonClick();
+
                     // Set the player for previewing stats in a preview screen
                     selectedPlayer = player;
 
@@ -127,6 +130,8 @@ public class CharacterSelectScreen extends GameScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (selectedPlayer != null) {
+                    // Play button click sound
+                    game.getSoundManager().playButtonClick();
                     // generate the buildings for the player
                     selectedPlayer.generateBuildings();
 

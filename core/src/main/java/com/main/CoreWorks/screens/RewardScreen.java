@@ -141,6 +141,7 @@ public class RewardScreen extends GameScreen {
             select.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+                    game.getSoundManager().playRewardSelected();
                     selectedReward = reward;
 
                     // if reward does not need target, then just apply and go next
@@ -201,6 +202,7 @@ public class RewardScreen extends GameScreen {
             back.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+                    game.getSoundManager().playButtonClick();
                     screen = screenType.CHOOSE_REWARD;
                     selectScreen();
                 }
@@ -221,6 +223,7 @@ public class RewardScreen extends GameScreen {
             buildingButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+                    game.getSoundManager().playButtonClick();
                     selectedBuilding = building;
 
                     // Sets the screens to the different confirmation screens based on what type of reward it is that needs building inputs
@@ -252,6 +255,7 @@ public class RewardScreen extends GameScreen {
         back.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                game.getSoundManager().playButtonClick();
                 screen = screenType.CHOOSE_REWARD;
                 selectScreen();
             }
@@ -296,6 +300,7 @@ public class RewardScreen extends GameScreen {
         confirm.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                game.getSoundManager().playButtonClick();
                 reward.setTarget(selectedBuilding);
                 reward.apply(runState);
                 game.resetCamera();
@@ -308,6 +313,7 @@ public class RewardScreen extends GameScreen {
         cancel.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                game.getSoundManager().playButtonClick();
                 screen = screenType.CHOOSE_BUILDING;
                 selectScreen();
             }

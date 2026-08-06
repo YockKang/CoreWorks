@@ -103,6 +103,8 @@ public class RestScreen extends GameScreen {
         healButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // Play button click sound
+                game.getSoundManager().playButtonClick();
                 choosingTable.remove();
                 mainWindow.addActor(confirmingHealTable);
             }
@@ -112,6 +114,8 @@ public class RestScreen extends GameScreen {
         rewardButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // Play button click sound
+                game.getSoundManager().playButtonClick();
                 choosingTable.remove();
                 mainWindow.addActor(confirmingUpgradeTable);
             }
@@ -135,6 +139,7 @@ public class RestScreen extends GameScreen {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     runState.getPlayer().heal(healAmt);
+                    game.getSoundManager().playHeal();
                     game.resetCamera();
                     completeNode();
                     game.setScreen(new MapScreen(game, runState));
@@ -145,6 +150,8 @@ public class RestScreen extends GameScreen {
             cancelButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+                    // Play button click sound
+                    game.getSoundManager().playButtonClick();
                     confirmingHealTable.remove();
                     mainWindow.addActor(choosingTable);
                 }
@@ -166,6 +173,8 @@ public class RestScreen extends GameScreen {
             confirmButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+                    // Play button click sound
+                    game.getSoundManager().playButtonClick();
                     game.resetCamera();
                     completeNode();
                     game.setScreen(new RewardScreen(game, runState, mysteryReward));
@@ -176,6 +185,8 @@ public class RestScreen extends GameScreen {
             cancelButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+                    // Play button click sound
+                    game.getSoundManager().playButtonClick();
                     confirmingUpgradeTable.remove();
                     mainWindow.addActor(choosingTable);
                 }
