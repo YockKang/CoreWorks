@@ -24,8 +24,20 @@
     "Enemies" : ["PoisonDrone", "PoisonDrone"]
   },
   {
+    "Tier" : 1,
+    "Enemies" : ["RailgunDrone", "RailgunDrone"]
+  },
+  {
     "Tier" : "Boss1",
     "Enemies" : ["FirstBoss"]
+  },
+  {
+    "Tier" : "Boss2",
+    "Enemies" : ["SecondBoss"]
+  },
+  {
+    "Tier" : "Boss3",
+    "Enemies" : ["LastBoss"]
   },
   {
     "Tier" : "Elite1",

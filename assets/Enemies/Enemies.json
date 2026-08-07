@@ -76,6 +76,19 @@
     ]
   },
   {
+    "id": "RailgunDrone",
+    "Name": "Railgun Drone",
+    "HP": 15,
+    "GracePeriod": 18,
+    "Moveset": [
+      {
+        "Type": "TrueDamage",
+        "Value": 6,
+        "Charge": 18
+      }
+    ]
+  },
+  {
     "id": "PoisonDrone",
     "Name": "Poison Drone",
     "HP": 10,
@@ -121,6 +134,93 @@
         "Type": "Damage",
         "Value": 10,
         "Charge": 10
+      }
+    ]
+  },
+  {
+    "id": "SecondBoss",
+    "Name": "Deadlier Drone",
+    "HP": 150,
+    "GracePeriod": 25,
+    "Moveset": [
+      {
+        "Type": "Disable",
+        "Value": 12,
+        "Charge": 9
+      },
+      {
+        "Type": "Shield",
+        "Value": 12,
+        "Charge": 9
+      },
+      {
+        "Type": "Heal",
+        "Value": 12,
+        "Charge": 9
+      },
+      {
+        "Type": "Damage",
+        "Value": 12,
+        "Charge": 9
+      },
+      {
+        "Type": "StatusEffect",
+        "Value": 2,
+        "Charge": 10,
+        "Effect": {
+          "Type": "Poison",
+          "Value": 2,
+          "Duration": 6,
+          "OnSelf": false,
+          "Immediate": false,
+          "Reduction": 0.75
+        }
+      }
+    ]
+  },
+  {
+    "id": "LastBoss",
+    "Name": "Deadliest Drone",
+    "HP": 170,
+    "GracePeriod": 30,
+    "Moveset": [
+      {
+        "Type": "Disable",
+        "Value": 15,
+        "Charge": 8
+      },
+      {
+        "Type": "Shield",
+        "Value": 15,
+        "Charge": 8
+      },
+      {
+        "Type": "Heal",
+        "Value": 15,
+        "Charge": 8
+      },
+      {
+        "Type": "Damage",
+        "Value": 15,
+        "Charge": 8
+      },
+      {
+        "Type": "StatusEffect",
+        "Value": 3,
+        "Charge": 8,
+        "Effect": {
+          "Type": "Poison",
+          "Value": 3,
+          "Duration": 8,
+          "OnSelf": false,
+          "Immediate": false,
+          "Reduction": 1.0
+        }
+      },
+      {
+        "Type": "TrueDamage",
+        "Value": 15,
+        "Charge": 8
       }
     ]
   }

@@ -45,6 +45,9 @@ public class Enemy extends Character {
                         StatusEffect effect = new StatusEffect(mv.get("Effect"), multiplierIn);
                         addMove(new StatusEffectMove(effect, charge));
                         break;
+                    case "TrueDamage":
+                        addMove(new TrueDamageMove(value, charge));
+                        break;
                 }
             } catch (Exception ignored) {
             }
