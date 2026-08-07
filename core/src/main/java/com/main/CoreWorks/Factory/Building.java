@@ -861,6 +861,7 @@ public abstract class Building extends Structure implements Updatable, Comparabl
 
     public Table tooltipDisplay(Skin skin) {
         Table displayTable = new Table(skin);
+        displayTable.setBackground("default-round");
         displayTable.add(new Label(name, skin)).row();
         displayTable.add(new Label("Speed: " + MathExtras.roundDP(getSpeed(), 2), skin)).row();
         return displayTable;

@@ -17,6 +17,7 @@ public class Player extends Character{
     private Array<Relic> relics;
     private FactoryGrid factoryGrid;
     private int money;
+    private int tubeBudget;
     // Passives Implementation TBD
 
     public Player(int hp, int shield, String name, FactoryGrid factoryGrid) {
@@ -47,6 +48,11 @@ public class Player extends Character{
             for (String r : relics) {
                 addRelic(RelicDatabase.get(r));
             }
+        }
+        if (data.get("TubeBudget") != null) {
+            tubeBudget = data.getInt("TubeBudget");
+        } else {
+            tubeBudget = 0;
         }
         this.money = 0;
     }
@@ -111,5 +117,17 @@ public class Player extends Character{
         for (String b : starterBuildingIds) {
             addBuilding(BuildingDatabase.getBuilding(b));
         }
+    }
+
+    public void spendTube(int i) {
+        tubeBudget -= i;
+    }
+
+    public void refundTube(int i) {
+        tubeBudget += i;
+    }
+
+    public int getTubeBudget() {
+        return tubeBudget;
     }
 }

@@ -1,9 +1,13 @@
 package com.main.CoreWorks.Factory;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Recipe.Recipe;
 import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.moveset.*;
+import com.main.CoreWorks.util.MathExtras;
 
 public class Miner extends Building {
 
@@ -96,5 +100,12 @@ public class Miner extends Building {
 
     public float getMineMultiplier() {
         return mineMultiplier;
+    }
+
+    @Override
+    public Table tooltipDisplay(Skin skin) {
+        Table displayTable = super.tooltipDisplay(skin);
+        displayTable.add(new Label("Output Multiplier: " + mineMultiplier, skin)).row();
+        return displayTable;
     }
 }

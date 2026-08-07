@@ -120,6 +120,10 @@ public class Sentence {
         this.text.add(text);
     }
 
+    public void appendSentence(Sentence text) {
+        this.text.addAll(text.text);
+    }
+
     public Table toTable(Skin skin) {
         Array<Array<Text>> formattedText = new Array<>();
         formattedText.add(new Array<>());

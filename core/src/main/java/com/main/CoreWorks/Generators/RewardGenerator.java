@@ -27,6 +27,8 @@ public class RewardGenerator {
             rewards.add(randomExpansionReward(runState));
         }
 
+        rewards.add(new AddTubeCountReward(2));
+
         // Return statement below
         return rewards;
     }

@@ -82,7 +82,7 @@ public class FactoryGrid {
 
     }
 
-    public void addTube(int x, int y, int dir1, int dir2) {
+    public boolean addTube(int x, int y, int dir1, int dir2) {
         if (x >= 0 && y >= 0 && y < maxHeight && x < maxWidth) {
             if (getStructureAt(x, y) == null) {
                 boolean[] arr = new boolean[4];
@@ -91,10 +91,13 @@ public class FactoryGrid {
                 Tube tube = new Tube(x, y, arr);
                 grid.get(y).set(x, tube);
                 tube.connect(grid, 1, new Array<>(new Integer[]{dir1, dir2}));
+                return true;
             } else if (getStructureAt(x, y) instanceof Tube tube) {
                 tube.addConnection(grid, dir1, dir2);
+                return false;
             }
         }
+        return false;
     }
 
     public Building removeBuilding(int x, int y) {

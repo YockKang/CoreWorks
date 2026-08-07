@@ -4,10 +4,15 @@ import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Coreworks;
 import com.main.CoreWorks.Factory.*;
 import com.main.CoreWorks.RunPersistence.RunState;
+import com.main.CoreWorks.TextParser.Sentence;
+import com.main.CoreWorks.TextParser.Text;
 import com.main.CoreWorks.entities.*;
 import com.main.CoreWorks.entities.Character;
 import com.main.CoreWorks.entities.Relics.Relic;
 import com.main.CoreWorks.moveset.*;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class CombatSim {
     private Player player;
@@ -16,9 +21,10 @@ public class CombatSim {
     private Queue<Move> queuedFactoryMoves = new Queue<>();
     private boolean win = false;
     private boolean lost = false;
-    private Array<String> combatLog = new Array<>(10);
+    private Array<Sentence> combatLog = new Array<>(10);
     private FactoryGrid grid;
     private int logsThisTick = 0;
+    private BigDecimal antiStallAccumulator = BigDecimal.valueOf(0);
 
 
     public CombatSim(Coreworks game, Player player, Array<Enemy> enemies) {
@@ -37,12 +43,18 @@ public class CombatSim {
         this.grid = grid;
     }
 
-    public void addLog(int tick, String log) {
+    public void addLog(int tick, Sentence log) {
         if (combatLog.size >= 50) {
             combatLog.removeIndex(0);
         }
-        combatLog.add("Tick " + tick + ": " + log);
+        Sentence newlog = new Sentence("Tick " + tick + ": ");
+        newlog.appendSentence(log);
+        combatLog.add(newlog);
         logsThisTick++;
+    }
+
+    public void addLog(int tick, String log) {
+        addLog(tick, new Sentence(log, true));
     }
 
     /*
@@ -88,6 +100,29 @@ public class CombatSim {
         }
         removeDead();
         winLoss();
+        accumulateStall(tick);
+        System.out.println(antiStallAccumulator);
+        if (antiStallAccumulator.intValue() >= 1) {
+            int stallDmg = antiStallAccumulator.intValue();
+            antiStallAccumulator = antiStallAccumulator.remainder(BigDecimal.ONE);
+            Move stallDmgMove = new TrueDamageMove(stallDmg, 0);
+            stallDmgMove.execute(player);
+            addLog(tick, String.format("%s recieved %s damage for stalling", player.displayName(), stallDmg));
+            game.getPopUpManager().requestPopup(
+                "Stalling_Explanation",
+                "Stalling",
+                "You have been in the fight for too long and are starting to take damage!\nDamage will ramp up as time goes on so be quick!",
+                true
+            );
+        }
+    }
+
+    private void accumulateStall(int tick) {
+        BigDecimal thisTick = new BigDecimal(tick)
+            .divide(new BigDecimal(5000))
+            .pow(10)
+            .multiply(new BigDecimal(50));
+        antiStallAccumulator = antiStallAccumulator.add(thisTick);
     }
 
     private void updateEnemiesSE(RunState runState, int tick) {
@@ -345,7 +380,7 @@ public class CombatSim {
         return enemies;
     }
 
-    public Array<String> getCombatLog() {
+    public Array<Sentence> getCombatLog() {
         return combatLog;
     }
 

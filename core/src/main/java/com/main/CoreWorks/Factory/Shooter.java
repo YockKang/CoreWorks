@@ -1,5 +1,8 @@
 package com.main.CoreWorks.Factory;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Factory.ResourceRequest.*;
 import com.main.CoreWorks.Resources.Resource;
@@ -8,6 +11,7 @@ import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.entities.Character;
 import com.main.CoreWorks.entities.Enemy;
 import com.main.CoreWorks.moveset.*;
+import com.main.CoreWorks.util.MathExtras;
 import com.main.CoreWorks.util.Pair;
 
 import java.util.Objects;
@@ -320,5 +324,12 @@ public class Shooter extends Building {
 
     public int getFlatDmg() {
         return flatDmg;
+    }
+
+    @Override
+    public Table tooltipDisplay(Skin skin) {
+        Table displayTable = super.tooltipDisplay(skin);
+        displayTable.add(new Label("Damage: " + MathExtras.roundDP(baseDmg, 2) + " x Resource + " + flatDmg, skin)).row();
+        return displayTable;
     }
 }

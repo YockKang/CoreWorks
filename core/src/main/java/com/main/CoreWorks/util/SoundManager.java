@@ -72,7 +72,7 @@ public class SoundManager {
     }
 
     public void playShield() {
-        shield.play();
+        shield.play(0.5f);
     }
 
     public void playShopPurchase() {

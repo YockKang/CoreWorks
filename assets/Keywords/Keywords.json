@@ -2,7 +2,12 @@
   {
     "Word" : "Poison",
     "Color" : "green",
-    "Description" : "Deals x True Damage every 4 ticks and halves"
+    "Description" : "Deals x True Damage every 8 ticks and halves"
+  },
+  {
+    "Word" : "Burn",
+    "Color" : "orange",
+    "Description" : "Deals x Damage every 8 ticks and halves"
   },
   {
     "Word" : "True Damage",

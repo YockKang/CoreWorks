@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Codex.Codex;
 import com.main.CoreWorks.Coreworks;
 import com.main.CoreWorks.Recipe.Recipe;
+import com.main.CoreWorks.TextParser.Sentence;
 import com.main.CoreWorks.entities.Relics.Relic;
 import com.main.CoreWorks.simulators.PopUpTutorial.PopUpManager;
 import com.main.CoreWorks.util.*;
@@ -106,7 +107,7 @@ public class CombatScreen extends GameScreen {
 
     private Building selectedBuilding;
 
-    private Queue<Label> combatLog = new Queue<>();
+    private Queue<Table> combatLog = new Queue<>();
     private Recipe selectedRecipe;
 
     public CombatScreen(Coreworks game, RunState runstate, Array<Enemy> enemies) {
@@ -243,7 +244,7 @@ public class CombatScreen extends GameScreen {
         ((Label) UIElements.get("rotationhelp")).setAlignment(Align.center);
         UIElements.put("recipeselecthelp", new Label("R\nChange Selected\nBuilding Recipe", skin));
         ((Label) UIElements.get("recipeselecthelp")).setAlignment(Align.center);
-        UIElements.put("tubemode", new Label("T\nAdd Tubes", skin));
+        UIElements.put("tubemode", new Label("", skin));
         ((Label) UIElements.get("tubemode")).setAlignment(Align.center);
 
         UIElements.put("paused", new Label("PAUSED\nPress Space to Continue", skin));
@@ -482,6 +483,7 @@ public class CombatScreen extends GameScreen {
                 cancelButton.addAction(Actions.color(new Color(.75f, 0, 0, 1), 0.15f));
             }
         });
+        cancelButton.setColor(new Color(.75f, 0, 0, 1));
 
         TextButton confirmButton = new TextButton("Confirm", skin);
         confirmButton.addListener(new ClickListener() {
@@ -507,6 +509,7 @@ public class CombatScreen extends GameScreen {
                 confirmButton.addAction(Actions.color(new Color(0, .75f, 0, 1), 0.15f));
             }
         });
+        confirmButton.setColor(new Color(0, .75f, 0, 1));
 
         recipeTable.add(cancelButton).right().pad(2);
         recipeTable.add(confirmButton).left().pad(2);
@@ -521,6 +524,8 @@ public class CombatScreen extends GameScreen {
         rightBar.add(logTable).growY().row();
 
         bottomBar.add(enemyTable).pad(5);
+
+        tubeUIRefresh();
 
         needRefresh = false;
     }
@@ -573,16 +578,16 @@ public class CombatScreen extends GameScreen {
 
     private void updateCombatLog() {
         Table logTable = (Table) UIElements.get("logbody");
-        Array<String> log = controller.getCombatSim().getCombatLog();
+        Array<Sentence> log = controller.getCombatSim().getCombatLog();
         int newlines = controller.getCombatSim().getLogsThisTick();
         int start = Math.max(0, log.size - newlines);
         for (int i = start; i < log.size; i++) {
-            Label newlog = new Label(log.get(i), skin75pct);
+            Table newlog = log.get(i).toTable(skin75pct);
             logTable.add(newlog).right().row();
             combatLog.addLast(newlog);
         }
         while (combatLog.size > 15) {
-            Label oldlog = combatLog.removeFirst();
+            Table oldlog = combatLog.removeFirst();
             oldlog.remove();
         }
         controller.getCombatSim().assertLogUpdated();
@@ -702,6 +707,15 @@ public class CombatScreen extends GameScreen {
             ((Label) UIElements.get("actualTPS")).setText(String.valueOf(MathExtras.roundDP(1 / avg, 1)));
         } else {
             ((Label) UIElements.get("actualTPS")).setText(0);
+        }
+    }
+
+    private void tubeUIRefresh() {
+        Label tubeHelper = (Label) UIElements.get("tubemode");
+        if (tubeMode) {
+            tubeHelper.setText("T\nTo Exit\n" + controller.getCombatSim().getPlayer().getTubeBudget() + " Remaining");
+        } else {
+            tubeHelper.setText("T\nAdd Tubes\n" + controller.getCombatSim().getPlayer().getTubeBudget() + " Remaining");
         }
     }
 
@@ -1038,7 +1052,6 @@ public class CombatScreen extends GameScreen {
         }
 
 
-
         shapeRenderer.end();
     }
 
@@ -1175,14 +1188,14 @@ public class CombatScreen extends GameScreen {
                 tubeMode = !tubeMode;
                 if (tubeMode) {
                     Label tubeHelper = (Label) UIElements.get("tubemode");
-                    tubeHelper.setText("T\nTo Exit");
+                    tubeHelper.setText("T\nTo Exit\n" + controller.getCombatSim().getPlayer().getTubeBudget() + " Remaining");
                     // deselect building
                     selectedBuilding = null;
                     // tube mode handling here for now
                     multiplexer.addProcessor(tubelogger);
                 } else {
                     Label tubeHelper = (Label) UIElements.get("tubemode");
-                    tubeHelper.setText("T\nAdd Tubes");
+                    tubeHelper.setText("T\nAdd Tubes\n" + controller.getCombatSim().getPlayer().getTubeBudget() + " Remaining");
                     multiplexer.removeProcessor(tubelogger);
                     downPoint = null;
                     upPoint = null;
@@ -1252,8 +1265,8 @@ public class CombatScreen extends GameScreen {
             // Handles Placement preview via mouse hovering
             if (selectedBuilding != null && hoveredGridCoords != null) {
                 hoveredGridCoords = getGridAt(
-                    mouseTranslatedX - (float) (selectedBuilding.getProjectedShape()[0].length * tileSize) / 2 + tileSize / 2,
-                    mouseTranslatedY + (float) (selectedBuilding.getProjectedShape().length * tileSize) / 2 - tileSize / 2);
+                    mouseTranslatedX - (float) (selectedBuilding.getProjectedShape()[0].length * tileSize) / 2 + (float) tileSize / 2,
+                    mouseTranslatedY + (float) (selectedBuilding.getProjectedShape().length * tileSize) / 2 - (float) tileSize / 2);
                 if (hoveredGridCoords != null) {
                     hoveredCanPlace = controller.getFactorySim().getGrid().checkValidPosition(selectedBuilding, hoveredGridCoords.x, hoveredGridCoords.y, selectedBuilding.getRotation());
                 } else {
@@ -1278,22 +1291,41 @@ public class CombatScreen extends GameScreen {
                 if (downPoint != null) {
                     if (Math.abs(upPoint.x - downPoint.x) + Math.abs(upPoint.y - downPoint.y) <= 2) {
                         // check movement is within 2 squares
+                        boolean tubePlaced = false;
+                        int tubeX = 0;
+                        int tubeY = 0;
+                        int tubeDir1 = 0;
+                        int tubeDir2 = 0;
                         switch (Math.abs(upPoint.x - downPoint.x) + Math.abs(upPoint.y - downPoint.y)) {
                             case 0 -> {
                                 if (upPoint.dir != downPoint.dir) {
-                                    controller.getFactorySim().getGrid().addTube(upPoint.x, upPoint.y, downPoint.dir, upPoint.dir);
+                                    tubeX = upPoint.x;
+                                    tubeY = upPoint.y;
+                                    tubeDir1 = downPoint.dir;
+                                    tubeDir2 = upPoint.dir;
+                                    tubePlaced = true;
                                 }
                             }
                             case 1 -> {
                                 if (downPoint.pointingTo().x == upPoint.x &&
                                     downPoint.pointingTo().y == upPoint.y) {
                                     if (downPoint.pointingToSide().dir != upPoint.dir) {
-                                        controller.getFactorySim().getGrid().addTube(upPoint.x, upPoint.y, downPoint.pointingToSide().dir, upPoint.dir);
+                                        tubeX = upPoint.x;
+                                        tubeY = upPoint.y;
+                                        ;
+                                        tubeDir1 = downPoint.pointingToSide().dir;
+                                        tubeDir2 = upPoint.dir;
+                                        tubePlaced = true;
                                     }
                                 } else if (downPoint.x == upPoint.pointingTo().x &&
                                     downPoint.y == upPoint.pointingTo().y) {
                                     if (upPoint.pointingToSide().dir != downPoint.dir) {
-                                        controller.getFactorySim().getGrid().addTube(downPoint.x, downPoint.y, downPoint.dir, upPoint.pointingToSide().dir);
+                                        tubeX = upPoint.x;
+                                        tubeY = upPoint.y;
+                                        ;
+                                        tubeDir1 = downPoint.dir;
+                                        tubeDir2 = upPoint.pointingToSide().dir;
+                                        tubePlaced = true;
                                     }
                                 }
 
@@ -1351,32 +1383,43 @@ public class CombatScreen extends GameScreen {
                                     DirectedCoords upPointer = upPoint.pointingToSide();
                                     if (downPointer.x == upPointer.x &&
                                         downPointer.y == upPointer.y) {
-                                        controller.getFactorySim().getGrid().addTube(upPointer.x, upPointer.y, downPointer.dir, upPointer.dir);
+                                        tubeX = upPointer.x;
+                                        tubeY = upPointer.y;
+                                        tubeDir1 = downPointer.dir;
+                                        tubeDir2 = upPointer.dir;
+                                        tubePlaced = true;
                                     }
-
                                 }
-
                             }
                         }
-                    }
+                        if (tubePlaced) {
+                            if (controller.getCombatSim().getPlayer().getTubeBudget() > 0) {
+                                boolean newSegment = controller.getFactorySim().getGrid().addTube(tubeX, tubeY, tubeDir1, tubeDir2);
+                                if (newSegment) {
+                                    controller.getCombatSim().getPlayer().spendTube(1);
+                                    tubeUIRefresh();
+                                }
+                            }
+                        }
 
-                    if (upPoint.x == downPoint.x &&
-                        upPoint.y == downPoint.y &&
-                        upPoint.dir != downPoint.dir) {
-                        controller.getFactorySim().getGrid().addTube(upPoint.x, upPoint.y, downPoint.dir, upPoint.dir);
                     }
                 }
                 upPoint = null;
                 downPoint = null;
             }
             if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
-                controller.getFactorySim().getGrid().removeTube(hoveredGridCoords.x, hoveredGridCoords.y);
+                Tube removed = controller.getFactorySim().getGrid().removeTube(hoveredGridCoords.x, hoveredGridCoords.y);
+                if (removed != null) {
+                    controller.getCombatSim().getPlayer().refundTube(1);
+                    tubeUIRefresh();
+                }
             }
         }
         if (codexOnScreen || recipeUIOn) {
             ((BuildingToolTip) UIElements.get("buildingtooltip")).hide();
         }
     }
+
 
 
     // Translates mouse coordinates to world coordinates

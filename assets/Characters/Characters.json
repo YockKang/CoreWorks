@@ -7,6 +7,7 @@
       7
     ],
     "HP": 50,
+    "TubeBudget": 4,
     "Buildings": [
       "Miner",
       "ChemPlant",
@@ -26,6 +27,7 @@
       5
     ],
     "HP": 35,
+    "TubeBudget": 5,
     "Buildings": [
       "Miner",
       "BigMiner",
@@ -45,6 +47,7 @@
       6
     ],
     "HP": 60,
+    "TubeBudget": 3,
     "Buildings": [
       "Miner",
       "Smelter",

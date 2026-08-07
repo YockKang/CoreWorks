@@ -222,7 +222,7 @@
     "id": "MachinePoisonShell",
     "Name": "Improved Poison Shell",
     "InputId": [
-      "IronOre", "Mercury"
+      "Shell", "Mercury"
     ],
     "InputMult": [
       1, 1
