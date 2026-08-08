@@ -153,4 +153,8 @@ public class ResourceBuffer {
             }
         }
     }
+
+    public Queue<Resource> getBuffer() {
+        return buffer;
+    }
 }

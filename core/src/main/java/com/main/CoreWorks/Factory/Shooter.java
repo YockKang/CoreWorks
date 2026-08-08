@@ -326,6 +326,10 @@ public class Shooter extends Building {
         return flatDmg;
     }
 
+    public Queue<Resource> getMagazine() {
+        return magazine;
+    }
+
     @Override
     public Table tooltipDisplay(Skin skin) {
         Table displayTable = super.tooltipDisplay(skin);

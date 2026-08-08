@@ -3,6 +3,7 @@ package com.main.CoreWorks.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.scenes.scene2d.*;
@@ -13,7 +14,9 @@ import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Codex.Codex;
 import com.main.CoreWorks.Coreworks;
 import com.main.CoreWorks.Recipe.Recipe;
+import com.main.CoreWorks.Resources.Resource;
 import com.main.CoreWorks.TextParser.Sentence;
+import com.main.CoreWorks.database.ResourceDatabase;
 import com.main.CoreWorks.entities.Relics.Relic;
 import com.main.CoreWorks.simulators.PopUpTutorial.PopUpManager;
 import com.main.CoreWorks.util.*;
@@ -1011,26 +1014,6 @@ public class CombatScreen extends GameScreen {
                     }
                 }
             }
-
-            // draw bottleneck UI
-
-            Coords nameCoords = building.getGlobalCoord(building.getDisplaySquare());
-            switch (building.getStatus()) {
-                case Building.Status.WORKING -> {
-                    shapeRenderer.setColor(Color.GREEN);
-                }
-                case Building.Status.DISABLED -> {
-                    shapeRenderer.setColor(Color.RED);
-                }
-                case Building.Status.FULL_OUTPUT -> {
-                    shapeRenderer.setColor(Color.YELLOW);
-                }
-                case Building.Status.NO_INPUT -> {
-                    shapeRenderer.setColor(Color.ORANGE);
-                }
-            }
-
-            shapeRenderer.circle(gridStartX + nameCoords.x * tileSize + (float) tileSize / 20 + 5, gridEndY - nameCoords.y * tileSize - ((float) tileSize / 20 + 5), 5);
         }
         shapeRenderer.end();
 
@@ -1060,11 +1043,146 @@ public class CombatScreen extends GameScreen {
 
 
         for (Building building : controller.getFactorySim().getGrid().getBuildings()) {
-
-
             Coords nameCoords = building.getGlobalCoord(building.getDisplaySquare());
             float nameX = gridStartX + nameCoords.x * tileSize + 10;
             float nameY = gridEndY - nameCoords.y * tileSize - 20;
+
+            // draws buffers
+            float scale = (float) (tileSize * 9 / 10) / 40;
+
+            if ((building instanceof Miner || building instanceof Refiner) && building.getRecipe() != null) {
+                for (int i = 0; i < building.getInputBuffer().size; i++) {
+                    ResourceBuffer buffer = building.getInputBuffer().get(i);
+
+
+                    game.batch.draw(game.getSpriteManager().getTexture("ResourceContainer"),
+                        gridStartX + nameCoords.x * tileSize + (float) tileSize / 20 + (i * 10 * scale),
+                        gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20,
+                        10 * scale,
+                        40 * scale
+                    );
+                    String id = buffer.getResourceId();
+                    String visType = ResourceDatabase.getDB().get(id).getData().getString("VisType");
+                    switch (visType) {
+                        case "Piece" -> {
+                            Texture resourceTexture = game.getSpriteManager().getTexture(id);
+                            for (int j = 0; j < buffer.getBuffer().size; j++) {
+                                game.batch.draw(resourceTexture,
+                                    gridStartX + nameCoords.x * tileSize + (float) tileSize / 20 + (i * 10 * scale) + scale,
+                                    (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2 * scale + (j * 8 * scale / 1.5)),
+                                    (float) (scale / 1.5 * 12),
+                                    (float) (scale / 1.5 * 8)
+                                );
+                            }
+                        }
+                        case "Liquid", "Bulk" -> {
+                            TextureRegion[][] resourceTexture = game.getSpriteManager().getTextureRegion(id + visType, 12, 8);
+                            for (int j = 0; j < buffer.getBuffer().size; j++) {
+                                if (j < buffer.getBuffer().size - 1) {
+                                    game.batch.draw(resourceTexture[1][0],
+                                        gridStartX + nameCoords.x * tileSize + (float) tileSize / 20 + (i * 10 * scale) + scale,
+                                        (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2 * scale + (j * 8 * scale / 1.5)),
+                                        (float) (scale / 1.5 * 12),
+                                        (float) (scale / 1.5 * 8)
+                                    );
+                                } else {
+                                    game.batch.draw(resourceTexture[0][0],
+                                        gridStartX + nameCoords.x * tileSize + (float) tileSize / 20 + (i * 10 * scale) + scale,
+                                        (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2 * scale + (j * 8 * scale / 1.5)),
+                                        (float) (scale / 1.5 * 12),
+                                        (float) (scale / 1.5 * 8)
+                                    );
+                                }
+                            }
+                        }
+                    }
+                }
+
+                for (int i = 0; i < building.getOutputResourceBuffer().size; i++) {
+                    ResourceBuffer buffer = building.getOutputResourceBuffer().get(i);
+
+
+                    game.batch.draw(game.getSpriteManager().getTexture("ResourceContainer"),
+                        gridStartX + (nameCoords.x + 1) * tileSize - (float) tileSize / 20 - ((i + 1) * 10 * scale),
+                        gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20,
+                        10 * scale,
+                        40 * scale
+                    );
+                    String id = buffer.getResourceId();
+                    String visType = ResourceDatabase.getDB().get(id).getData().getString("VisType");
+                    switch (visType) {
+                        case "Piece" -> {
+                            Texture resourceTexture = game.getSpriteManager().getTexture(id);
+                            for (int j = 0; j < buffer.getBuffer().size; j++) {
+                                game.batch.draw(resourceTexture,
+                                    gridStartX + (nameCoords.x + 1) * tileSize - (float) tileSize / 20 - ((i + 1) * 10 * scale) + scale,
+                                    (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2 * scale + (j * 8 * scale / 1.5)),
+                                    (float) (scale / 1.5 * 12),
+                                    (float) (scale / 1.5 * 8)
+                                );
+                            }
+                        }
+                        case "Liquid", "Bulk" -> {
+                            TextureRegion[][] resourceTexture = game.getSpriteManager().getTextureRegion(id + visType, 12, 8);
+                            for (int j = 0; j < buffer.getBuffer().size; j++) {
+                                if (j < buffer.getBuffer().size - 1) {
+                                    game.batch.draw(resourceTexture[1][0],
+                                        gridStartX + (nameCoords.x + 1) * tileSize - (float) tileSize / 20 - ((i + 1) * 10 * scale) + scale,
+                                        (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2 * scale + (j * 8 * scale / 1.5)),
+                                        (float) (scale / 1.5 * 12),
+                                        (float) (scale / 1.5 * 8)
+                                    );
+                                } else {
+                                    game.batch.draw(resourceTexture[0][0],
+                                        gridStartX + (nameCoords.x + 1) * tileSize - (float) tileSize / 20 - ((i + 1) * 10 * scale) + scale,
+                                        (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2 * scale + (j * 8 * scale / 1.5)),
+                                        (float) (scale / 1.5 * 12),
+                                        (float) (scale / 1.5 * 8)
+                                    );
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (building instanceof Shooter shooter) {
+                game.batch.draw(game.getSpriteManager().getTexture("ResourceContainer"),
+                    gridStartX + nameCoords.x * tileSize + (float) tileSize / 20,
+                    gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20,
+                    10 * scale,
+                    40 * scale
+                );
+                for (int j = 0; j < shooter.getMagazine().size; j++) {
+                    Resource resource = shooter.getMagazine().get(j);
+                    Texture resourceTexture = game.getSpriteManager().getTexture(resource.getId());
+                    game.batch.draw(resourceTexture,
+                        gridStartX + nameCoords.x * tileSize + (float) tileSize / 20 + scale,
+                        (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2 * scale + (j * 8 * scale / 1.5)),
+                        (float) (scale / 1.5 * 12),
+                        (float) (scale / 1.5 * 8)
+                    );
+                }
+            }
+            if (building instanceof Defender defender) {
+                game.batch.draw(game.getSpriteManager().getTexture("ResourceContainer"),
+                    gridStartX + nameCoords.x * tileSize + (float) tileSize / 20,
+                    gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20,
+                    10 * scale,
+                    40 * scale
+                );
+                for (int j = 0; j < defender.getMagazine().size; j++) {
+                    Resource resource = defender.getMagazine().get(j);
+                    Texture resourceTexture = game.getSpriteManager().getTexture(resource.getId());
+                    game.batch.draw(resourceTexture,
+                        gridStartX + nameCoords.x * tileSize + (float) tileSize / 20 + scale,
+                        (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2 * scale + (j * 8 * scale / 1.5)),
+                        (float) (scale / 1.5 * 12),
+                        (float) (scale / 1.5 * 8)
+                    );
+                }
+            }
+
+
             game.font.getData().setScale(0.75f);
             game.font.draw(game.batch, building.gridName(), nameX, nameY);
             if (building instanceof Miner ||
@@ -1077,11 +1195,35 @@ public class CombatScreen extends GameScreen {
                     tempfont.draw(game.batch, "Recipe not set!", nameX, nameY - 30);
                 }
             }
-
-
         }
         game.font.getData().setScale(1f);
         game.batch.end();
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        // draw bottleneck UI
+
+        for (Building building : controller.getFactorySim().getGrid().getBuildings()) {
+            Coords nameCoords = building.getGlobalCoord(building.getDisplaySquare());
+            switch (building.getStatus()) {
+                case Building.Status.WORKING -> {
+                    shapeRenderer.setColor(Color.GREEN);
+                }
+                case Building.Status.DISABLED -> {
+                    shapeRenderer.setColor(Color.RED);
+                }
+                case Building.Status.FULL_OUTPUT -> {
+                    shapeRenderer.setColor(Color.YELLOW);
+                }
+                case Building.Status.NO_INPUT -> {
+                    shapeRenderer.setColor(Color.ORANGE);
+                }
+            }
+
+            shapeRenderer.circle(gridStartX + nameCoords.x * tileSize + (float) tileSize / 20 + 5, gridEndY - nameCoords.y * tileSize - ((float) tileSize / 20 + 5), 5);
+        }
+        shapeRenderer.end();
+
     }
 
     public void checkWinLoss() {
@@ -1098,7 +1240,7 @@ public class CombatScreen extends GameScreen {
             game.setScreen(new WinScreen(game, runState));
             return;
         } else if (controller.isLost()) {
-            game.getSoundManager().playDefeat();
+            game.getSoundManager().playSound("defeat", 1);
             controller.getFactorySim().clear();
             game.resetCamera();
             game.setScreen(new LoseScreen(game));
@@ -1421,7 +1563,6 @@ public class CombatScreen extends GameScreen {
     }
 
 
-
     // Translates mouse coordinates to world coordinates
     private Vector2 translateMouseToWorld() {
         mouse2DCoords.set(Gdx.input.getX(), Gdx.input.getY());
@@ -1439,7 +1580,7 @@ public class CombatScreen extends GameScreen {
         if (hoveredGridCoords != null && selectedBuilding != null && !selectedBuilding.isOnGrid()) {
             boolean successfulPlacement = controller.getFactorySim().getGrid().placeBuilding(selectedBuilding, hoveredGridCoords.x, hoveredGridCoords.y, selectedBuilding.getRotation());
             if (successfulPlacement) {
-                game.getSoundManager().playBuildingPlace();
+                game.getSoundManager().playSound("buildingPlace", 1);
                 controller.getCombatSim().getPlayer().removeBuilding(selectedBuilding);
                 needRefresh = true;
                 selectedBuilding = null;
@@ -1470,7 +1611,7 @@ public class CombatScreen extends GameScreen {
             } else {
                 Building building = controller.getFactorySim().getGrid().removeBuilding(coords.x, coords.y);
                 if (building != null) {
-                    game.getSoundManager().playBuildingRemove();
+                    game.getSoundManager().playSound("buildingRemove", 1);
                     controller.getCombatSim().getPlayer().addBuilding(building);
                 }
             }

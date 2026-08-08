@@ -283,7 +283,7 @@ public class CombatSim {
                 move.execute(building);
 
                 if (building != null) {
-                    game.getSoundManager().playBuildingDisable();
+                    game.getSoundManager().playSound("buildingDisable", 1);
                     addLog(tick, String.format("%s disabled %s for %s ticks", attacker.displayName(), building.displayName(), move.getValue()));
                 }
 
@@ -344,7 +344,7 @@ public class CombatSim {
         // Reverse order to patch potential bugs with 2 dead enemies side by side
         for (int i = enemies.size - 1; i >= 0; i--) {
             if (enemies.get(i).isDead()) {
-                game.getSoundManager().playEnemyDown();
+                game.getSoundManager().playSound("enemyDown", 1);
                 enemies.removeIndex(i);
             }
         }

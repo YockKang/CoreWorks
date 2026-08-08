@@ -176,8 +176,8 @@
     ]
   },
   {
-    "id": "MachineRail",
-    "Name": "Make Rail",
+    "id": "MachineSabot",
+    "Name": "Make Sabot",
     "InputId": [
       "Steel"
     ],
@@ -185,7 +185,7 @@
       1
     ],
     "OutputId": [
-      "Rail"
+      "Sabot"
     ],
     "OutputMult": [
       1

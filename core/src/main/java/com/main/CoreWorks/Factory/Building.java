@@ -870,4 +870,8 @@ public abstract class Building extends Structure implements Updatable, Comparabl
     public Status getStatus() {
         return status;
     }
+
+    public Array<ResourceBuffer> getInputBuffer() {
+        return inputBuffer;
+    }
 }

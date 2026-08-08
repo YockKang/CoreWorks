@@ -9,7 +9,7 @@
     "MagSize": 5,
     "BaseDef": 3.5,
     "Action" : "Heal",
-    "Whitelist": ["IronOre", "Iron", "Coal", "Ammonia", "Steel", "Rail"]
+    "Whitelist": ["IronOre", "Iron", "Coal", "Ammonia", "Steel"]
   },
   {
     "id" : "Shielder1",

@@ -9,7 +9,7 @@
     "Shape" : ["S", 1],
     "MagSize": 5,
     "BaseDmg": 1.5,
-    "Whitelist": ["BasicPoisonShell", "PoisonShell", "ExplosiveShell", "Explosive", "Shell", "Rail"]
+    "Whitelist": ["BasicPoisonShell", "PoisonShell", "ExplosiveShell", "Explosive", "Shell", "Sabot"]
   },
 
   {
@@ -26,7 +26,7 @@
     "DisplayOverride": [1, 1],
     "MagSize": 5,
     "BaseDmg": 2,
-    "Whitelist": ["BasicPoisonShell", "PoisonShell", "ExplosiveShell", "Explosive", "Shell", "Rail"]
+    "Whitelist": ["BasicPoisonShell", "PoisonShell", "ExplosiveShell", "Explosive", "Shell", "Sabot"]
   },
 
   {
@@ -40,7 +40,7 @@
     "MagSize": 5,
     "BaseDmg": 2,
     "AoE": [[-1,1]],
-    "Whitelist": ["BasicPoisonShell", "PoisonShell", "ExplosiveShell", "Explosive", "Shell", "Rail"]
+    "Whitelist": ["BasicPoisonShell", "PoisonShell", "ExplosiveShell", "Explosive", "Shell", "Sabot"]
   },
 
   {
@@ -77,24 +77,24 @@
   },
 
   {
-    "id" : "Railgun",
+    "id" : "Sabotgun",
     "Tier" : 1,
     "Type" : "Shooter",
-    "Name" : "Railgun",
-    "Description": "A basic railgun, deals 1x damage\nto the first enemy and 0.5x to the second enemy",
+    "Name" : "Sabotgun",
+    "Description": "A basic Sabotgun, deals 1x damage\nto the first enemy and 0.5x to the second enemy",
     "Cooldown" : 2,
     "Shape" : ["R", 4, 1],
     "MagSize": 5,
     "BaseDmg": 1.5,
     "AoE": [[1, 1], [2, 0.5]],
-    "Whitelist": ["Shell", "BasicPoisonShell", "PoisonShell", "Rail"]
+    "Whitelist": ["Shell", "BasicPoisonShell", "PoisonShell", "Sabot"]
   },
   {
-    "id" : "Railgun+",
+    "id" : "Sabotgun+",
     "Tier" : 2,
     "Type" : "Shooter",
-    "Name" : "Railgun+",
-    "Description": "An improved railgun, deals 1x true damage\nto the first enemy and 0.5x to the second enemy",
+    "Name" : "Sabotgun+",
+    "Description": "An improved Sabotgun, deals 1x true damage\nto the first enemy and 0.5x to the second enemy",
     "Cooldown" : 2,
     "Shape" : [
       [true , false],
@@ -105,16 +105,16 @@
     "MagSize": 5,
     "BaseDmg": 1.75,
     "AoE": [[1, 1], [2, 0.5]],
-    "Whitelist": ["Rail"],
+    "Whitelist": ["Sabot"],
     "Damage Type": "True"
   },
   {
-    "id" : "MegaRailgun",
+    "id" : "MegaSabotgun",
     "Tier" : 3,
     "Type" : "Shooter",
-    "Name" : "Leviathan Railgun",
-    "GridName" : "Leviathan\nRailgun",
-    "Description": "A beast of a railgun from who knows where,\ndeals True Damage to all enemies",
+    "Name" : "Leviathan Sabotgun",
+    "GridName" : "Leviathan\nSabotgun",
+    "Description": "A beast of a Sabotgun from who knows where,\ndeals True Damage to all enemies",
     "Cooldown" : 2,
     "Shape" : [
       [true , true , false],
@@ -125,7 +125,7 @@
     "MagSize": 5,
     "BaseDmg": 2.5,
     "AoE": "All",
-    "Whitelist": ["Rail"],
+    "Whitelist": ["Sabot"],
     "Damage Type": "True"
   }
 ]

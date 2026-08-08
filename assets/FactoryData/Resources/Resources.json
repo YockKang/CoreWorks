@@ -3,61 +3,71 @@
   {
     "id" : "IronOre",
     "Name" : "Iron Ore",
-    "DmgMult" : 0.5
+    "DmgMult" : 0.5,
+    "VisType" : "Bulk"
   },
 
   {
     "id" : "Iron",
     "Name" : "Iron Ingot",
-    "DmgMult" : 1
+    "DmgMult" : 1,
+    "VisType" : "Piece"
   },
 
   {
     "id" : "Coal",
     "Name" : "Coal",
-    "DmgMult" : 0.5
+    "DmgMult" : 0.5,
+    "VisType" : "Bulk"
   },
 
   {
     "id" : "Mercury",
     "Name" : "Mercury",
-    "DmgMult" : 0.5
+    "DmgMult" : 0.5,
+    "VisType" : "Piece"
   },
 
   {
     "id" : "Ammonia",
     "Name" : "Ammonia",
-    "DmgMult" : 0.7
+    "DmgMult" : 0.7,
+    "VisType" : "Liquid"
   },
 
   {
     "id" : "Steel",
     "Name" : "Steel",
-    "DmgMult" : 2
+    "DmgMult" : 2,
+    "VisType" : "Piece"
   },
 
   {
     "id" : "Explosive",
     "Name" : "Explosive",
-    "DmgMult" : 3.5
+    "DmgMult" : 3.5,
+    "VisType" : "Piece"
   },
 
   {
     "id" : "Shell",
     "Name" : "Shell",
-    "DmgMult" : 3
+    "DmgMult" : 3,
+    "VisType" : "Piece"
   },
 
   {
     "id" : "ExplosiveShell",
     "Name" : "Explosive Shell",
-    "DmgMult" : 4
+    "DmgMult" : 4,
+    "VisType" : "Piece"
   },
 
   {
     "id" : "PoisonShell",
     "Name" : "Poison Shell",
     "DmgMult" : 3.5,
+    "VisType" : "Piece",
     "Modifiers" : [
       {
         "type" : "DamageType",
@@ -70,6 +80,7 @@
     "id" : "BasicPoisonShell",
     "Name" : "Basic Poison Shell",
     "DmgMult" : 2,
+    "VisType" : "Piece",
     "Modifiers" : [
       {
         "type" : "DamageType",
@@ -79,8 +90,9 @@
   },
 
   {
-    "id" : "Rail",
-    "Name" : "Rail",
-    "DmgMult" : 4
+    "id" : "Sabot",
+    "Name" : "Sabot",
+    "DmgMult" : 4,
+    "VisType" : "Piece"
   }
 ]

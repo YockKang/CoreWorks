@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.*;
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.main.CoreWorks.Factory.ResourceRequest.*;
 import com.main.CoreWorks.Resources.Resource;
 import com.main.CoreWorks.RunPersistence.RunState;
@@ -143,5 +144,9 @@ public class Defender extends Building{
         Table displayTable = super.tooltipDisplay(skin);
         displayTable.add(new Label("Defense: " + MathExtras.roundDP(baseDef, 2) + " x Resource + " + flatDef, skin)).row();
         return displayTable;
+    }
+
+    public Queue<Resource> getMagazine() {
+        return magazine;
     }
 }

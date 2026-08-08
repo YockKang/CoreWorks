@@ -141,7 +141,7 @@ public class RewardScreen extends GameScreen {
             select.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    game.getSoundManager().playRewardSelected();
+                    game.getSoundManager().playSound("rewardSelected", 1);
                     selectedReward = reward;
 
                     // if reward does not need target, then just apply and go next
