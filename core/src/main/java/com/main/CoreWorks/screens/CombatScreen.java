@@ -1069,7 +1069,7 @@ public class CombatScreen extends GameScreen {
                             for (int j = 0; j < buffer.getBuffer().size; j++) {
                                 game.batch.draw(resourceTexture,
                                     gridStartX + nameCoords.x * tileSize + (float) tileSize / 20 + (i * 10 * scale) + scale,
-                                    (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2 * scale + (j * 8 * scale / 1.5)),
+                                    (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2f * scale + ((double) j / buffer.getCapacity()) * (36 * scale)),
                                     (float) (scale / 1.5 * 12),
                                     (float) (scale / 1.5 * 8)
                                 );
@@ -1078,21 +1078,18 @@ public class CombatScreen extends GameScreen {
                         case "Liquid", "Bulk" -> {
                             TextureRegion[][] resourceTexture = game.getSpriteManager().getTextureRegion(id + visType, 12, 8);
                             for (int j = 0; j < buffer.getBuffer().size; j++) {
+                                TextureRegion tx = null;
                                 if (j < buffer.getBuffer().size - 1) {
-                                    game.batch.draw(resourceTexture[1][0],
-                                        gridStartX + nameCoords.x * tileSize + (float) tileSize / 20 + (i * 10 * scale) + scale,
-                                        (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2 * scale + (j * 8 * scale / 1.5)),
-                                        (float) (scale / 1.5 * 12),
-                                        (float) (scale / 1.5 * 8)
-                                    );
+                                    tx = resourceTexture[1][0];
                                 } else {
-                                    game.batch.draw(resourceTexture[0][0],
-                                        gridStartX + nameCoords.x * tileSize + (float) tileSize / 20 + (i * 10 * scale) + scale,
-                                        (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2 * scale + (j * 8 * scale / 1.5)),
-                                        (float) (scale / 1.5 * 12),
-                                        (float) (scale / 1.5 * 8)
-                                    );
+                                    tx = resourceTexture[0][0];
                                 }
+                                game.batch.draw(tx,
+                                    gridStartX + nameCoords.x * tileSize + (float) tileSize / 20 + (i * 10 * scale) + scale,
+                                    (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2f * scale + ((double) j / buffer.getCapacity()) * (36 * scale)),
+                                    (float) (scale / 1.5 * 12),
+                                    (float) ((double) 1 / buffer.getCapacity()) * (36 * scale)
+                                );
                             }
                         }
                     }
@@ -1116,7 +1113,7 @@ public class CombatScreen extends GameScreen {
                             for (int j = 0; j < buffer.getBuffer().size; j++) {
                                 game.batch.draw(resourceTexture,
                                     gridStartX + (nameCoords.x + 1) * tileSize - (float) tileSize / 20 - ((i + 1) * 10 * scale) + scale,
-                                    (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2 * scale + (j * 8 * scale / 1.5)),
+                                    (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2f * scale + ((double) j / buffer.getCapacity()) * (36 * scale)),
                                     (float) (scale / 1.5 * 12),
                                     (float) (scale / 1.5 * 8)
                                 );
@@ -1125,21 +1122,18 @@ public class CombatScreen extends GameScreen {
                         case "Liquid", "Bulk" -> {
                             TextureRegion[][] resourceTexture = game.getSpriteManager().getTextureRegion(id + visType, 12, 8);
                             for (int j = 0; j < buffer.getBuffer().size; j++) {
+                                TextureRegion tx = null;
                                 if (j < buffer.getBuffer().size - 1) {
-                                    game.batch.draw(resourceTexture[1][0],
-                                        gridStartX + (nameCoords.x + 1) * tileSize - (float) tileSize / 20 - ((i + 1) * 10 * scale) + scale,
-                                        (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2 * scale + (j * 8 * scale / 1.5)),
-                                        (float) (scale / 1.5 * 12),
-                                        (float) (scale / 1.5 * 8)
-                                    );
+                                    tx = resourceTexture[1][0];
                                 } else {
-                                    game.batch.draw(resourceTexture[0][0],
-                                        gridStartX + (nameCoords.x + 1) * tileSize - (float) tileSize / 20 - ((i + 1) * 10 * scale) + scale,
-                                        (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2 * scale + (j * 8 * scale / 1.5)),
-                                        (float) (scale / 1.5 * 12),
-                                        (float) (scale / 1.5 * 8)
-                                    );
+                                    tx = resourceTexture[0][0];
                                 }
+                                game.batch.draw(tx,
+                                    gridStartX + (nameCoords.x + 1) * tileSize - (float) tileSize / 20 - ((i + 1) * 10 * scale) + scale,
+                                    (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2f * scale + ((double) j / buffer.getCapacity()) * (36 * scale)),
+                                    (float) (scale / 1.5 * 12),
+                                    (float) ((double) 1 / buffer.getCapacity()) * (36 * scale)
+                                );
                             }
                         }
                     }
@@ -1157,7 +1151,7 @@ public class CombatScreen extends GameScreen {
                     Texture resourceTexture = game.getSpriteManager().getTexture(resource.getId());
                     game.batch.draw(resourceTexture,
                         gridStartX + nameCoords.x * tileSize + (float) tileSize / 20 + scale,
-                        (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2 * scale + (j * 8 * scale / 1.5)),
+                        (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2f * scale + ((double) j / shooter.getMagSize()) * (36 * scale)),
                         (float) (scale / 1.5 * 12),
                         (float) (scale / 1.5 * 8)
                     );
@@ -1175,7 +1169,7 @@ public class CombatScreen extends GameScreen {
                     Texture resourceTexture = game.getSpriteManager().getTexture(resource.getId());
                     game.batch.draw(resourceTexture,
                         gridStartX + nameCoords.x * tileSize + (float) tileSize / 20 + scale,
-                        (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2 * scale + (j * 8 * scale / 1.5)),
+                        (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2f * scale + ((double) j / defender.getMagSize()) * (36 * scale)),
                         (float) (scale / 1.5 * 12),
                         (float) (scale / 1.5 * 8)
                     );

@@ -149,4 +149,8 @@ public class Defender extends Building{
     public Queue<Resource> getMagazine() {
         return magazine;
     }
+
+    public int getMagSize() {
+        return magSize;
+    }
 }

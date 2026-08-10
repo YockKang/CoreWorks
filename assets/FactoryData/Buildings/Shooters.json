@@ -77,11 +77,11 @@
   },
 
   {
-    "id" : "Sabotgun",
+    "id" : "Railgun",
     "Tier" : 1,
     "Type" : "Shooter",
-    "Name" : "Sabotgun",
-    "Description": "A basic Sabotgun, deals 1x damage\nto the first enemy and 0.5x to the second enemy",
+    "Name" : "Railgun",
+    "Description": "A basic Railgun, deals 1x damage\nto the first enemy and 0.5x to the second enemy",
     "Cooldown" : 2,
     "Shape" : ["R", 4, 1],
     "MagSize": 5,
@@ -90,11 +90,11 @@
     "Whitelist": ["Shell", "BasicPoisonShell", "PoisonShell", "Sabot"]
   },
   {
-    "id" : "Sabotgun+",
+    "id" : "Railgun+",
     "Tier" : 2,
     "Type" : "Shooter",
-    "Name" : "Sabotgun+",
-    "Description": "An improved Sabotgun, deals 1x true damage\nto the first enemy and 0.5x to the second enemy",
+    "Name" : "Railgun+",
+    "Description": "An improved Railgun, deals 1x true damage\nto the first enemy and 0.5x to the second enemy",
     "Cooldown" : 2,
     "Shape" : [
       [true , false],

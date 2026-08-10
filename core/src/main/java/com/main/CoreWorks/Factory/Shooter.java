@@ -330,6 +330,10 @@ public class Shooter extends Building {
         return magazine;
     }
 
+    public int getMagSize() {
+        return magSize;
+    }
+
     @Override
     public Table tooltipDisplay(Skin skin) {
         Table displayTable = super.tooltipDisplay(skin);
