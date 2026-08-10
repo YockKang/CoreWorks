@@ -18,7 +18,7 @@
     "Relics": [
       "MoneyRelic"
     ],
-    "BuildGuide": "Create Explosives for the mortar\nConsider improving to Explosive Shells"
+    "BuildGuide": "Beginner-friendly character with straightforward mechanics.\nCreate Explosives for the mortar\nConsider improving to Explosive Shells"
   },
   {
     "id": "Chemist",
@@ -39,7 +39,7 @@
     "Relics": [
       "MoneyRelic3"
     ],
-    "BuildGuide": "Start with Basic Poison Shells\nKey damage is through Poison"
+    "BuildGuide": "Fragile character with powerful buildings.\nStart with Basic Poison Shells\nKey damage is through Poison"
   },
   {
     "id": "Commander",
@@ -59,7 +59,7 @@
     "Relics": [
       "MoneyRelic2"
     ],
-    "BuildGuide": "Start with Shells\nConsider working towards railguns and steel manufacturing"
+    "BuildGuide": "Tanky character with weak start but powerful ceiling.\nStart with Shells\nConsider working towards railguns and steel manufacturing"
   }
   /*
   {
