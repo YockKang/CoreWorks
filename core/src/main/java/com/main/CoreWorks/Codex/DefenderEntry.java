@@ -7,11 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.JsonValue;
 import com.main.CoreWorks.TextParser.Sentence;
-import com.main.CoreWorks.TextParser.Text;
-
-import java.util.Objects;
 
 public class DefenderEntry extends BuildingEntry{
 
@@ -52,7 +50,7 @@ public class DefenderEntry extends BuildingEntry{
                 Sentence tooltipText = new Sentence("Expected Protection: " +
                     (int) (data.getFloat("BaseDef") * resource.dmgMult));
                 System.out.println(tooltipText.text);
-                Table expectedDamage = tooltipText.toTable(skin);
+                Table expectedDamage = tooltipText.toTable(skin, Align.center);
                 expectedDamage.setBackground("default-round");
                 Tooltip<Table> descToolTip = new Tooltip<>(expectedDamage);
                 descToolTip.setInstant(true);

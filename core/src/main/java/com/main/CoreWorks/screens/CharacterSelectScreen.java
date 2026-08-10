@@ -3,12 +3,10 @@ package com.main.CoreWorks.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Coreworks;
-import com.main.CoreWorks.Factory.Building;
 import com.main.CoreWorks.Factory.BuildingTemplate.BuildingTemplate;
 import com.main.CoreWorks.Generators.RunMapGenerator;
 import com.main.CoreWorks.RunPersistence.RunMap;
@@ -167,7 +165,7 @@ public class CharacterSelectScreen extends GameScreen {
 
         // Sets the tooltips for player info
         Sentence playerInfo = new Sentence(selectedPlayer.toString(), true);
-        preview.add(playerInfo.toTable(skin)).row();
+        preview.add(playerInfo.toTable(skin, Align.center)).row();
         preview.add(new Label(String.format("Grid size: %s x %s", selectedPlayer.getFactoryGrid().getMaxWidth(), selectedPlayer.getFactoryGrid().getMaxHeight()), skin)).row();
 
         // Sets the tooltips for starter buildings (max 3 per row)
@@ -197,7 +195,7 @@ public class CharacterSelectScreen extends GameScreen {
         for (Relic relic : selectedPlayer.getRelics()) {
             Label label3 = new Label("- " + relic.getName(), skin);
             label3.setColor(Color.GOLD);
-            Tooltip<Table> descToolTip = new Tooltip<>(relic.getDescription().toTable(skin));
+            Tooltip<Table> descToolTip = new Tooltip<>(relic.getDescription().toTable(skin, Align.center));
             descToolTip.setInstant(true);
             label3.addListener(descToolTip);
             relicTable.add(label3);
@@ -207,6 +205,15 @@ public class CharacterSelectScreen extends GameScreen {
             }
         }
         preview.add(relicTable);
+        preview.row();
+
+        if (selectedPlayer.getStarterAdvice() != null) {
+            Label label4 = new Label("Tips:", skin);
+            label4.setColor(Color.ORANGE);
+            preview.add(label4).row();
+            Table starterTips = new Sentence(selectedPlayer.getStarterAdvice(), true).toTable(skin, Align.center);
+            preview.add(starterTips);
+        }
     }
 
     @Override

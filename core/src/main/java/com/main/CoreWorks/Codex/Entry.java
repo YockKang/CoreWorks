@@ -1,9 +1,7 @@
 package com.main.CoreWorks.Codex;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.JsonValue;
 import com.main.CoreWorks.TextParser.Sentence;
 
@@ -41,7 +39,7 @@ public abstract class Entry {
     public void generateInfoTable(Skin skin) {
         infoTable.add(new Label(name, skin)).row();
         if (description != null) {
-            infoTable.add(description.toTable(skin)).row();
+            infoTable.add(description.toTable(skin, Align.center)).row();
         }
     }
 }

@@ -445,7 +445,7 @@ public class CombatScreen extends GameScreen {
             Table table = new Table(skin);
             Label label3 = new Label(relic.getName(), skin);
             label3.setColor(Color.GOLD);
-            Tooltip<Table> descToolTip = new Tooltip<>(relic.getDescription().toTable(skin));
+            Tooltip<Table> descToolTip = new Tooltip<>(relic.getDescription().toTable(skin, Align.center));
             descToolTip.setInstant(true);
             label3.addListener(descToolTip);
             table.setBackground("default-round");
@@ -585,7 +585,7 @@ public class CombatScreen extends GameScreen {
         int newlines = controller.getCombatSim().getLogsThisTick();
         int start = Math.max(0, log.size - newlines);
         for (int i = start; i < log.size; i++) {
-            Table newlog = log.get(i).toTable(skin75pct);
+            Table newlog = log.get(i).toTable(skin75pct, Align.center);
             logTable.add(newlog).right().row();
             combatLog.addLast(newlog);
         }
@@ -734,6 +734,8 @@ public class CombatScreen extends GameScreen {
 
     @Override
     public void render(float delta) {
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         double minInterval = trueSpeeds[speedPointer];
 
         externalInput();
@@ -803,6 +805,7 @@ public class CombatScreen extends GameScreen {
             resetTPSCount = false;
             lastNTicksSum = 0;
         }
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     private void recordTick(double time) {
@@ -970,6 +973,7 @@ public class CombatScreen extends GameScreen {
         }
 
         // draw border
+        /*
         for (Building building : controller.getFactorySim().getGrid().getBuildings()) {
             Array<DirectedCoords> border = building.getBorder();
             Color drawColor = null;
@@ -980,6 +984,51 @@ public class CombatScreen extends GameScreen {
             }
             for (DirectedCoords coords : border) {
                 DirectedCoords trueLocation = building.getGlobalCoord(coords.x, coords.y).addDirection((coords.dir + building.getRotation()) % 4);
+                int botLeftX = gridStartX + trueLocation.x * tileSize;
+                int botLeftY = gridEndY - (trueLocation.y + 1) * tileSize; // offset by one since libGDX stores its object origins in the bottom left
+                shapeRenderer.setColor(drawColor);
+                switch (trueLocation.dir) {
+                    case 0 -> {
+                        shapeRenderer.rect(
+                            botLeftX,
+                            botLeftY + tileSize - (float) tileSize / 20,
+                            tileSize,
+                            (float) tileSize / 20);
+                    }
+                    case 1 -> {
+                        shapeRenderer.rect(
+                            botLeftX + tileSize - (float) tileSize / 20,
+                            botLeftY,
+                            (float) tileSize / 20,
+                            tileSize);
+                    }
+                    case 2 -> {
+                        shapeRenderer.rect(
+                            botLeftX,
+                            botLeftY,
+                            tileSize,
+                            (float) tileSize / 20);
+                    }
+                    case 3 -> {
+                        shapeRenderer.rect(
+                            botLeftX,
+                            botLeftY,
+                            (float) tileSize / 20,
+                            tileSize);
+                    }
+                }
+            }
+         */
+
+
+        // new border (selected only)
+        if (selectedBuilding != null && selectedBuilding.isOnGrid()) {
+            Array<DirectedCoords> border = selectedBuilding.getBorder();
+            Color drawColor = new Color(1, 1, 1, 0.4f);
+
+            for (DirectedCoords coords : border) {
+                DirectedCoords trueLocation = selectedBuilding.getGlobalCoord(coords.x, coords.y).addDirection((coords.dir + selectedBuilding.getRotation()) % 4);
+                trueLocation = trueLocation.pointingToSide();
                 int botLeftX = gridStartX + trueLocation.x * tileSize;
                 int botLeftY = gridEndY - (trueLocation.y + 1) * tileSize; // offset by one since libGDX stores its object origins in the bottom left
                 shapeRenderer.setColor(drawColor);
@@ -1026,7 +1075,9 @@ public class CombatScreen extends GameScreen {
             shapeRenderer.setColor(Color.WHITE);
         }
 
-        for (int x = 0; x < gridWidth; x++) {
+        for (
+            int x = 0;
+            x < gridWidth; x++) {
             for (int y = 0; y < gridHeight; y++) {
                 int bottomLeftCorner = gridStartX + x * tileSize;
                 int topLeftCorner = gridEndY - (y + 1) * tileSize; // offset by one since libGDX shape draws the object origins in the bottom left, but we start from top left
@@ -1184,7 +1235,7 @@ public class CombatScreen extends GameScreen {
                 if (building.getRecipe() != null) {
                     game.font.draw(game.batch, building.getRecipe().getName(), nameX, nameY - 30);
                 } else {
-                    BitmapFont tempfont = new BitmapFont();
+                    BitmapFont tempfont = skin75pct.getFont("default-font");
                     tempfont.setColor(Color.RED);
                     tempfont.draw(game.batch, "Recipe not set!", nameX, nameY - 30);
                 }

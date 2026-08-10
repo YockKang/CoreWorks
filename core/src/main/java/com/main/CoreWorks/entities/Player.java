@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.*;
 import com.google.errorprone.annotations.Var;
 import com.main.CoreWorks.Factory.Building;
 import com.main.CoreWorks.Factory.FactoryGrid;
+import com.main.CoreWorks.TextParser.Sentence;
 import com.main.CoreWorks.database.BuildingDatabase;
 import com.main.CoreWorks.database.RelicDatabase;
 import com.main.CoreWorks.database.RelicGroupDatabase;
@@ -18,6 +19,7 @@ public class Player extends Character{
     private FactoryGrid factoryGrid;
     private int money;
     private int tubeBudget;
+    private String starterAdvice;
     // Passives Implementation TBD
 
     public Player(int hp, int shield, String name, FactoryGrid factoryGrid) {
@@ -53,6 +55,9 @@ public class Player extends Character{
             tubeBudget = data.getInt("TubeBudget");
         } else {
             tubeBudget = 0;
+        }
+        if (data.get("BuildGuide") != null) {
+            starterAdvice = data.getString("BuildGuide");
         }
         this.money = 0;
     }
@@ -129,5 +134,9 @@ public class Player extends Character{
 
     public int getTubeBudget() {
         return tubeBudget;
+    }
+
+    public String getStarterAdvice() {
+        return starterAdvice;
     }
 }

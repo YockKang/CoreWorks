@@ -4,6 +4,7 @@ package com.main.CoreWorks.TextParser;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.main.CoreWorks.database.KeywordDatabase;
 import regexodus.*;
@@ -125,6 +126,10 @@ public class Sentence {
     }
 
     public Table toTable(Skin skin) {
+        return toTable(skin, Align.left);
+    }
+
+    public Table toTable(Skin skin, int alignment) {
         Array<Array<Text>> formattedText = new Array<>();
         formattedText.add(new Array<>());
         for (Text fragment : text) {
@@ -134,6 +139,7 @@ public class Sentence {
             }
         }
         Table table = new Table(skin);
+        table.align(alignment);
         for (Array<Text> line : formattedText) {
             Table row = new Table();
             for (Text txt : line) {

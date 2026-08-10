@@ -53,7 +53,7 @@
     "Shape" : ["S", 1],
     "MagSize": 5,
     "BaseDmg": 2,
-    "Whitelist": ["ExplosiveShell", "Explosive", "Shell","BasicPoisonShell"],
+    "Whitelist": ["ExplosiveShell", "Explosive", "Shell", "BasicPoisonShell"],
     "AoE": "Random"
   },
 
@@ -102,6 +102,7 @@
       [true , true ],
       [true , true]
     ],
+    "DisplayOverride": [1, 2],
     "MagSize": 5,
     "BaseDmg": 1.75,
     "AoE": [[1, 1], [2, 0.5]],
@@ -109,12 +110,12 @@
     "Damage Type": "True"
   },
   {
-    "id" : "MegaSabotgun",
+    "id" : "MegaRailgun",
     "Tier" : 3,
     "Type" : "Shooter",
-    "Name" : "Leviathan Sabotgun",
-    "GridName" : "Leviathan\nSabotgun",
-    "Description": "A beast of a Sabotgun from who knows where,\ndeals True Damage to all enemies",
+    "Name" : "Leviathan Railgun",
+    "GridName" : "Leviathan\nRailgun",
+    "Description": "A beast of a Railgun from who knows where,\ndeals True Damage to all enemies",
     "Cooldown" : 2,
     "Shape" : [
       [true , true , false],
@@ -122,6 +123,7 @@
       [true , true , true ],
       [true , true , false]
     ],
+    "DisplayOverride": [2, 2],
     "MagSize": 5,
     "BaseDmg": 2.5,
     "AoE": "All",

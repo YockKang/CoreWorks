@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.JsonValue;
 import com.main.CoreWorks.TextParser.Sentence;
 import com.main.CoreWorks.TextParser.Text;
@@ -67,7 +68,7 @@ public class ShooterEntry extends BuildingEntry {
                     tooltipText.appendText(new Text(damageType, Color.WHITE));
                 }
                 System.out.println(tooltipText.text);
-                Table expectedDamage = tooltipText.toTable(skin);
+                Table expectedDamage = tooltipText.toTable(skin, Align.center);
                 expectedDamage.setBackground("default-round");
                 Tooltip<Table> descToolTip = new Tooltip<>(expectedDamage);
                 descToolTip.setInstant(true);
