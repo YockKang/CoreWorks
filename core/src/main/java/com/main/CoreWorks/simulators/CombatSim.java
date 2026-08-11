@@ -325,6 +325,13 @@ public class CombatSim {
                         addLog(tick, String.format("%s gained %s shield", character.displayName(), value));
                     }
 
+                    case "Burn" -> {
+                        Move mv = new DamageMove(value, 0);
+                        mv.execute(character);
+                        game.getSoundManager().playDamage();
+                        addLog(tick, String.format("%s received %s Burn damage", character.displayName(), value));
+                    }
+
                     default -> {
                         System.out.println("Unregistered Status Effect: " + type);
                     }

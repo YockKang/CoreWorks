@@ -7,7 +7,7 @@ public class AddBuildingReward extends Reward {
     private String buildingId;
 
     public AddBuildingReward(String buildingId) {
-        super("Add a building", String.format("Adds 1 %s to your inventory", BuildingDatabase.getBuildingConstructor(buildingId).getName()));
+        super("Add a building", String.format("Adds a\n%s\nto your inventory", BuildingDatabase.getBuildingConstructor(buildingId).getName()));
         this.buildingId = buildingId;
     }
 

@@ -952,22 +952,9 @@ public class CombatScreen extends GameScreen {
                     }
                 } else if (occupied instanceof Tube tube) {
                     // if its a tube, do something else
-                    int i = 0;
-                    for (boolean conn : tube.getConnections1()) {
-                        if (conn) {
-                            pipeDrawSwitcher(i, bottomLeftCorner, topLeftCorner, Color.GRAY);
-                        }
-                        i++;
-                    }
-                    if (tube.getDouble()) {
-                        i = 0;
-                        for (boolean conn : tube.getConnections2()) {
-                            if (conn) {
-                                pipeDrawSwitcher(i, bottomLeftCorner, topLeftCorner, Color.LIGHT_GRAY);
-                            }
-                            i++;
-                        }
-                    }
+
+                    pipeDrawSwitcher(tube, bottomLeftCorner, topLeftCorner);
+
                 }
             }
         }
@@ -1666,8 +1653,107 @@ public class CombatScreen extends GameScreen {
     }
 
     // draws pipes
-    private void pipeDrawSwitcher(int rot, float tileX, float tileY, Color colour) {
-        shapeRenderer.setColor(colour);
+    private void pipeDrawSwitcher(Tube tube, float tileX, float tileY) {
+        game.batch.begin();
+        TextureRegion[][] tubeSheet = game.getSpriteManager().getTextureRegion("Pipes", 44, 44);
+
+
+        if (tube.getDouble()) {
+            if (tube.getConnections1()[0] == tube.getConnections1()[2]) {
+                if (tube.getConnections1()[0]) {
+                    game.batch.draw(tubeSheet[2][2],
+                        tileX, tileY,
+                        tileSize, tileSize
+                    );
+                } else {
+                    game.batch.draw(tubeSheet[2][3],
+                        tileX, tileY,
+                        tileSize, tileSize
+                    );
+                }
+            } else {
+                if (tube.getConnections1()[0] == tube.getConnections1()[1]) {
+                    game.batch.draw(tubeSheet[0][1],
+                        tileX, tileY,
+                        tileSize, tileSize
+                    );
+                    game.batch.draw(tubeSheet[0][3],
+                        tileX, tileY,
+                        tileSize, tileSize
+                    );
+                } else {
+                    game.batch.draw(tubeSheet[0][0],
+                        tileX, tileY,
+                        tileSize, tileSize
+                    );
+                    game.batch.draw(tubeSheet[0][2],
+                        tileX, tileY,
+                        tileSize, tileSize
+                    );
+                }
+            }
+        } else {
+            int count = 0;
+            for (boolean value : tube.getConnections1()) {
+                if (value) count++;
+            }
+            switch (count) {
+                case 2 -> {
+                    if (tube.getConnections1()[0]) {
+                        if (tube.getConnections1()[1]) {
+                            game.batch.draw(tubeSheet[0][1],
+                                tileX, tileY,
+                                tileSize, tileSize
+                            );
+                        } else if (tube.getConnections1()[3]) {
+                            game.batch.draw(tubeSheet[0][0],
+                                tileX, tileY,
+                                tileSize, tileSize
+                            );
+                        } else {
+                            game.batch.draw(tubeSheet[2][0],
+                                tileX, tileY,
+                                tileSize, tileSize
+                            );
+                        }
+                    } else if (tube.getConnections1()[2]) {
+                        if (tube.getConnections1()[1]) {
+                            game.batch.draw(tubeSheet[0][2],
+                                tileX, tileY,
+                                tileSize, tileSize
+                            );
+                        } else {
+                            game.batch.draw(tubeSheet[0][3],
+                                tileX, tileY,
+                                tileSize, tileSize
+                            );
+                        }
+                    } else {
+                        game.batch.draw(tubeSheet[2][1],
+                            tileX, tileY,
+                            tileSize, tileSize
+                        );
+                    }
+                }
+                case 3 -> {
+                    for (int i = 0; i < 4; i++) {
+                        if (!tube.getConnections1()[i]) {
+                            game.batch.draw(tubeSheet[1][i],
+                                tileX, tileY,
+                                tileSize, tileSize
+                            );
+                        }
+                    }
+                }
+                case 4 -> {
+                    game.batch.draw(tubeSheet[3][0],
+                        tileX, tileY,
+                        tileSize, tileSize
+                    );
+                }
+            }
+        }
+/*
         switch (rot) {
             case 0 -> {
                 shapeRenderer.rect(
@@ -1698,6 +1784,8 @@ public class CombatScreen extends GameScreen {
                     (float) tileSize / 3);
             }
         }
+ */
+        game.batch.end();
     }
 
     // Generic code that translates mouse clicks on grid into an x and y coord of a 2D array (in this case grid's 2D array)

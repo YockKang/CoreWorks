@@ -44,6 +44,10 @@ public class SpriteManager {
                 }
             }
         }
+        assetManager.load("Images/Pipes.png", Texture.class);
+        imgMap.put("Pipes", "Images/Pipes.png");
+
+
         assetManager.finishLoading();
     }
 
