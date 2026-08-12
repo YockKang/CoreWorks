@@ -290,7 +290,7 @@ public class CombatSim {
                 game.getPopUpManager().requestPopup(
                     "Disable_building_explanation",
                     "Building disabled",
-                    "An enemy attempted to disable your buildings!\nNot every attempt will succeed, but a larger building is more likely to get disabled.\nDisabled buildings are highlighted in yellow, and cannot take any action or be interacted with.\nA disabled building will automatically be enabled after some ticks.",
+                    "An enemy attempted to disable your buildings!\nNot every attempt will succeed, but a larger building is more likely to get disabled.\nDisabled buildings will display a red tooltip symbol, and cannot take any action or be interacted with.\nA disabled building will automatically be enabled after some ticks.",
                     true
                 );
             }

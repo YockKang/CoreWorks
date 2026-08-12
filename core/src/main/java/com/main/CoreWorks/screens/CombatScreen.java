@@ -631,9 +631,15 @@ public class CombatScreen extends GameScreen {
                     );
                     game.getPopUpManager().requestPopup(
                         "building_factory_explanation",
-                        "Building operations & factory",
-                        "When buildings are placed on the grid, they will operate automatically every tick.\nBuildings can have output ports, represented by small arrows on the building when placed on the grid.\nThese output ports are directions where buildings will output their resources, if any." +
-                            "\nBuildings that can take in inputs can do so from any direction not occupied by an output port.",
+                        "Building operations & factory 1",
+                        "When buildings are placed on the grid, they will operate automatically every tick.\nBuildings can have output ports, represented by orange border lines on a grid square when placed.\nThese output ports are directions where buildings will output their resources, if any." +
+                            "\nBuildings that can take in inputs can do so from any direction not occupied by an output port.\nBuildings also have storage that visually fill up.",
+                        true
+                    );
+                    game.getPopUpManager().requestPopup(
+                        "building_factory_explanation_2",
+                        "Building operations & factory 2",
+                        "You can check your factory bottlenecks with the tooltip circular symbol, next to the storage.\nRed represents disabled.\nYellow is Output full.\nOrange is insufficient inputs.\nGreen is normal operation.",
                         true
                     );
                     game.getPopUpManager().requestPopup(
@@ -879,8 +885,8 @@ public class CombatScreen extends GameScreen {
         game.getPopUpManager().requestPopup(
             "placement_preview_explanation",
             "Placement Preview",
-            "When a building is selected and you hover over the grid, you can see a preview of its position.\nGreen means placement is valid, Red means placement invalid.\nYou can only place buildings when the placement is valid." +
-                "\nThe preview does NOT show direction of output ports (if any).",
+            "When a building is selected and you hover over the grid, you can see a preview of its position.\nThe building will turn red if placement is invalid.\nYou can only place buildings when the placement is valid." +
+                "\nThe preview also shows direction of output ports (if any).",
             true
         );
     }
@@ -1420,7 +1426,7 @@ public class CombatScreen extends GameScreen {
                     "\nTubes can be used to connect output ports to another building, as if they were directly connected." +
                     "\nTo draw a tube, draw the desired shape of the segment on an empty square when in tube mode." +
                     "\nRight click when in tube mode to remove a tube." +
-                    "\nTubes can only be drawn one segment at a time.",
+                    "\nTubes can only be drawn one segment at a time and are limited.",
                 true
             );
         }
