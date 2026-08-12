@@ -54,11 +54,11 @@ public class Recipe {
                   int dur,
                   String name,
                   String id) {
-        this.input = new Array<String>(inputs);
-        this.output = new Array<String>(outputs);
-        this.inputMult = new Array<Integer>(inputMultiple);
-        this.outputMult = new Array<Integer>(outputMultiple);
-        this.validGroups = new Array<String>(groups);
+        this.input = new Array<>(inputs);
+        this.output = new Array<>(outputs);
+        this.inputMult = new Array<>(inputMultiple);
+        this.outputMult = new Array<>(outputMultiple);
+        this.validGroups = new Array<>(groups);
         this.duration = dur;
         this.name = name;
         this.id = id;
@@ -74,22 +74,22 @@ public class Recipe {
         Resource[] r = new Resource[0];
         this.input = new Array<>(data.get("InputId").asStringArray());
         this.output = new Array<>(data.get("OutputId").asStringArray());
-        this.inputMult = new Array<Integer>(
+        this.inputMult = new Array<>(
             Arrays.stream(
-                data.get("InputMult")
-                    .asIntArray())
+                    data.get("InputMult")
+                        .asIntArray())
                 .boxed()
                 .toArray(Integer[]::new));
-        this.outputMult = new Array<Integer>(
+        this.outputMult = new Array<>(
             Arrays.stream(
-                data.get("OutputMult")
-                    .asIntArray())
+                    data.get("OutputMult")
+                        .asIntArray())
                 .boxed()
                 .toArray(Integer[]::new));
-        this.validGroups = new Array<String>(
+        this.validGroups = new Array<>(
             Arrays.stream(
-                data.get("Groups")
-                    .asStringArray())
+                    data.get("Groups")
+                        .asStringArray())
                 .toArray(String[]::new));
         this.duration = data.getInt("duration");
         this.name = data.getString("Name");
@@ -170,9 +170,9 @@ public class Recipe {
                 inputStr.append(ResourceDatabase.getName(input.get(i)) ).append(" x");
                 try {
                     if (building instanceof Miner miner) {
-                        inputStr.append(String.valueOf (inputMult.get(i) * miner.getMineMultiplier()) );
+                        inputStr.append(inputMult.get(i) * miner.getMineMultiplier());
                     } else {
-                        inputStr.append(String.valueOf (inputMult.get(i).toString()) );
+                        inputStr.append(inputMult.get(i).toString());
                     }
                 } catch (Exception e) {
                     inputStr.append("0");
@@ -185,7 +185,7 @@ public class Recipe {
             mainTable.add(inputTable).pad(2).row();
         }
 
-        mainTable.add(new Label(String.valueOf(MathExtras.roundDP((float) duration / building.getSpeed(), 2)) + " ticks", skin)).pad(2).row();
+        mainTable.add(new Label(MathExtras.roundDP((float) duration / building.getSpeed(), 2) + " ticks", skin)).pad(2).row();
 
         if (output.size > 0) {
             Table outputTable = new Table(skin);
@@ -194,9 +194,9 @@ public class Recipe {
                 outputStr.append(ResourceDatabase.getName(output.get(i)) ).append(" x");
                 try {
                     if (building instanceof Miner miner) {
-                        outputStr.append( String.valueOf(outputMult.get(i) * miner.getMineMultiplier()) );
+                        outputStr.append(outputMult.get(i) * miner.getMineMultiplier());
                     } else {
-                        outputStr.append( String.valueOf(outputMult.get(i).toString()) );
+                        outputStr.append(outputMult.get(i).toString());
                     }
                 } catch (Exception e) {
                     outputStr.append("0");

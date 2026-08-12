@@ -4,7 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.*;
-import com.github.tommyettinger.ds.ObjectDeque;
 import com.main.CoreWorks.Factory.ResourceRequest.*;
 import com.main.CoreWorks.Resources.Resource;
 import com.main.CoreWorks.RunPersistence.RunState;
@@ -16,14 +15,14 @@ public class Defender extends Building{
     private String action;
     protected Queue<Resource> magazine;
     protected int magSize;
-    protected float baseDef = 1;;
+    protected float baseDef = 1;
     protected int flatDef = 0;
     protected int defCount = 1;
 
     public Defender(int coolDown, int magSize, boolean[][] shape) {
         super(coolDown,
-            new Array<ResourceBuffer>(0),
-            new Array<ResourceBuffer>(0),
+            new Array<>(0),
+            new Array<>(0),
             shape,
             "defender");
         this.magazine = new Queue<>(magSize);

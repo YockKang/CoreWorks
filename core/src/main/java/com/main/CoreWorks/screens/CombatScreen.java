@@ -1,31 +1,43 @@
 package com.main.CoreWorks.screens;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.*;
-import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Queue;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.main.CoreWorks.Codex.Codex;
 import com.main.CoreWorks.Coreworks;
-import com.main.CoreWorks.Recipe.Recipe;
-import com.main.CoreWorks.Resources.Resource;
-import com.main.CoreWorks.TextParser.Sentence;
-import com.main.CoreWorks.TextParser.Text;
-import com.main.CoreWorks.database.ResourceDatabase;
-import com.main.CoreWorks.entities.Relics.Relic;
-import com.main.CoreWorks.simulators.PopUpTutorial.PopUpManager;
-import com.main.CoreWorks.util.*;
 import com.main.CoreWorks.Factory.*;
 import com.main.CoreWorks.Factory.Tubes.Tube;
+import com.main.CoreWorks.Recipe.Recipe;
+import com.main.CoreWorks.Resources.Resource;
 import com.main.CoreWorks.RunPersistence.RunState;
-import com.main.CoreWorks.entities.*;
-import com.main.CoreWorks.simulators.*;
+import com.main.CoreWorks.TextParser.Sentence;
+import com.main.CoreWorks.database.ResourceDatabase;
+import com.main.CoreWorks.entities.Enemy;
+import com.main.CoreWorks.entities.Relics.Relic;
+import com.main.CoreWorks.simulators.CombatController;
+import com.main.CoreWorks.simulators.CombatSim;
+import com.main.CoreWorks.simulators.FactorySim;
+import com.main.CoreWorks.simulators.PopUpTutorial.PopUpManager;
+import com.main.CoreWorks.util.Coords;
+import com.main.CoreWorks.util.DirectedCoords;
+import com.main.CoreWorks.util.MathExtras;
+import com.main.CoreWorks.util.SpriteManager;
 
 public class CombatScreen extends GameScreen {
 
@@ -992,7 +1004,6 @@ public class CombatScreen extends GameScreen {
 
                     boolean[][] shape = building.getShape();
 
-                    int largeAxis = Math.max(shape.length, shape[0].length);
                     TextureRegion[][] buildingImage = textureRegions.split(
                         44,
                         44
@@ -1124,8 +1135,6 @@ public class CombatScreen extends GameScreen {
 
 
             Coords nameCoords = building.getGlobalCoord(building.getDisplaySquare());
-            float nameX = gridStartX + nameCoords.x * tileSize + 10;
-            float nameY = gridEndY - nameCoords.y * tileSize - 20;
 
             // draws buffers
 
@@ -1530,7 +1539,6 @@ public class CombatScreen extends GameScreen {
                                     if (downPoint.pointingToSide().dir != upPoint.dir) {
                                         tubeX = upPoint.x;
                                         tubeY = upPoint.y;
-                                        ;
                                         tubeDir1 = downPoint.pointingToSide().dir;
                                         tubeDir2 = upPoint.dir;
                                         tubePlaced = true;
@@ -1540,7 +1548,6 @@ public class CombatScreen extends GameScreen {
                                     if (upPoint.pointingToSide().dir != downPoint.dir) {
                                         tubeX = upPoint.x;
                                         tubeY = upPoint.y;
-                                        ;
                                         tubeDir1 = downPoint.dir;
                                         tubeDir2 = upPoint.pointingToSide().dir;
                                         tubePlaced = true;

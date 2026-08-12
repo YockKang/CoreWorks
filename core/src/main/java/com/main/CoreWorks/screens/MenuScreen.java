@@ -1,7 +1,8 @@
 package com.main.CoreWorks.screens;
 
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -9,14 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.main.CoreWorks.Coreworks;
-import com.main.CoreWorks.Factory.FactoryGrid;
-import com.main.CoreWorks.Generators.RunMapGenerator;
-import com.main.CoreWorks.RunPersistence.RunMap;
-import com.main.CoreWorks.RunPersistence.RunState;
-import com.main.CoreWorks.database.PlayerDatabase;
-import com.main.CoreWorks.entities.Player;
 
 public class MenuScreen implements Screen {
 

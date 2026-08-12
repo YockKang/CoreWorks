@@ -2,8 +2,6 @@ package com.main.CoreWorks.Rewards;
 
 import com.main.CoreWorks.RunPersistence.RunState;
 
-import java.util.Objects;
-
 public class ShopOffer {
     protected int cost;
     protected Reward reward;

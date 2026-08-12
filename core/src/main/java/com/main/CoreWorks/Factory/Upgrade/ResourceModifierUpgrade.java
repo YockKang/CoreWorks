@@ -15,7 +15,7 @@ public class ResourceModifierUpgrade extends UpgradeAspect {
     @Override
     public void execute(Building b) {
         b.addModifier(mod);
-    };
+    }
 
     @Override
     public String changes(Building b) {

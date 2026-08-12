@@ -1,6 +1,5 @@
 package com.main.CoreWorks.Factory.Upgrade;
 
-import com.badlogic.gdx.utils.Array;
 import com.main.CoreWorks.Factory.*;
 
 public class MineMultUpgrade extends UpgradeAspect{
@@ -28,7 +27,7 @@ public class MineMultUpgrade extends UpgradeAspect{
     public String changes(Building b) {
         StringBuilder str = new StringBuilder().append("Mine Multiplier: ");
         if (b instanceof Miner miner) {
-            str.append( miner.getMineMultiplier() )
+            str.append( (int) miner.getMineMultiplier() )
                 .append(" -> ")
                 .append( (int) (miner.getMineMultiplier() + value) );
         } else {

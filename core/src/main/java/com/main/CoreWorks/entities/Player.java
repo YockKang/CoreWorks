@@ -1,13 +1,10 @@
 package com.main.CoreWorks.entities;
 
 import com.badlogic.gdx.utils.*;
-import com.google.errorprone.annotations.Var;
 import com.main.CoreWorks.Factory.Building;
 import com.main.CoreWorks.Factory.FactoryGrid;
-import com.main.CoreWorks.TextParser.Sentence;
 import com.main.CoreWorks.database.BuildingDatabase;
 import com.main.CoreWorks.database.RelicDatabase;
-import com.main.CoreWorks.database.RelicGroupDatabase;
 import com.main.CoreWorks.entities.Relics.Relic;
 
 public class Player extends Character{

@@ -2,7 +2,6 @@ package com.main.CoreWorks.moveset;
 
 import com.main.CoreWorks.Factory.Building;
 import com.main.CoreWorks.entities.Character;
-import com.main.CoreWorks.entities.Enemy;
 
 public abstract class Move {
     protected String name;

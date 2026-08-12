@@ -11,6 +11,7 @@ import com.main.CoreWorks.Recipe.Recipe;
 import com.main.CoreWorks.Resources.*;
 import com.main.CoreWorks.database.*;
 import com.main.CoreWorks.moveset.*;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.*;
 
@@ -70,8 +71,6 @@ public abstract class Building extends Structure implements Updatable, Comparabl
      {true, false}}
      */
 
-    // ?? fields
-    protected int HP;
 
     public Building(int coolDown,
                     Array<ResourceBuffer> inputs,
@@ -214,7 +213,7 @@ public abstract class Building extends Structure implements Updatable, Comparabl
             }
             validRecipes = unique;
 
-            validRecipes.sort((r1, r2) -> r1.getName().compareTo(r2.getName()));
+            validRecipes.sort(Comparator.comparing(Recipe::getName));
 
         }
 
@@ -509,7 +508,6 @@ public abstract class Building extends Structure implements Updatable, Comparabl
         if (connectedTubes.containsKey(tube)) {
             connectedTubes.get(tube).remove(dir);
         }
-        ;
         System.out.println(connectedTubes.get(tube));
         System.out.println(connectedTubes.get(tube).size);
         if (connectedTubes.get(tube).size == 0) {
@@ -548,7 +546,7 @@ public abstract class Building extends Structure implements Updatable, Comparabl
                 sup = b.recipe.getOutputs();
             }
 
-            ObjectSet<String> consAsSet = new ObjectSet<String>();
+            ObjectSet<String> consAsSet = new ObjectSet<>();
             consAsSet.addAll(cons);
             Array<String> matches = new Array<>(0);
 
@@ -835,7 +833,7 @@ public abstract class Building extends Structure implements Updatable, Comparabl
     }
 
     @Override
-    public int compareTo(Building b) {
+    public int compareTo(@NonNull Building b) {
         if (!isEnabled && b.isEnabled) {
             return -1;
         } else if (isEnabled && !b.isEnabled) {

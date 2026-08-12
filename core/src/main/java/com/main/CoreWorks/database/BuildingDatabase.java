@@ -3,7 +3,6 @@ package com.main.CoreWorks.database;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Factory.Building;
 import com.main.CoreWorks.Factory.BuildingTemplate.*;
-import com.main.CoreWorks.Recipe.Recipe;
 
 public class BuildingDatabase {
     private static final ObjectMap<String, BuildingTemplate> BuildingDB = new ObjectMap<>();

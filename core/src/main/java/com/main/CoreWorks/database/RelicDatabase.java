@@ -4,7 +4,6 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
-import com.main.CoreWorks.Factory.Building;
 import com.main.CoreWorks.entities.Relics.Relic;
 
 public class RelicDatabase {

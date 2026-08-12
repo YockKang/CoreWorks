@@ -1,18 +1,21 @@
 package com.main.CoreWorks.simulators;
 
-import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Queue;
 import com.main.CoreWorks.Coreworks;
-import com.main.CoreWorks.Factory.*;
+import com.main.CoreWorks.Factory.Building;
+import com.main.CoreWorks.Factory.FactoryGrid;
 import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.TextParser.Sentence;
-import com.main.CoreWorks.TextParser.Text;
-import com.main.CoreWorks.entities.*;
 import com.main.CoreWorks.entities.Character;
+import com.main.CoreWorks.entities.Enemy;
+import com.main.CoreWorks.entities.Player;
 import com.main.CoreWorks.entities.Relics.Relic;
+import com.main.CoreWorks.entities.StatusEffect;
 import com.main.CoreWorks.moveset.*;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 public class CombatSim {
     private Player player;

@@ -1,7 +1,5 @@
 package com.main.CoreWorks.Rewards;
 
-import com.main.CoreWorks.Factory.Building;
-import com.main.CoreWorks.Factory.Upgrade.Upgrade;
 import com.main.CoreWorks.RunPersistence.RunState;
 
 public class AddTubeCountReward extends Reward {

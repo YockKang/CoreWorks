@@ -1,8 +1,5 @@
 package com.main.CoreWorks.RunPersistence;
 
-import com.badlogic.gdx.utils.Array;
-import com.main.CoreWorks.Rewards.ShopOffer;
-
 public class ShopNode extends MapNode{
 
     public ShopNode(int tier, float multiplier, float x, float y) {

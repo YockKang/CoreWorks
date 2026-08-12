@@ -20,16 +20,16 @@ public class Refiner extends Building{
 
     public Refiner(int coolDown, boolean[][] shape, int mineMult, String name) {
         super(coolDown,
-            new Array<ResourceBuffer>(0),
-            new Array<ResourceBuffer>(0),
+            new Array<>(0),
+            new Array<>(0),
             shape,
             "refiner");
     }
 
     public Refiner(int coolDown, boolean[][] shape, int mineMult, String name, Recipe rec) {
         super(coolDown,
-            new Array<ResourceBuffer>(0),
-            new Array<ResourceBuffer>(0),
+            new Array<>(0),
+            new Array<>(0),
             shape,
             "refiner");
         this.recipe = rec;

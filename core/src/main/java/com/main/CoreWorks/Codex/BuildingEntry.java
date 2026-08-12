@@ -1,12 +1,10 @@
 package com.main.CoreWorks.Codex;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.*;
-import com.main.CoreWorks.Resources.ResourceTemplate;
 
 public class BuildingEntry extends Entry{
 

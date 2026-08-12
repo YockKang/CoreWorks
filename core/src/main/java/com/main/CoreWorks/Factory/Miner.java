@@ -13,12 +13,10 @@ public class Miner extends Building {
 
     protected float mineMultiplier;
 
-    private static final Array<String> upgradeTags = new Array<>(new String[]{"Speed", "Buffer", "MineMult"});
-
     public Miner(int coolDown, boolean[][] shape, int mineMult, String name) {
         super(coolDown,
-            new Array<ResourceBuffer>(0),
-            new Array<ResourceBuffer>(0),
+            new Array<>(0),
+            new Array<>(0),
             shape,
             "miner");
         this.mineMultiplier = mineMult;
@@ -26,8 +24,8 @@ public class Miner extends Building {
 
     public Miner(int coolDown, boolean[][] shape, int mineMult, String name, Recipe rec) {
         super(coolDown,
-            new Array<ResourceBuffer>(0),
-            new Array<ResourceBuffer>(0),
+            new Array<>(0),
+            new Array<>(0),
             shape,
             "miner");
         this.mineMultiplier = mineMult;

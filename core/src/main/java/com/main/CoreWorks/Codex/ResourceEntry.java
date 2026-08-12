@@ -11,9 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.*;
-import com.main.CoreWorks.Recipe.Recipe;
-import com.main.CoreWorks.Resources.Modifier;
-import com.main.CoreWorks.database.RecipeDatabase;
 
 import java.util.Objects;
 

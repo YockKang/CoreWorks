@@ -3,7 +3,6 @@ package com.main.CoreWorks.Factory.BuildingTemplate;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.reflect.*;
 import com.main.CoreWorks.Codex.BuildingEntry;
-import com.main.CoreWorks.Codex.Entry;
 import com.main.CoreWorks.Factory.Building;
 
 public class BuildingTemplate {

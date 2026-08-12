@@ -9,7 +9,6 @@ import com.main.CoreWorks.Resources.Resource;
 import com.main.CoreWorks.RunPersistence.CombatNode;
 import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.entities.Character;
-import com.main.CoreWorks.entities.Enemy;
 import com.main.CoreWorks.moveset.*;
 import com.main.CoreWorks.util.MathExtras;
 import com.main.CoreWorks.util.Pair;
@@ -30,8 +29,8 @@ public class Shooter extends Building {
 
     public Shooter(int coolDown, int magSize, boolean[][] shape) {
         super(coolDown,
-            new Array<ResourceBuffer>(0),
-            new Array<ResourceBuffer>(0),
+            new Array<>(0),
+            new Array<>(0),
             shape,
             "shooter");
         this.magazine = new Queue<>(magSize);

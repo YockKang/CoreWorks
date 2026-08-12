@@ -7,7 +7,6 @@ import com.main.CoreWorks.Factory.Tubes.*;
 public class FactoryGrid {
     protected Array<Array<Structure>> grid;
     protected Array<Building> buildingList = new Array<>();
-    protected Array<TubeNet> tubeNets = new Array<>();
 
     protected int maxHeight;
     protected int maxWidth;
@@ -75,7 +74,7 @@ public class FactoryGrid {
             }
             bldg.putOnGrid();
             buildingList.add(bldg);
-            bldg.updateInputs(grid);;
+            bldg.updateInputs(grid);
             bldg.updateOutputs(grid);
             return true;
         }
