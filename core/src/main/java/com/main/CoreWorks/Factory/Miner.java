@@ -104,7 +104,17 @@ public class Miner extends Building {
 
     @Override
     public Table tooltipDisplay(Skin skin) {
-        Table displayTable = super.tooltipDisplay(skin);
+        Table displayTable = new Table(skin);
+        displayTable.setBackground("default-round");
+        displayTable.add(new Label(name, skin)).row();
+        if (this.recipe != null) {
+            displayTable.add(new Label("Crafting: " + this.recipe.getName(), skin)).row();
+        } else {
+            Label errMsg = new Label("Recipe not set!", skin);
+            errMsg.setColor(1, 0, 0, 1);
+            displayTable.add(errMsg).row();
+        }
+        displayTable.add(new Label("Speed: " + MathExtras.roundDP(getSpeed(), 2), skin)).row();
         displayTable.add(new Label("Output Multiplier: " + mineMultiplier, skin)).row();
         return displayTable;
     }

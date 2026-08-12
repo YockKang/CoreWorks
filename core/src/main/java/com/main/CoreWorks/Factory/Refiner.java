@@ -1,10 +1,14 @@
 package com.main.CoreWorks.Factory;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.Recipe.Recipe;
 import com.main.CoreWorks.Resources.*;
 import com.main.CoreWorks.RunPersistence.RunState;
 import com.main.CoreWorks.moveset.*;
+import com.main.CoreWorks.util.MathExtras;
 
 import java.util.Objects;
 
@@ -171,5 +175,21 @@ public class Refiner extends Building{
     public void clear() {
         super.clear();
         isCrafting = false;
+    }
+
+    @Override
+    public Table tooltipDisplay(Skin skin) {
+        Table displayTable = new Table(skin);
+        displayTable.setBackground("default-round");
+        displayTable.add(new Label(name, skin)).row();
+        if (this.recipe != null) {
+            displayTable.add(new Label("Crafting: " + this.recipe.getName(), skin)).row();
+        } else {
+            Label errMsg = new Label("Recipe not set!", skin);
+            errMsg.setColor(1,0,0,1);
+            displayTable.add(errMsg).row();
+        }
+        displayTable.add(new Label("Speed: " + MathExtras.roundDP(getSpeed(), 2), skin)).row();
+        return displayTable;
     }
 }

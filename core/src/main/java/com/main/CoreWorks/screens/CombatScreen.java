@@ -1115,6 +1115,7 @@ public class CombatScreen extends GameScreen {
 
             float scale = (float) (tileSize * 9 / 10) / 40;
 
+
             Coords nameCoords = building.getGlobalCoord(building.getDisplaySquare());
             float nameX = gridStartX + nameCoords.x * tileSize + 10;
             float nameY = gridEndY - nameCoords.y * tileSize - 20;
@@ -1248,6 +1249,7 @@ public class CombatScreen extends GameScreen {
             }
 
 
+            /*
             game.font.getData().setScale(0.75f);
             game.font.draw(game.batch, building.gridName(), nameX, nameY);
             if (building instanceof Miner ||
@@ -1260,8 +1262,10 @@ public class CombatScreen extends GameScreen {
                     tempfont.draw(game.batch, "Recipe not set!", nameX, nameY - 30);
                 }
             }
+
+             */
         }
-        game.font.getData().setScale(1f);
+
         game.batch.end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);

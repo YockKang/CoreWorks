@@ -88,7 +88,7 @@ public abstract class Building extends Structure implements Updatable, Comparabl
 
     public Building(JsonValue data) {
         super();
-        this.status = Status.WORKING;
+        this.status = Status.DISABLED;
         this.name = data.getString("Name");
         this.idNum = data.getInt("idNum");
         this.name = name + " #" + idNum;
