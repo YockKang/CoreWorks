@@ -670,9 +670,6 @@ public class CombatScreen extends GameScreen {
 
         for (Recipe recipe : craftable) {
             TextButton recipeButton = new TextButton(recipe.getName(), skin);
-            if (recipe == selectedRecipe) {
-                recipeButton.setColor(Color.GREEN);
-            }
             recipeButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -686,6 +683,7 @@ public class CombatScreen extends GameScreen {
                 recipeSelect.row();
             }
         }
+        game.batch.setColor(Color.WHITE);
     }
 
     private void displayRecipeSelection() {
@@ -828,7 +826,7 @@ public class CombatScreen extends GameScreen {
 
         boolean[][] rotatedShape = selectedBuilding.getProjectedShape();
 
-        if (hoveredGridCoords.x + rotatedShape[0].length - 1 >= gridWidth || hoveredGridCoords.x + rotatedShape.length - 1 >= gridHeight) {
+        if (hoveredGridCoords.x + rotatedShape[0].length - 1 >= gridWidth || hoveredGridCoords.y + rotatedShape.length - 1 >= gridHeight) {
             return;
         }
 
