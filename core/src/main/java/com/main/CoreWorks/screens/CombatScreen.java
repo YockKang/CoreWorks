@@ -433,14 +433,16 @@ public class CombatScreen extends GameScreen {
         Table enemyTable = (Table) UIElements.get("enemytable");
         enemyTable.add(UIElements.get("enemyheader")).row();
         ScrollPane enemyScroller = new ScrollPane(UIElements.get("enemybody"));
-        inventoryScroller.setScrollingDisabled(false, true);
+        enemyScroller.setScrollingDisabled(false, true);
         enemyTable.add(enemyScroller).pad(10).growY().row();
         updateEnemies();
 
         // relics
         Table relicTable = (Table) UIElements.get("relictable");
+        ScrollPane relicScroller = new ScrollPane(relicTable);
+        relicScroller.setScrollingDisabled(false, true);
         relicTable.clear();
-        topBar.add(relicTable);
+        topBar.add(relicScroller);
 
         for (Relic relic : runState.getRelics()) {
             Table table = new Table(skin);
@@ -1609,6 +1611,9 @@ public class CombatScreen extends GameScreen {
                             }
                         }
                         if (tubePlaced) {
+                            if (controller.getFactorySim().getGrid().getStructureAt(tubeX, tubeY) instanceof Tube) {
+                                controller.getFactorySim().getGrid().addTube(tubeX, tubeY, tubeDir1, tubeDir2);
+                            }
                             if (controller.getCombatSim().getPlayer().getTubeBudget() > 0) {
                                 boolean newSegment = controller.getFactorySim().getGrid().addTube(tubeX, tubeY, tubeDir1, tubeDir2);
                                 if (newSegment) {

@@ -459,7 +459,10 @@ public abstract class Building extends Structure implements Updatable, Comparabl
                     target = null;
                 }
                 if (target instanceof Tube tube) {
-                    tube.getNetwork((portGlobalDir + 2) % 4).addInput(this, p);
+                    TubeNet neighourNet = tube.getNetwork((portGlobalDir + 2) % 4);
+                    if (neighourNet != null) {
+                        neighourNet.addInput(this, p);
+                    }
                 } else if (target instanceof Building building) {
                     building.addInput(this, p);
                 }

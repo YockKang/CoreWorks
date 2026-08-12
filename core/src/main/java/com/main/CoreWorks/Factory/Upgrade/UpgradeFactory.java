@@ -86,10 +86,11 @@ public class UpgradeFactory {
             upgradesGroup.add("DamageMult");
         }
 
+        upgradesGroup = new Array<>(upgradesGroup);
+
         Array<UpgradeAspect> upgrades = new Array<>();
 
         while (numUpgrades > 0 && upgradesGroup.size > 0) {
-            numUpgrades--;
             UpgradeAspect thisUpgrade = null;
             String category = "";
             while (thisUpgrade == null) {
@@ -133,11 +134,10 @@ public class UpgradeFactory {
                         thisUpgrade = new BufferSizeUpgrade((int) adjPower);
                     }
                     case "MineMult" -> {
-                        adjPower = (float) (power / 2);
-                        if ((Math.round(adjPower) > 0)) {
-                            adjPower = 0;thisUpgrade = new MineMultUpgrade(Math.round(adjPower));
+                        adjPower = (int) Math.round(power / 2);
+                        if (adjPower > 0) {
+                            thisUpgrade = new MineMultUpgrade(adjPower);
                         }
-
                     }
                     case "BaseDamage" -> {
                         adjPower = (float) power;
@@ -148,7 +148,7 @@ public class UpgradeFactory {
                     }
                     case "DamageMult" -> {
                         adjPower = (float) (power * 0.1);
-                        if (adjPower > 0.05) {
+                        if (adjPower > 0.1) {
                             adjPower = roundDP(adjPower, 2);
                         } else {
                             adjPower = 0.1f;
@@ -170,6 +170,7 @@ public class UpgradeFactory {
                     }
                 }
                 if (thisUpgrade != null) {
+                    numUpgrades--;
                     upgrades.add(thisUpgrade);
                     break;
                 }

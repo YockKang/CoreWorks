@@ -83,7 +83,7 @@
     "Moveset": [
       {
         "Type": "TrueDamage",
-        "Value": 6,
+        "Value": 1,
         "Charge": 18
       }
     ]
