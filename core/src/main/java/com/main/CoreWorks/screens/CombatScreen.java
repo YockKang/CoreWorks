@@ -783,11 +783,13 @@ public class CombatScreen extends GameScreen {
         game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
         shapeRenderer.setProjectionMatrix(game.viewport.getCamera().combined);
 
+        game.batch.setColor(Color.WHITE);
         // Drawing functions below
         drawGrid();
         drawBuildings();
         // drawIOPorts();
         drawPlacementPreview();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
 
         // Draws the Scene2D UI
         if (needRefresh) {
@@ -804,7 +806,6 @@ public class CombatScreen extends GameScreen {
             resetTPSCount = false;
             lastNTicksSum = 0;
         }
-        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     private void recordTick(double time) {
