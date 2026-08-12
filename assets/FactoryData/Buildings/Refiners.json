@@ -25,6 +25,7 @@
       [true , true, false],
       [true , true, true]
     ],
+    "DisplayOverride": [2, 1],
     "Ports" : [
       {
         "x" : 0,
@@ -71,6 +72,7 @@
     "Shape" : [
       [true, false, true],
       [true , true, true]],
+    "DisplayOverride": [1, 1],
     "Ports" : [
       {
         "x" : 0,

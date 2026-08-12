@@ -828,39 +828,54 @@ public class CombatScreen extends GameScreen {
 
         boolean[][] rotatedShape = selectedBuilding.getProjectedShape();
 
-        // Set Green if valid, Red if not valid
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        if (hoveredCanPlace) {
-            shapeRenderer.setColor(Color.GREEN);
-        } else {
-            shapeRenderer.setColor(Color.RED);
+        if (hoveredGridCoords.x + rotatedShape[0].length - 1 >= gridWidth || hoveredGridCoords.x + rotatedShape.length - 1 >= gridHeight) {
+            return;
         }
+
+        // Set Green if valid, Red if not valid
+        if (hoveredCanPlace) {
+            game.batch.setColor(1, 0, 0, .9f);
+        } else {
+            game.batch.setColor(1, 0, 0, .9f);
+        }
+
+        float scale = (float) tileSize / 44;
+
+        game.batch.begin();
 
         // Draws the preview
         for (int y = 0; y < rotatedShape.length; y++) {
             for (int x = 0; x < rotatedShape[y].length; x++) {
-                if (!rotatedShape[y][x]) { // If not filled, do not draw anything
-                    continue;
-                }
+                int leftEdge = gridStartX + (hoveredGridCoords.x + x) * tileSize;
+                int bottomEdge = gridEndY - (hoveredGridCoords.y + y + 1) * tileSize; // offset by one since libGDX stores its object origins in the bottom left
 
-                // Get the base x,y coord in the grid 2D shape array for drawing
-                int gridX = hoveredGridCoords.x + x;
-                int gridY = hoveredGridCoords.y + y;
 
-                // For now, no drawing of any parts of the building outside of grid
-                // When we have sprites maybe can change this part
-                if (gridX < 0 || gridY < 0 || gridX >= gridWidth || gridY >= gridHeight) {
-                    continue;
-                }
+                TextureRegion textureRegions = selectedBuilding.getTexture()[selectedBuilding.getRotation()][0];
 
-                float tileX = gridStartX + gridX * tileSize;
-                float tileY = gridEndY - (gridY + 1) * tileSize;
+                boolean[][] shape = selectedBuilding.getShape();
 
-                shapeRenderer.rect(tileX, tileY, tileSize, tileSize);
+                TextureRegion[][] buildingImage = textureRegions.split(
+                    44,
+                    44
+                );
+
+                game.batch.draw(buildingImage[y][x],
+                    leftEdge,
+                    bottomEdge,
+                    44 * scale,
+                    44 * scale
+                );
+
             }
         }
+        game.batch.setColor(0, 0, 0, 1);
+        game.batch.end();
 
-        shapeRenderer.end();
+
+
+
+
+
 
         game.getPopUpManager().requestPopup(
             "placement_preview_explanation",
@@ -976,7 +991,7 @@ public class CombatScreen extends GameScreen {
                         44
                     );
 
-                    Coords imgLocCords = new Coords(x - building.getX(), y- building.getY());
+                    Coords imgLocCords = new Coords(x - building.getX(), y - building.getY());
 
                     game.batch.draw(buildingImage[imgLocCords.y][imgLocCords.x],
                         leftEdge,
