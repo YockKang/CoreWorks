@@ -21,6 +21,7 @@
     "Tier" : 0,
     "Type" : "Refiner",
     "Name" : "Advanced Smelter",
+    "GridName" : "Advanced\nSmelter",
     "Shape" : [
       [true , true, false],
       [true , true, true]
@@ -68,6 +69,7 @@
     "Tier" : 0,
     "Type" : "Refiner",
     "Name" : "Advanced Machining Plant",
+    "GridName" : "Advanced\nMachining Plant",
     "BaseSpeed" : 2,
     "Shape" : [
       [true, false, true],
@@ -112,6 +114,7 @@
     "Tier" : 0,
     "Type" : "Refiner",
     "Name" : "Advanced Chemical Plant",
+    "GridName" : "Advanced\nChemical Plant",
     "BaseSpeed" : 2,
     "Shape" : [
       [true, false, false, false],

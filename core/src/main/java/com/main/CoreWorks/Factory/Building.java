@@ -93,7 +93,7 @@ public abstract class Building extends Structure implements Updatable, Comparabl
         this.idNum = data.getInt("idNum");
         this.name = name + " #" + idNum;
         if (data.get("GridName") != null) {
-            this.gridName = data.getString("GridName");
+            this.gridName = data.getString("GridName") + " #" + idNum;
         } else {
             this.gridName = name;
         }

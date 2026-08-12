@@ -607,7 +607,7 @@ public class CombatScreen extends GameScreen {
         int buildingCount = 0;
 
         for (Building building : inventory) {
-            TextButton buildingButton = new TextButton(building.gridName(), skin75pct);
+            TextButton buildingButton = new TextButton(building.gridName() , skin75pct);
 
             if (building == selectedBuilding) {
                 buildingButton.setColor(Color.GREEN);
