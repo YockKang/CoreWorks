@@ -6,19 +6,17 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.main.CoreWorks.Factory.BuildingTemplate.BuildingTemplate;
 import com.main.CoreWorks.Resources.ResourceTemplate;
+import com.main.CoreWorks.database.BuildingDatabase;
 import com.main.CoreWorks.database.ResourceDatabase;
 
 public class SpriteManager {
 
-    private static AssetManager assetManager;
+    private static AssetManager assetManager = new AssetManager();
     private static ObjectMap<String, String> imgMap = new ObjectMap<>();
 
-    public SpriteManager() {
-        assetManager = new AssetManager();
-    }
-
-    public void load() {
+    public static void load() {
         assetManager.load("Images/ResourceContainer.png", Texture.class);
         imgMap.put("ResourceContainer", "Images/ResourceContainer.png");
         for (ObjectMap.Entry<String, ResourceTemplate> entry : ResourceDatabase.getDB()) {
@@ -47,20 +45,32 @@ public class SpriteManager {
         assetManager.load("Images/Pipes.png", Texture.class);
         imgMap.put("Pipes", "Images/Pipes.png");
 
+        for (ObjectMap.Entry<String, BuildingTemplate> entry : BuildingDatabase.getDB()) {
+            try {
+                assetManager.load("Images/" + entry.key + ".png", Texture.class);
+                imgMap.put(entry.key, "Images/" + entry.key + ".png");
+            } catch (Exception e) {
+                System.out.println("no image for " + entry.key);
+            }
+
+        }
+
+        assetManager.load("Images/ResourceContainer.png", Texture.class);
+        imgMap.put("ResourceContainer", "Images/ResourceContainer.png");
 
         assetManager.finishLoading();
     }
 
-    public Texture getTexture(String name) {
+    public static Texture getTexture(String name) {
         return assetManager.get(imgMap.get(name));
     }
 
-    public TextureRegion[][] getTextureRegion(String name, int frameWidth, int frameHeight) {
+    public static TextureRegion[][] getTextureRegion(String name, int frameWidth, int frameHeight) {
         return TextureRegion.split(getTexture(name), frameWidth, frameHeight);
     }
 
     // Adds a dispose method to dispose of all the sprites in one command
-    public void dispose() {
+    public static void dispose() {
         assetManager.dispose();
     }
 }

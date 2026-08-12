@@ -16,6 +16,7 @@ import com.main.CoreWorks.Coreworks;
 import com.main.CoreWorks.Recipe.Recipe;
 import com.main.CoreWorks.Resources.Resource;
 import com.main.CoreWorks.TextParser.Sentence;
+import com.main.CoreWorks.TextParser.Text;
 import com.main.CoreWorks.database.ResourceDatabase;
 import com.main.CoreWorks.entities.Relics.Relic;
 import com.main.CoreWorks.simulators.PopUpTutorial.PopUpManager;
@@ -786,9 +787,9 @@ public class CombatScreen extends GameScreen {
 
         // Drawing functions below
         drawGrid();
-        drawPlacementPreview();
         drawBuildings();
-        drawIOPorts();
+        // drawIOPorts();
+        drawPlacementPreview();
 
         // Draws the Scene2D UI
         if (needRefresh) {
@@ -929,35 +930,70 @@ public class CombatScreen extends GameScreen {
     }
 
     public void drawGrid() {
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        // Draws the outline of unoccupied grids
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+
+        if (isPaused) {
+            shapeRenderer.setColor(Color.RED);
+        } else {
+            shapeRenderer.setColor(Color.WHITE);
+        }
+
+        for (
+            int x = 0;
+            x < gridWidth; x++) {
+            for (int y = 0; y < gridHeight; y++) {
+                int bottomLeftCorner = gridStartX + x * tileSize;
+                int topLeftCorner = gridEndY - (y + 1) * tileSize; // offset by one since libGDX shape draws the object origins in the bottom left, but we start from top left
+                shapeRenderer.rect(bottomLeftCorner, topLeftCorner, tileSize, tileSize);
+            }
+        }
+
+
+        shapeRenderer.end();
+
+
+        game.batch.begin();
 
         // Draws the Outline of occupied grids
         for (int x = 0; x < gridWidth; x++) {
             for (int y = 0; y < gridHeight; y++) {
-                int bottomLeftCorner = gridStartX + x * tileSize;
-                int topLeftCorner = gridEndY - (y + 1) * tileSize; // offset by one since libGDX stores its object origins in the bottom left
+                int leftEdge = gridStartX + x * tileSize;
+                int bottomEdge = gridEndY - (y + 1) * tileSize; // offset by one since libGDX stores its object origins in the bottom left
                 Structure occupied = controller.getFactorySim().getGrid().getStructureAt(x, y);
 
-                // If there is a non-disabled building, draw it as blue
-                if (occupied instanceof Building bldg) {
-                    if (bldg.isEnabled()) {
-                        shapeRenderer.setColor(Color.BLUE);
-                        shapeRenderer.rect(bottomLeftCorner, topLeftCorner, tileSize, tileSize);
-                    }
+                float scale = (float) tileSize / 44;
+                // If there is a building, draw it
+                if (occupied instanceof Building building) {
+                    TextureRegion textureRegions = building.getTexture()[building.getRotation()][0];
 
-                    // If there is a disabled building, draw it as yellow
-                    if (!bldg.isEnabled()) {
-                        shapeRenderer.setColor(Color.YELLOW);
-                        shapeRenderer.rect(bottomLeftCorner, topLeftCorner, tileSize, tileSize);
-                    }
+                    boolean[][] shape = building.getShape();
+
+                    int largeAxis = Math.max(shape.length, shape[0].length);
+                    TextureRegion[][] buildingImage = textureRegions.split(
+                        44,
+                        44
+                    );
+
+                    Coords imgLocCords = new Coords(x - building.getX(), y- building.getY());
+
+                    game.batch.draw(buildingImage[imgLocCords.y][imgLocCords.x],
+                        leftEdge,
+                        bottomEdge,
+                        44 * scale,
+                        44 * scale
+                    );
+
                 } else if (occupied instanceof Tube tube) {
                     // if its a tube, do something else
 
-                    pipeDrawSwitcher(tube, bottomLeftCorner, topLeftCorner);
+                    pipeDrawSwitcher(tube, leftEdge, bottomEdge);
 
                 }
             }
         }
+        game.batch.end();
 
         // draw border
         /*
@@ -1008,6 +1044,7 @@ public class CombatScreen extends GameScreen {
          */
 
 
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         // new border (selected only)
         if (selectedBuilding != null && selectedBuilding.isOnGrid()) {
             Array<DirectedCoords> border = selectedBuilding.getBorder();
@@ -1053,27 +1090,6 @@ public class CombatScreen extends GameScreen {
         }
         shapeRenderer.end();
 
-        // Draws the outline of unoccupied grids
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-
-        if (isPaused) {
-            shapeRenderer.setColor(Color.RED);
-        } else {
-            shapeRenderer.setColor(Color.WHITE);
-        }
-
-        for (
-            int x = 0;
-            x < gridWidth; x++) {
-            for (int y = 0; y < gridHeight; y++) {
-                int bottomLeftCorner = gridStartX + x * tileSize;
-                int topLeftCorner = gridEndY - (y + 1) * tileSize; // offset by one since libGDX shape draws the object origins in the bottom left, but we start from top left
-                shapeRenderer.rect(bottomLeftCorner, topLeftCorner, tileSize, tileSize);
-            }
-        }
-
-
-        shapeRenderer.end();
     }
 
     public void drawBuildings() {
@@ -1081,19 +1097,21 @@ public class CombatScreen extends GameScreen {
 
 
         for (Building building : controller.getFactorySim().getGrid().getBuildings()) {
+
+            float scale = (float) (tileSize * 9 / 10) / 40;
+
             Coords nameCoords = building.getGlobalCoord(building.getDisplaySquare());
             float nameX = gridStartX + nameCoords.x * tileSize + 10;
             float nameY = gridEndY - nameCoords.y * tileSize - 20;
 
             // draws buffers
-            float scale = (float) (tileSize * 9 / 10) / 40;
 
             if ((building instanceof Miner || building instanceof Refiner) && building.getRecipe() != null) {
                 for (int i = 0; i < building.getInputBuffer().size; i++) {
                     ResourceBuffer buffer = building.getInputBuffer().get(i);
 
 
-                    game.batch.draw(game.getSpriteManager().getTexture("ResourceContainer"),
+                    game.batch.draw(SpriteManager.getTexture("ResourceContainer"),
                         gridStartX + nameCoords.x * tileSize + (float) tileSize / 20 + (i * 10 * scale),
                         gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20,
                         10 * scale,
@@ -1103,7 +1121,7 @@ public class CombatScreen extends GameScreen {
                     String visType = ResourceDatabase.getDB().get(id).getData().getString("VisType");
                     switch (visType) {
                         case "Piece" -> {
-                            Texture resourceTexture = game.getSpriteManager().getTexture(id);
+                            Texture resourceTexture = SpriteManager.getTexture(id);
                             for (int j = 0; j < buffer.getBuffer().size; j++) {
                                 game.batch.draw(resourceTexture,
                                     gridStartX + nameCoords.x * tileSize + (float) tileSize / 20 + (i * 10 * scale) + scale,
@@ -1114,7 +1132,7 @@ public class CombatScreen extends GameScreen {
                             }
                         }
                         case "Liquid", "Bulk" -> {
-                            TextureRegion[][] resourceTexture = game.getSpriteManager().getTextureRegion(id + visType, 12, 8);
+                            TextureRegion[][] resourceTexture = SpriteManager.getTextureRegion(id + visType, 12, 8);
                             for (int j = 0; j < buffer.getBuffer().size; j++) {
                                 TextureRegion tx = null;
                                 if (j < buffer.getBuffer().size - 1) {
@@ -1137,7 +1155,7 @@ public class CombatScreen extends GameScreen {
                     ResourceBuffer buffer = building.getOutputResourceBuffer().get(i);
 
 
-                    game.batch.draw(game.getSpriteManager().getTexture("ResourceContainer"),
+                    game.batch.draw(SpriteManager.getTexture("ResourceContainer"),
                         gridStartX + (nameCoords.x + 1) * tileSize - (float) tileSize / 20 - ((i + 1) * 10 * scale),
                         gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20,
                         10 * scale,
@@ -1147,7 +1165,7 @@ public class CombatScreen extends GameScreen {
                     String visType = ResourceDatabase.getDB().get(id).getData().getString("VisType");
                     switch (visType) {
                         case "Piece" -> {
-                            Texture resourceTexture = game.getSpriteManager().getTexture(id);
+                            Texture resourceTexture = SpriteManager.getTexture(id);
                             for (int j = 0; j < buffer.getBuffer().size; j++) {
                                 game.batch.draw(resourceTexture,
                                     gridStartX + (nameCoords.x + 1) * tileSize - (float) tileSize / 20 - ((i + 1) * 10 * scale) + scale,
@@ -1158,7 +1176,7 @@ public class CombatScreen extends GameScreen {
                             }
                         }
                         case "Liquid", "Bulk" -> {
-                            TextureRegion[][] resourceTexture = game.getSpriteManager().getTextureRegion(id + visType, 12, 8);
+                            TextureRegion[][] resourceTexture = SpriteManager.getTextureRegion(id + visType, 12, 8);
                             for (int j = 0; j < buffer.getBuffer().size; j++) {
                                 TextureRegion tx = null;
                                 if (j < buffer.getBuffer().size - 1) {
@@ -1178,7 +1196,7 @@ public class CombatScreen extends GameScreen {
                 }
             }
             if (building instanceof Shooter shooter) {
-                game.batch.draw(game.getSpriteManager().getTexture("ResourceContainer"),
+                game.batch.draw(SpriteManager.getTexture("ResourceContainer"),
                     gridStartX + nameCoords.x * tileSize + (float) tileSize / 20,
                     gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20,
                     10 * scale,
@@ -1186,7 +1204,7 @@ public class CombatScreen extends GameScreen {
                 );
                 for (int j = 0; j < shooter.getMagazine().size; j++) {
                     Resource resource = shooter.getMagazine().get(j);
-                    Texture resourceTexture = game.getSpriteManager().getTexture(resource.getId());
+                    Texture resourceTexture = SpriteManager.getTexture(resource.getId());
                     game.batch.draw(resourceTexture,
                         gridStartX + nameCoords.x * tileSize + (float) tileSize / 20 + scale,
                         (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2f * scale + ((double) j / shooter.getMagSize()) * (36 * scale)),
@@ -1196,7 +1214,7 @@ public class CombatScreen extends GameScreen {
                 }
             }
             if (building instanceof Defender defender) {
-                game.batch.draw(game.getSpriteManager().getTexture("ResourceContainer"),
+                game.batch.draw(SpriteManager.getTexture("ResourceContainer"),
                     gridStartX + nameCoords.x * tileSize + (float) tileSize / 20,
                     gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20,
                     10 * scale,
@@ -1204,7 +1222,7 @@ public class CombatScreen extends GameScreen {
                 );
                 for (int j = 0; j < defender.getMagazine().size; j++) {
                     Resource resource = defender.getMagazine().get(j);
-                    Texture resourceTexture = game.getSpriteManager().getTexture(resource.getId());
+                    Texture resourceTexture = SpriteManager.getTexture(resource.getId());
                     game.batch.draw(resourceTexture,
                         gridStartX + nameCoords.x * tileSize + (float) tileSize / 20 + scale,
                         (float) (gridEndY - (nameCoords.y + 1) * tileSize + (float) tileSize / 20 + 2f * scale + ((double) j / defender.getMagSize()) * (36 * scale)),
@@ -1654,8 +1672,7 @@ public class CombatScreen extends GameScreen {
 
     // draws pipes
     private void pipeDrawSwitcher(Tube tube, float tileX, float tileY) {
-        game.batch.begin();
-        TextureRegion[][] tubeSheet = game.getSpriteManager().getTextureRegion("Pipes", 44, 44);
+        TextureRegion[][] tubeSheet = SpriteManager.getTextureRegion("Pipes", 44, 44);
 
 
         if (tube.getDouble()) {
@@ -1785,7 +1802,6 @@ public class CombatScreen extends GameScreen {
             }
         }
  */
-        game.batch.end();
     }
 
     // Generic code that translates mouse clicks on grid into an x and y coord of a 2D array (in this case grid's 2D array)

@@ -29,7 +29,7 @@ public class RelicDatabase {
             try {
                 relic = clazz.getConstructor().newInstance();
             } catch (Exception e) {
-                System.out.println("Relic Generation Error");
+                System.out.println("Relic Generation Error for " + name);
             }
             if (relic != null) {
                 RelicDB.put(relic.getId(), relic);

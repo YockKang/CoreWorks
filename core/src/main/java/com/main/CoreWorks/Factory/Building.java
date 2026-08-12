@@ -1,5 +1,6 @@
 package com.main.CoreWorks.Factory;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.*;
 import com.main.CoreWorks.RunPersistence.RunState;
@@ -16,6 +17,7 @@ import java.util.*;
 public abstract class Building extends Structure implements Updatable, Comparable<Building> {
 
 
+
     public enum Status {
         WORKING,
         DISABLED,
@@ -25,6 +27,7 @@ public abstract class Building extends Structure implements Updatable, Comparabl
 
 
     // confirmed fields
+    protected TextureRegion[][] texture;
     protected String name;
     protected String gridName;
     protected int idNum;
@@ -215,6 +218,8 @@ public abstract class Building extends Structure implements Updatable, Comparabl
 
         }
 
+        int largeAxis = Math.max(shape.length, shape[0].length);
+        this.texture = SpriteManager.getTextureRegion(data.getString("id"), largeAxis * 44, largeAxis * 44);
     }
 
     private void addRecipes(JsonValue data) {
@@ -330,7 +335,7 @@ public abstract class Building extends Structure implements Updatable, Comparabl
     }
 
 
-    protected Coords getLocalCoord(int x, int y) {
+    public Coords getLocalCoord(int x, int y) {
         return getLocalCoord(x, y, this.xCoord, this.yCoord, this.rotation, this.shape);
     }
 
@@ -873,5 +878,9 @@ public abstract class Building extends Structure implements Updatable, Comparabl
 
     public Array<ResourceBuffer> getInputBuffer() {
         return inputBuffer;
+    }
+
+    public TextureRegion[][] getTexture() {
+        return texture;
     }
 }

@@ -34,7 +34,7 @@ public class BuildingTemplate {
             idNum++;
             return bldg;
         } catch (Exception e) {
-            System.out.println("Building Generation Error");
+            System.out.println("Building Generation Error: " + buildingData.getString("Name"));
             return null;
         }
     }

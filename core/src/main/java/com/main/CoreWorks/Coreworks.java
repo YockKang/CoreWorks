@@ -38,11 +38,9 @@ public class Coreworks extends Game {
     private PopUpManager popUpManager = new PopUpManager();
 
     private SoundManager soundManager;
-    private SpriteManager spriteManager;
 
     @Override
     public void create() {
-        spriteManager = new SpriteManager();
         camera = new OrthographicCamera();
         batch = new SpriteBatch();
         // use libGDX's default font
@@ -104,7 +102,7 @@ public class Coreworks extends Game {
         Codex.register();
         Codex.generateInfoTable(new Skin(Gdx.files.internal("uiskin.json")));
 
-        spriteManager.load();
+        SpriteManager.load();
 
         loadImageAssets();
 
@@ -129,11 +127,6 @@ public class Coreworks extends Game {
     // Method to get sound manager
     public SoundManager getSoundManager() {
         return soundManager;
-    }
-
-    // Method to get sound manager
-    public SpriteManager getSpriteManager() {
-        return spriteManager;
     }
 
     @Override
