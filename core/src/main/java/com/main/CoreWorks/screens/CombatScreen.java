@@ -208,7 +208,7 @@ public class CombatScreen extends GameScreen {
             "Combat & ticks",
             "The combat system runs on a tick-based system.\nBuildings operate automatically, and take actions based on passed number of ticks.\nEnemies take action after certain number of ticks have passed, represented by cooldowns." +
                 "\nYou win if all enemies are defeated." +
-                "\nYou lose if your health drops to 0." +
+                "\nYou lose if your health drops to 0.\nYou can speed up tick speed by changing the multiplier below the tick count." +
                 "\nDifferent buildings can defeat enemies in different ways. Refer to codex with C for more information!",
             true
         );
