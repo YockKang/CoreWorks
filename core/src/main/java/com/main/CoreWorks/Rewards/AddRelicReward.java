@@ -8,7 +8,7 @@ public class AddRelicReward extends Reward {
     private Relic relic;
 
     public AddRelicReward(Relic relic) {
-        super("Add a Relic", String.format("Adds 1 %s to your inventory", relic.getName()));
+        super("Add a Relic", String.format("Adds 1\n%s\nto your inventory", relic.getName()));
         this.relic = relic;
     }
 
