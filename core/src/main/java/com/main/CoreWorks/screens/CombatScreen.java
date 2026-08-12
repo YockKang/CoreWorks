@@ -834,9 +834,9 @@ public class CombatScreen extends GameScreen {
 
         // Set Green if valid, Red if not valid
         if (hoveredCanPlace) {
-            game.batch.setColor(1, 0, 0, .9f);
+            game.batch.setColor(1, 1, 1, .75f);
         } else {
-            game.batch.setColor(1, 0, 0, .9f);
+            game.batch.setColor(1, 0, 0, .75f);
         }
 
         float scale = (float) tileSize / 44;
